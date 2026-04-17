@@ -142,18 +142,18 @@
 - [x] Test PRESCIENT daily report -> correct aggregated metrics
 - [x] Test FLEET MC comparison -> ranked list matches seed data
 - [x] Fix any bugs found (3 bugs fixed: divider misclassification, drain misclassification, fallen tree mode detection)
-- [ ] Commit: `fix(backend): VIRA, GUARDIAN, PRESCIENT, FLEET tested + fixed`
+- [x] Commit: `fix(backend): VIRA, GUARDIAN, PRESCIENT, FLEET tested + fixed`
 
 ---
 
 ## Phase 5: Integration Testing (Day 2–3 — PARALLEL with Yash)
 
-- [ ] Test VIRA → NEXUS pipeline: chat complaint → issue created → assigned
-- [ ] Test VIRA status query with real issue from data_store
-- [ ] Test GUARDIAN escalate → WebSocket broadcast received
-- [ ] Test PRESCIENT weekly digest → cross-MC data
-- [ ] Test FLEET insights → natural-language insights generated
-- [ ] Commit: `fix(backend): agents B integration verified`
+- [x] Test VIRA → NEXUS pipeline: chat complaint → issue created → assigned
+- [x] Test VIRA status query with real issue from data_store
+- [x] Test GUARDIAN escalate → WebSocket broadcast received
+- [x] Test PRESCIENT weekly digest → cross-MC data
+- [x] Test FLEET insights → natural-language insights generated
+- [x] Commit: `fix(backend): agents B integration verified`
 
 ---
 

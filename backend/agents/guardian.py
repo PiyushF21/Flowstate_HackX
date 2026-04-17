@@ -75,8 +75,6 @@ def haversine_distance(lat1: float, lng1: float, lat2: float, lng2: float) -> fl
 def parse_iso_datetime(dt_str: str) -> datetime:
     """Parse ISO datetime string."""
     try:
-        if "+" in dt_str and "T" in dt_str and dt_str[-3] == ":":
-            dt_str = dt_str[:-3] + dt_str[-2:]
         return datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
     except (ValueError, AttributeError):
         return datetime.now(IST)
