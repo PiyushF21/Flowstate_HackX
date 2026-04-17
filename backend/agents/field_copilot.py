@@ -36,6 +36,13 @@ SAFETY_PROTOCOLS = {
     "traffic": "High-visibility vest and traffic police assistance required."
 }
 
+from langchain_core.prompts import PromptTemplate
+from langchain_xai import ChatXAI
+from pydantic import BaseModel, Field
+
+from config import settings
+from data_store import data_store
+
 COPILOT_PROMPT = """You are FIELD_COPILOT, an AI technical assistant for municipal infrastructure workers.
 A worker in the field has encountered a problem and has asked you a question.
 
@@ -53,3 +60,43 @@ Worker's Message: "{user_message}"
 Provide a concise, direct, and technically accurate answer to help the worker solve their issue.
 Respond in exactly 1-3 sentences.
 """
+
+class CopilotResponse(BaseModel):
+    reply: str = Field(description="The 1-3 sentence advice for the worker")
+    safety_warning: str = Field(description="Any critical safety warning to flash on screen")
+
+async def get_advice(worker_id: str, issue_id: str, user_message: str) -> CopilotResponse:
+    worker = await data_store.get_worker(worker_id)
+    issue = await data_store.get_issue(issue_id)
+    
+    if not worker or not issue:
+        return CopilotResponse(reply="Entity not found context.", safety_warning="")
+        
+    cat = issue.category or "general"
+    knowledge = REPAIR_KNOWLEDGE.get(cat, ["No specific knowledge loaded."])
+    safety = SAFETY_PROTOCOLS.get(cat, "Standard safety protocols apply.")
+    procedure = " ".join(issue.procedure) if issue.procedure else "None"
+    
+    if not settings.has_xai_key:
+        return CopilotResponse(
+            reply=f"MOCK: To resolve {cat}, please follow standard protocol. {knowledge[0]}",
+            safety_warning=f"MOCK WARNING: {safety}"
+        )
+        
+    llm = ChatXAI(xai_api_key=settings.XAI_API_KEY, model="grok-beta", temperature=0.1)
+    llm_with_struct = llm.with_structured_output(CopilotResponse)
+    
+    prompt = PromptTemplate.from_template(COPILOT_PROMPT)
+    chain = prompt | llm_with_struct
+    
+    res = await chain.ainvoke({
+        "category": cat,
+        "subcategory": issue.subcategory,
+        "status": issue.status,
+        "procedure": procedure,
+        "knowledge": str(knowledge),
+        "safety": safety,
+        "user_message": user_message
+    })
+    
+    return res
