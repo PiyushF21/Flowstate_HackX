@@ -134,14 +134,14 @@
 
 ---
 
-## Phase 4: Individual Agent Testing (Day 2 — PARALLEL with Yash's dashboards)
+## Phase 4: Individual Agent Testing (Day 2 -- PARALLEL with Yash's dashboards)
 
-- [ ] Test VIRA with multiple complaint types (pothole, water leak, garbage)
-- [ ] Test VIRA mode detection accuracy
-- [ ] Test GUARDIAN with overdue seed data → alerts generated
-- [ ] Test PRESCIENT daily report → correct aggregated metrics
-- [ ] Test FLEET MC comparison → ranked list matches seed data
-- [ ] Fix any bugs found
+- [x] Test VIRA with multiple complaint types (pothole, water leak, garbage)
+- [x] Test VIRA mode detection accuracy
+- [x] Test GUARDIAN with overdue seed data -> alerts generated
+- [x] Test PRESCIENT daily report -> correct aggregated metrics
+- [x] Test FLEET MC comparison -> ranked list matches seed data
+- [x] Fix any bugs found (3 bugs fixed: divider misclassification, drain misclassification, fallen tree mode detection)
 - [ ] Commit: `fix(backend): VIRA, GUARDIAN, PRESCIENT, FLEET tested + fixed`
 
 ---

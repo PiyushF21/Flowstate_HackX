@@ -46,6 +46,7 @@ REPORT_KEYWORDS = [
     "report", "complain", "complaint", "issue", "problem",
     "there is", "there's", "i see", "i saw", "i noticed",
     "i found", "i want to report", "i'd like to report",
+    "blocking", "tree", "scattered", "overflowing",
 ]
 
 QUERY_KEYWORDS = [
@@ -78,9 +79,9 @@ CATEGORY_KEYWORDS = {
         }
     },
     "water_pipeline": {
-        "keywords": ["water", "pipe", "pipeline", "burst", "leak", "flooding",
+        "keywords": ["water pipe", "pipe", "pipeline", "burst pipe", "water leak",
                      "water supply", "tap", "water pressure", "contaminated",
-                     "dirty water", "no water", "water cut"],
+                     "dirty water", "no water", "water cut", "gushing"],
         "subcategories": {
             "burst_pipe": ["burst", "broken pipe", "pipe burst", "gushing"],
             "contamination": ["contaminated", "dirty water", "brown water", "smell"],
@@ -102,10 +103,12 @@ CATEGORY_KEYWORDS = {
         "keywords": ["garbage", "waste", "trash", "rubbish", "litter",
                      "drain", "drainage", "sewer", "sewage", "gutter",
                      "overflow", "clog", "blocked drain", "stink", "smell",
-                     "dirty", "filthy", "unhygienic"],
+                     "dirty", "filthy", "unhygienic", "blocked",
+                     "not flowing", "water not flowing"],
         "subcategories": {
             "garbage": ["garbage", "waste", "trash", "rubbish", "litter", "dump", "bin"],
-            "drain_blockage": ["drain", "drainage", "blocked", "clogged", "gutter"],
+            "drain_blockage": ["drain", "drainage", "blocked", "clogged", "gutter",
+                               "not flowing", "water not flowing"],
             "sewage_overflow": ["sewage", "sewer", "overflow", "sewage water"],
         }
     },
@@ -119,9 +122,11 @@ CATEGORY_KEYWORDS = {
         }
     },
     "traffic": {
-        "keywords": ["traffic", "divider", "barrier", "sign", "signage", "road sign"],
+        "keywords": ["divider", "road divider", "broken divider", "barrier",
+                     "sign", "signage", "road sign", "median", "scattered"],
         "subcategories": {
-            "broken_divider": ["divider", "barrier", "median", "broken divider"],
+            "broken_divider": ["divider", "road divider", "broken divider",
+                               "barrier", "median", "scattered"],
             "missing_signage": ["sign", "signage", "road sign", "missing sign"],
         }
     },
