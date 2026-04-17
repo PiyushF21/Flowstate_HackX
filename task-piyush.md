@@ -17,7 +17,7 @@
 - [x] Draft `check_overdue_tasks()` skeleton — datetime math for deadline comparison
 - [x] Draft `generate_alert()` — builds structured alert dict
 - [x] Draft `escalate()` skeleton — status update + alert creation
-- [ ] Commit: `feat: agent drafts — VIRA, GUARDIAN logic (pure Python)`
+- [x] Commit: `feat: agent drafts — VIRA, GUARDIAN logic (pure Python)`
 
 ---
 

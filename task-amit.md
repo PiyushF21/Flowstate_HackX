@@ -11,53 +11,53 @@
 > Seed data is pure JSON. Agent drafts are pure Python. No waiting for anyone.
 
 ### Seed Data (DO FIRST — push ASAP, others need it)
-- [ ] Create `seed_data/mcs.json` — 8 Municipal Corporations (pure JSON)
-- [ ] — BMC Mumbai (85% resolution, 4.2h avg, 42 workers)
-- [ ] — PMC Pune (82% resolution, 4.8h avg, 35 workers)
-- [ ] — NMC Nagpur (55% resolution, 8.2h avg, 22 workers)
-- [ ] — NMC Nashik (68% resolution, 6.5h avg, 18 workers)
-- [ ] — TMC Thane (78% resolution, 5.1h avg, 28 workers)
-- [ ] — RMC Ratnagiri (72% resolution, 5.8h avg, 12 workers)
-- [ ] — KMC Kolhapur (75% resolution, 5.5h avg, 15 workers)
-- [ ] — AMC Aurangabad (62% resolution, 7.2h avg, 20 workers)
-- [ ] Create `seed_data/workers.json` — 20 workers
-- [ ] — 5 Roads & Asphalt specialists (Mumbai)
-- [ ] — 3 Hydraulic & Plumbing specialists (Mumbai + Pune)
-- [ ] — 3 Electrical & Power specialists (Mumbai + Nagpur)
-- [ ] — 3 Sanitation & Waste specialists (Mumbai)
-- [ ] — 2 Structural specialists (various)
-- [ ] — 2 Traffic & Signaling specialists (various)
-- [ ] — Mix of statuses: 8 available, 8 on_task, 4 off_duty
-- [ ] — Include realistic GPS coords for Mumbai locations
-- [ ] — Varied performance: ratings 3.2–4.8, on-time 70%–98%
-- [ ] Create `seed_data/issues.json` — 30 issues
-- [ ] — 10 car_sensor source (potholes, jolt data, GPS)
-- [ ] — 8 360_capture source (dividers, debris, signals)
-- [ ] — 12 manual_complaint source (water, electrical, sanitation)
-- [ ] — Severity mix: 3 CRITICAL, 7 HIGH, 12 MEDIUM, 8 LOW
-- [ ] — Status mix: 5 reported, 6 assigned, 8 in_progress, 10 resolved, 1 escalated
-- [ ] — Real Mumbai/Pune/Nagpur GPS coordinates
-- [ ] — Realistic descriptions and timestamps
-- [ ] — Link assigned_to with workers.json worker_ids
-- [ ] — Include procedure + materials for assigned/in-progress issues
-- [ ] Create `seed_data/reports.json` — 5 daily reports
-- [ ] — 3 for BMC Mumbai (April 15, 16, 17)
-- [ ] — 1 for PMC Pune (April 17)
-- [ ] — 1 for NMC Nagpur (April 17)
-- [ ] — Full structure: summary, by_category, by_severity, worst_wards
-- [ ] Verify: all JSON files parse without errors
-- [ ] Verify: data relationships consistent (worker → issue → MC)
-- [ ] Push seed data to main immediately
-- [ ] Commit: `feat: seed data — issues, workers, MCs, reports`
+- [x] Create `seed_data/mcs.json` — 8 Municipal Corporations (pure JSON)
+- [x] — BMC Mumbai (85% resolution, 4.2h avg, 42 workers)
+- [x] — PMC Pune (82% resolution, 4.8h avg, 35 workers)
+- [x] — NMC Nagpur (55% resolution, 8.2h avg, 22 workers)
+- [x] — NMC Nashik (68% resolution, 6.5h avg, 18 workers)
+- [x] — TMC Thane (78% resolution, 5.1h avg, 28 workers)
+- [x] — RMC Ratnagiri (72% resolution, 5.8h avg, 12 workers)
+- [x] — KMC Kolhapur (75% resolution, 5.5h avg, 15 workers)
+- [x] — AMC Aurangabad (62% resolution, 7.2h avg, 20 workers)
+- [x] Create `seed_data/workers.json` — 20 workers
+- [x] — 5 Roads & Asphalt specialists (Mumbai)
+- [x] — 3 Hydraulic & Plumbing specialists (Mumbai + Pune)
+- [x] — 3 Electrical & Power specialists (Mumbai + Nagpur)
+- [x] — 3 Sanitation & Waste specialists (Mumbai)
+- [x] — 2 Structural specialists (various)
+- [x] — 2 Traffic & Signaling specialists (various)
+- [x] — Mix of statuses: 8 available, 8 on_task, 4 off_duty
+- [x] — Include realistic GPS coords for Mumbai locations
+- [x] — Varied performance: ratings 3.2–4.8, on-time 70%–98%
+- [x] Create `seed_data/issues.json` — 30 issues
+- [x] — 10 car_sensor source (potholes, jolt data, GPS)
+- [x] — 8 360_capture source (dividers, debris, signals)
+- [x] — 12 manual_complaint source (water, electrical, sanitation)
+- [x] — Severity mix: 3 CRITICAL, 7 HIGH, 12 MEDIUM, 8 LOW
+- [x] — Status mix: 5 reported, 6 assigned, 8 in_progress, 10 resolved, 1 escalated
+- [x] — Real Mumbai/Pune/Nagpur GPS coordinates
+- [x] — Realistic descriptions and timestamps
+- [x] — Link assigned_to with workers.json worker_ids
+- [x] — Include procedure + materials for assigned/in-progress issues
+- [x] Create `seed_data/reports.json` — 5 daily reports
+- [x] — 3 for BMC Mumbai (April 15, 16, 17)
+- [x] — 1 for PMC Pune (April 17)
+- [x] — 1 for NMC Nagpur (April 17)
+- [x] — Full structure: summary, by_category, by_severity, worst_wards
+- [x] Verify: all JSON files parse without errors
+- [x] Verify: data relationships consistent (worker → issue → MC)
+- [x] Push seed data to main immediately
+- [x] Commit: `feat: seed data — issues, workers, MCs, reports`
 
 ### Agent Logic Drafts (pure Python, no imports)
-- [ ] Draft LOOP SLA calculation logic
-- [ ] Draft LOOP re-report GPS proximity check (haversine math)
-- [ ] Draft ORACLE `calculate_allocation_score()` formula
-- [ ] Draft FIELD_COPILOT `REPAIR_KNOWLEDGE` dict (all categories)
-- [ ] Draft FIELD_COPILOT `SAFETY_PROTOCOLS` dict
-- [ ] Draft COPILOT_PROMPT template string
-- [ ] Commit: `feat: agent drafts — LOOP, ORACLE, FIELD_COPILOT logic`
+- [x] Draft LOOP SLA calculation logic
+- [x] Draft LOOP re-report GPS proximity check (haversine math)
+- [x] Draft ORACLE `calculate_allocation_score()` formula
+- [x] Draft FIELD_COPILOT `REPAIR_KNOWLEDGE` dict (all categories)
+- [x] Draft FIELD_COPILOT `SAFETY_PROTOCOLS` dict
+- [x] Draft COPILOT_PROMPT template string
+- [x] Commit: `feat: agent drafts — LOOP, ORACLE, FIELD_COPILOT logic`
 
 ---
 

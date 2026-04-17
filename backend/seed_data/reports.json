@@ -1,0 +1,170 @@
+[
+  {
+    "report_id": "RPT-MUM-2026-04-15",
+    "mc_name": "BMC Mumbai",
+    "date": "2026-04-15",
+    "generated_by": "PRESCIENT",
+    "generated_at": "2026-04-15T23:00:00+05:30",
+    "summary": {
+      "total_received": 18,
+      "total_resolved": 14,
+      "total_pending": 4,
+      "total_overdue": 1,
+      "avg_resolution_hours": 3.8,
+      "sla_compliance_pct": 92.8,
+      "citizen_satisfaction_avg": 4.2,
+      "worker_utilization_pct": 78.5
+    },
+    "by_category": {
+      "roads": 8,
+      "water_pipeline": 3,
+      "electrical": 2,
+      "sanitation": 3,
+      "structural": 1,
+      "traffic": 1
+    },
+    "by_severity": {
+      "CRITICAL": 1,
+      "HIGH": 5,
+      "MEDIUM": 8,
+      "LOW": 4
+    },
+    "worst_wards": ["K-West", "L", "H-West"],
+    "escalated_tasks": 1,
+    "fund_utilization_pct": 72.3
+  },
+  {
+    "report_id": "RPT-MUM-2026-04-16",
+    "mc_name": "BMC Mumbai",
+    "date": "2026-04-16",
+    "generated_by": "PRESCIENT",
+    "generated_at": "2026-04-16T23:00:00+05:30",
+    "summary": {
+      "total_received": 22,
+      "total_resolved": 18,
+      "total_pending": 6,
+      "total_overdue": 2,
+      "avg_resolution_hours": 4.1,
+      "sla_compliance_pct": 88.9,
+      "citizen_satisfaction_avg": 4.0,
+      "worker_utilization_pct": 82.1
+    },
+    "by_category": {
+      "roads": 10,
+      "water_pipeline": 4,
+      "electrical": 3,
+      "sanitation": 3,
+      "structural": 1,
+      "traffic": 1
+    },
+    "by_severity": {
+      "CRITICAL": 2,
+      "HIGH": 6,
+      "MEDIUM": 9,
+      "LOW": 5
+    },
+    "worst_wards": ["K-West", "T", "G-South"],
+    "escalated_tasks": 2,
+    "fund_utilization_pct": 75.8
+  },
+  {
+    "report_id": "RPT-MUM-2026-04-17",
+    "mc_name": "BMC Mumbai",
+    "date": "2026-04-17",
+    "generated_by": "PRESCIENT",
+    "generated_at": "2026-04-17T17:00:00+05:30",
+    "summary": {
+      "total_received": 25,
+      "total_resolved": 10,
+      "total_pending": 15,
+      "total_overdue": 3,
+      "avg_resolution_hours": 4.5,
+      "sla_compliance_pct": 85.0,
+      "citizen_satisfaction_avg": 3.9,
+      "worker_utilization_pct": 85.7
+    },
+    "by_category": {
+      "roads": 12,
+      "water_pipeline": 4,
+      "electrical": 3,
+      "sanitation": 4,
+      "structural": 1,
+      "traffic": 1
+    },
+    "by_severity": {
+      "CRITICAL": 3,
+      "HIGH": 7,
+      "MEDIUM": 10,
+      "LOW": 5
+    },
+    "worst_wards": ["K-West", "L", "M-West"],
+    "escalated_tasks": 1,
+    "fund_utilization_pct": 68.2
+  },
+  {
+    "report_id": "RPT-PUN-2026-04-17",
+    "mc_name": "PMC Pune",
+    "date": "2026-04-17",
+    "generated_by": "PRESCIENT",
+    "generated_at": "2026-04-17T17:00:00+05:30",
+    "summary": {
+      "total_received": 14,
+      "total_resolved": 10,
+      "total_pending": 4,
+      "total_overdue": 0,
+      "avg_resolution_hours": 4.6,
+      "sla_compliance_pct": 91.0,
+      "citizen_satisfaction_avg": 4.1,
+      "worker_utilization_pct": 71.4
+    },
+    "by_category": {
+      "roads": 5,
+      "water_pipeline": 3,
+      "electrical": 2,
+      "sanitation": 2,
+      "structural": 2
+    },
+    "by_severity": {
+      "CRITICAL": 0,
+      "HIGH": 4,
+      "MEDIUM": 7,
+      "LOW": 3
+    },
+    "worst_wards": ["Kothrud", "Shivajinagar"],
+    "escalated_tasks": 0,
+    "fund_utilization_pct": 65.0
+  },
+  {
+    "report_id": "RPT-NAG-2026-04-17",
+    "mc_name": "NMC Nagpur",
+    "date": "2026-04-17",
+    "generated_by": "PRESCIENT",
+    "generated_at": "2026-04-17T17:00:00+05:30",
+    "summary": {
+      "total_received": 12,
+      "total_resolved": 5,
+      "total_pending": 7,
+      "total_overdue": 4,
+      "avg_resolution_hours": 8.1,
+      "sla_compliance_pct": 58.3,
+      "citizen_satisfaction_avg": 3.2,
+      "worker_utilization_pct": 54.5
+    },
+    "by_category": {
+      "roads": 4,
+      "water_pipeline": 2,
+      "electrical": 3,
+      "sanitation": 2,
+      "structural": 1
+    },
+    "by_severity": {
+      "CRITICAL": 1,
+      "HIGH": 3,
+      "MEDIUM": 5,
+      "LOW": 3
+    },
+    "worst_wards": ["Dharampeth", "Sadar"],
+    "escalated_tasks": 3,
+    "fund_utilization_pct": 45.6
+  }
+]

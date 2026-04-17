@@ -1,0 +1,82 @@
+[
+  {
+    "mc_id": "bmc-mumbai",
+    "name": "BMC Mumbai",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "total_workers": 42,
+    "issues_this_week": 156,
+    "resolution_rate": 85.9,
+    "avg_resolution_hours": 4.2
+  },
+  {
+    "mc_id": "pmc-pune",
+    "name": "PMC Pune",
+    "city": "Pune",
+    "state": "Maharashtra",
+    "total_workers": 35,
+    "issues_this_week": 112,
+    "resolution_rate": 82.1,
+    "avg_resolution_hours": 4.8
+  },
+  {
+    "mc_id": "nmc-nagpur",
+    "name": "NMC Nagpur",
+    "city": "Nagpur",
+    "state": "Maharashtra",
+    "total_workers": 22,
+    "issues_this_week": 89,
+    "resolution_rate": 55.0,
+    "avg_resolution_hours": 8.2
+  },
+  {
+    "mc_id": "nmc-nashik",
+    "name": "NMC Nashik",
+    "city": "Nashik",
+    "state": "Maharashtra",
+    "total_workers": 18,
+    "issues_this_week": 64,
+    "resolution_rate": 68.3,
+    "avg_resolution_hours": 6.5
+  },
+  {
+    "mc_id": "tmc-thane",
+    "name": "TMC Thane",
+    "city": "Thane",
+    "state": "Maharashtra",
+    "total_workers": 28,
+    "issues_this_week": 98,
+    "resolution_rate": 78.4,
+    "avg_resolution_hours": 5.1
+  },
+  {
+    "mc_id": "rmc-ratnagiri",
+    "name": "RMC Ratnagiri",
+    "city": "Ratnagiri",
+    "state": "Maharashtra",
+    "total_workers": 12,
+    "issues_this_week": 31,
+    "resolution_rate": 72.0,
+    "avg_resolution_hours": 5.8
+  },
+  {
+    "mc_id": "kmc-kolhapur",
+    "name": "KMC Kolhapur",
+    "city": "Kolhapur",
+    "state": "Maharashtra",
+    "total_workers": 15,
+    "issues_this_week": 42,
+    "resolution_rate": 75.2,
+    "avg_resolution_hours": 5.5
+  },
+  {
+    "mc_id": "amc-aurangabad",
+    "name": "AMC Aurangabad",
+    "city": "Aurangabad",
+    "state": "Maharashtra",
+    "total_workers": 20,
+    "issues_this_week": 57,
+    "resolution_rate": 62.1,
+    "avg_resolution_hours": 7.2
+  }
+]
