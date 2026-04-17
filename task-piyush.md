@@ -10,13 +10,13 @@
 
 > Write pure Python logic — no imports needed. Return plain dicts.
 
-- [ ] Draft `detect_mode(message)` — keyword matching logic for report/query/general
-- [ ] Draft REPORT_EXTRACTION_PROMPT template string
-- [ ] Draft STATUS_RESPONSE_PROMPT template string
-- [ ] Draft `OVERDUE_THRESHOLDS` dict (CRITICAL: 30, HIGH: 240, MEDIUM: 480, LOW: 1440)
-- [ ] Draft `check_overdue_tasks()` skeleton — datetime math for deadline comparison
-- [ ] Draft `generate_alert()` — builds structured alert dict
-- [ ] Draft `escalate()` skeleton — status update + alert creation
+- [x] Draft `detect_mode(message)` — keyword matching logic for report/query/general
+- [x] Draft REPORT_EXTRACTION_PROMPT template string
+- [x] Draft STATUS_RESPONSE_PROMPT template string
+- [x] Draft `OVERDUE_THRESHOLDS` dict (CRITICAL: 30, HIGH: 240, MEDIUM: 480, LOW: 1440)
+- [x] Draft `check_overdue_tasks()` skeleton — datetime math for deadline comparison
+- [x] Draft `generate_alert()` — builds structured alert dict
+- [x] Draft `escalate()` skeleton — status update + alert creation
 - [ ] Commit: `feat: agent drafts — VIRA, GUARDIAN logic (pure Python)`
 
 ---
