@@ -1,40 +1,85 @@
 """
 InfraLens — FastAPI Application Entry Point
 
-Minimal Phase 1 scaffolding:
+Phase 1 scaffolding:
 - Health check endpoint
-- CORS middleware for frontend (localhost:5173)
+- CORS middleware for frontend
 
-Phase 2 will add: SENTINEL middleware, WebSocket, routers, startup events.
+Phase 2 core (Added):
+- SENTINEL middleware (RBAC + Audit)
+- WebSocket multiplexer
+- Issues router
+- App Lifespan (Seed Data loading)
 """
 
-from fastapi import FastAPI
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from contextlib import asynccontextmanager
 
 from config import settings
+from data_store import data_store
+from ws_manager import ws_manager
+from routers import issues_router
+from middleware.sentinel_middleware import SentinelMiddleware
+
+# ---------------------------------------------------------------------------
+# App Lifespan (Startup / Shutdown)
+# ---------------------------------------------------------------------------
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    """Lifecycle hook for startup and shutdown events."""
+    print("[NEXUS] Booting InfraLens data layer...")
+    data_store.load_seed_data()
+    yield
+    print("[NEXUS] Shutting down InfraLens...")
 
 # ---------------------------------------------------------------------------
 # App initialization
 # ---------------------------------------------------------------------------
 app = FastAPI(
     title="InfraLens",
-    description="AI-Powered Civic Infrastructure Intelligence Platform",
+    description="Engineered by Flowstate — Civic Intelligence Platform",
     version="0.1.0",
+    lifespan=lifespan
 )
 
 # ---------------------------------------------------------------------------
-# CORS — allow frontend dev server
+# Middlewares (Order matters: Execution is outer -> inner)
+# CORS acts first to allow preflights. Then Sentinel authenticates/audits.
 # ---------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        settings.FRONTEND_ORIGIN,  # http://localhost:5173
-        "http://localhost:5173",     # explicit fallback
+        settings.FRONTEND_ORIGIN,
+        "http://localhost:5173",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(SentinelMiddleware)
+
+# ---------------------------------------------------------------------------
+# Routers
+# ---------------------------------------------------------------------------
+app.include_router(issues_router.router)
+
+# ---------------------------------------------------------------------------
+# WebSockets
+# ---------------------------------------------------------------------------
+@app.websocket("/ws/{channel}")
+async def websocket_endpoint(websocket: WebSocket, channel: str):
+    # Check headers or query params for role for targeting, default empty
+    role = websocket.query_params.get("role", "")
+    await ws_manager.connect(websocket, channel, role)
+    try:
+        while True:
+            # We mostly broadcast, but if clients send, read here
+            data = await websocket.receive_text()
+            # Loopback or process client messages if needed
+    except WebSocketDisconnect:
+        ws_manager.disconnect(websocket, channel)
 
 
 # ---------------------------------------------------------------------------

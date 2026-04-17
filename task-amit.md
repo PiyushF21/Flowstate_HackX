@@ -63,13 +63,13 @@
 
 ## Phase 2: Pull models.py → Add Real Types (Day 1 — PARALLEL with all)
 
-- [ ] `git pull origin main` (Stavan's models.py should be there)
-- [ ] Verify: `from models import Issue, Worker, DailyReport` works
-- [ ] Verify: `from data_store import data_store` works
-- [ ] Add imports to LOOP draft, wrap returns in models
-- [ ] Add imports to ORACLE draft, connect to data_store
-- [ ] Create your feature branch: `git checkout -b feat/agents-group-c`
-- [ ] Commit: `feat(backend): LOOP + ORACLE agents with real model imports`
+- [x] `git pull origin main` (Stavan's models.py should be there)
+- [x] Verify: `from models import Issue, Worker, DailyReport` works
+- [x] Verify: `from data_store import data_store` works
+- [x] Add imports to LOOP draft, wrap returns in models
+- [x] Add imports to ORACLE draft, connect to data_store
+- [x] Create your feature branch: `git checkout -b feat/agents-group-c`
+- [ ] Commit: `feat(backend): LOOP + ORACLE agents with real model imports` (Skipped per user instruction)
 
 ---
 

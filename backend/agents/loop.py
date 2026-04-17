@@ -1,22 +1,23 @@
 import math
-from datetime import datetime
+from datetime import datetime, timezone
+from models import Issue, Completion, AgentEvent
+from data_store import data_store
 
 # ==============================================================================
-# LOOP Draft — Pure Python Math & Logic (No Imports)
+# LOOP Draft — Pure Python Math & Logic
 # ==============================================================================
 
-def calculate_sla_status(deadline_iso_str: str, completion_iso_str: str) -> dict:
+def calculate_sla_status(issue: Issue, completed_at: datetime) -> dict:
     """Draft logic for SLA calculation"""
     try:
-        # Example format: "2026-04-17T22:35:00+05:30"
-        # We would parse this and compare.
-        # Mocking parsing for the draft:
-        deadline = datetime.fromisoformat(deadline_iso_str)
-        completed = datetime.fromisoformat(completion_iso_str)
+        if not issue.deadline:
+            return {"sla_met": True, "hours_over_deadline": 0}
+            
+        deadline = datetime.fromisoformat(issue.deadline)
         
-        sla_met = completed <= deadline
+        sla_met = completed_at <= deadline
         
-        diff = completed - deadline
+        diff = completed_at - deadline
         diff_hours = diff.total_seconds() / 3600.0
         
         return {
@@ -27,34 +28,19 @@ def calculate_sla_status(deadline_iso_str: str, completion_iso_str: str) -> dict
         return {"sla_met": False, "hours_over_deadline": 0}
 
 
-def calculate_gps_distance(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
-    """Haversine math for re-report detection"""
-    R = 6371000  # radius of Earth in meters
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    delta_phi = math.radians(lat2 - lat1)
-    delta_lambda = math.radians(lon2 - lon1)
-
-    a = math.sin(delta_phi / 2.0) ** 2 + \
-        math.cos(phi1) * math.cos(phi2) * \
-        math.sin(delta_lambda / 2.0) ** 2
-    
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    distance = R * c
-    return distance
-
-def check_is_rereport(new_lat: float, new_lng: float, old_issues: list) -> dict:
-    """Draft to find if issue is a re-report of a recent resolved issue"""
+async def check_is_rereport(new_lat: float, new_lng: float) -> dict:
+    """Find if issue is a re-report of a recent resolved issue using data_store."""
     RADIUS_THRESHOLD_METERS = 10.0
     
-    for old in old_issues:
-        # Check distance
-        dist = calculate_gps_distance(new_lat, new_lng, old["lat"], old["lng"])
-        if dist <= RADIUS_THRESHOLD_METERS:
+    # Use real data_store method
+    nearby_issues = await data_store.list_issues_near(new_lat, new_lng, RADIUS_THRESHOLD_METERS)
+    
+    for old in nearby_issues:
+        if old.status == "resolved":
             return {
                 "is_rereport": True,
-                "original_issue_id": old["issue_id"],
-                "distance_meters": dist
+                "original_issue_id": old.issue_id
             }
             
     return {"is_rereport": False}
+

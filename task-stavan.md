@@ -62,21 +62,21 @@
 
 ## Phase 2: Core Completion (Day 1 — PARALLEL with Yash/Piyush/Amit)
 
-- [ ] Create `backend/ws_manager.py` — ConnectionManager class
-- [ ] Implement connect, disconnect, broadcast, send_to_role methods
-- [ ] Define channels: agent_events, issues, tasks, notifications, escalations
-- [ ] Verify: WebSocket connects on `/ws/agent_events`
-- [ ] Create `backend/middleware/sentinel_middleware.py`
-- [ ] Implement role-permission mapping (5 roles from agents.md)
-- [ ] Implement X-User-Role header reading
-- [ ] Implement route access checking
-- [ ] Implement audit log generation per request
-- [ ] Implement 403 response for unauthorized
-- [ ] Verify: unauthorized request blocked with 403
-- [ ] Update `backend/main.py` — CORS, SENTINEL middleware, WebSocket endpoint, startup event
-- [ ] Create `backend/routers/issues_router.py` — GET/POST/PATCH /api/issues
-- [ ] Verify: `GET /api/issues` returns data (empty or seed)
-- [ ] Commit: `feat(backend): core — WebSocket, SENTINEL middleware, main.py, issues router`
+- [x] Create `backend/ws_manager.py` — ConnectionManager class
+- [x] Implement connect, disconnect, broadcast, send_to_role methods
+- [x] Define channels: agent_events, issues, tasks, notifications, escalations
+- [x] Verify: WebSocket connects on `/ws/agent_events`
+- [x] Create `backend/middleware/sentinel_middleware.py`
+- [x] Implement role-permission mapping (5 roles from agents.md)
+- [x] Implement X-User-Role header reading
+- [x] Implement route access checking
+- [x] Implement audit log generation per request
+- [x] Implement 403 response for unauthorized
+- [x] Verify: unauthorized request blocked with 403
+- [x] Update `backend/main.py` — CORS, SENTINEL middleware, WebSocket endpoint, startup event
+- [x] Create `backend/routers/issues_router.py` — GET/POST/PATCH /api/issues
+- [x] Verify: `GET /api/issues` returns data (empty or seed)
+- [x] Commit: `feat(backend): core — WebSocket, SENTINEL middleware, main.py, issues router`
 
 ---
 
