@@ -1,41 +1,48 @@
 import { motion } from 'framer-motion'
-import { TrendingUp, TrendingDown, Minus, type LucideIcon } from 'lucide-react'
+import { TrendingUp, TrendingDown, Minus, Activity, type LucideIcon } from 'lucide-react'
 import AnimatedCounter from './AnimatedCounter'
 import { cn } from '../../lib/utils'
 
 interface KPICardProps {
-  /** Card title/label */
-  label: string
-  /** Numeric value to display */
+  label?: string
+  title?: string
   value: number
-  /** Optional suffix (e.g., "%", "hrs", "min") */
   suffix?: string
-  /** Optional prefix (e.g., "₹") */
   prefix?: string
-  /** Lucide icon component to show */
-  icon: LucideIcon
-  /** Icon accent color */
+  icon?: LucideIcon
   iconColor?: string
-  /** Trend direction */
   trend?: 'up' | 'down' | 'flat'
-  /** Trend percentage text (e.g., "+12%", "-3%") */
   trendText?: string
-  /** Extra CSS classes */
+  change?: number
+  isPositive?: boolean
+  agentSource?: string
   className?: string
 }
 
 export default function KPICard({
   label,
+  title,
   value,
   suffix,
   prefix,
-  icon: Icon,
+  icon: Icon = Activity,
   iconColor = 'var(--primary)',
   trend,
   trendText,
+  change,
+  isPositive,
+  agentSource,
   className,
 }: KPICardProps) {
-  const TrendIcon = trend === 'up' ? TrendingUp : trend === 'down' ? TrendingDown : Minus
+  const finalLabel = title || label || ''
+  
+  // Interop logic
+  const resolvedTrend = trend || (change && change > 0 ? 'up' : change && change < 0 ? 'down' : 'flat')
+  const resolvedTrendText = trendText || (change ? `${change > 0 ? '+' : ''}${change}` : '')
+  const positiveDefault = resolvedTrend === 'up'
+  const isGood = isPositive !== undefined ? isPositive : positiveDefault
+
+  const TrendIcon = resolvedTrend === 'up' ? TrendingUp : resolvedTrend === 'down' ? TrendingDown : Minus
 
   return (
     <motion.div
@@ -44,26 +51,31 @@ export default function KPICard({
       transition={{ duration: 0.4 }}
       className={cn('glass-card flex flex-col gap-3', className)}
     >
-      {/* Header: icon + trend */}
+      {/* Header: icon + trend + agentSource */}
       <div className="flex items-center justify-between">
-        <div
-          className="w-10 h-10 rounded-xl flex items-center justify-center"
-          style={{ backgroundColor: `${iconColor}15` }}
-        >
-          <Icon size={20} style={{ color: iconColor }} />
+        <div className="flex items-center gap-2">
+          <div
+            className="w-10 h-10 rounded-xl flex items-center justify-center"
+            style={{ backgroundColor: `${iconColor}15` }}
+          >
+            <Icon size={20} style={{ color: iconColor }} />
+          </div>
+          {agentSource && (
+            <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-surface border border-border text-text-muted">
+              {agentSource}
+            </span>
+          )}
         </div>
 
-        {trend && trendText && (
+        {resolvedTrend && resolvedTrendText && (
           <span
             className={cn(
               'inline-flex items-center gap-1 text-xs font-medium px-2 py-0.5 rounded-full',
-              trend === 'up' && 'text-green-400 bg-green-500/10',
-              trend === 'down' && 'text-red-400 bg-red-500/10',
-              trend === 'flat' && 'text-slate-400 bg-slate-500/10'
+              isGood ? 'text-green-400 bg-green-500/10' : 'text-red-400 bg-red-500/10'
             )}
           >
             <TrendIcon size={12} />
-            {trendText}
+            {resolvedTrendText}
           </span>
         )}
       </div>
@@ -76,7 +88,8 @@ export default function KPICard({
       </div>
 
       {/* Label */}
-      <p className="text-sm text-text-secondary">{label}</p>
+      <p className="text-sm text-text-secondary">{finalLabel}</p>
     </motion.div>
   )
 }
+

@@ -129,53 +129,53 @@
 ## Phase 5: BMC + State Dashboards — Desktop (Day 2–3 — PARALLEL with backend integration)
 
 ### BMC Components
-- [ ] Create `BMCLayout.tsx` — desktop sidebar + content area
-- [ ] Create `Sidebar.tsx` — 4 nav items with icons + active state
-- [ ] Create `IssueTable.tsx` — sortable, filterable table with confidence score
-- [ ] Create `IssueDetailPanel.tsx` — slide-in right panel
-- [ ] Create `ActivityFeed.tsx` — real-time agent action stream
-- [ ] Create `WorkerMap.tsx` — mapcn map with worker GPS pins
-- [ ] Create `WorkerTable.tsx` — worker data table
-- [ ] Create `ConfidenceScore.tsx` — color-coded score (red 80+, orange 60-80, yellow <60)
-- [ ] Create `ReportGenerator.tsx` — PRESCIENT report trigger + preview
+- [x] Create `BMCLayout.tsx` — desktop sidebar + content area
+- [x] Create `Sidebar.tsx` — 4 nav items with icons + active state
+- [x] Create `IssueTable.tsx` — sortable, filterable table with confidence score
+- [x] Create `IssueDetailPanel.tsx` — slide-in right panel
+- [x] Create `ActivityFeed.tsx` — real-time agent action stream
+- [x] Create `WorkerMap.tsx` — mapcn map with worker GPS pins
+- [x] Create `WorkerTable.tsx` — worker data table
+- [x] Create `ConfidenceScore.tsx` — color-coded score (red 80+, orange 60-80, yellow <60)
+- [x] Create `ReportGenerator.tsx` — PRESCIENT report trigger + preview
 
 ### BMC Pages
-- [ ] Create `IssuesDashboard.tsx` — 4 KPI cards, issue table, filters, detail panel, activity feed
-- [ ] Verify: table sorts, filters work, row click opens panel, activity feed scrolls
-- [ ] Create `WorkersPage.tsx` — summary strip, worker map, worker table, detail sidebar
-- [ ] Verify: map shows workers, table rows click to sidebar
-- [ ] Create `CompletedPage.tsx` — summary strip, completed table, proof thumbnails, export
-- [ ] Verify: table renders, SLA indicators show correctly
-- [ ] Create `ReportsPage.tsx` — generate button, report preview, charts, analytics, archive
-- [ ] Verify: charts render (bar, line, donut), report preview displays
+- [x] Create `IssuesDashboard.tsx` — 4 KPI cards, issue table, filters, detail panel, activity feed
+- [x] Verify: table sorts, filters work, row click opens panel, activity feed scrolls
+- [x] Create `WorkersPage.tsx` — summary strip, worker map, worker table, detail sidebar
+- [x] Verify: map shows workers, table rows click to sidebar
+- [x] Create `CompletedPage.tsx` — summary strip, completed table, proof thumbnails, export
+- [x] Verify: table renders, SLA indicators show correctly
+- [x] Create `ReportsPage.tsx` — generate button, report preview, charts, analytics, archive
+- [x] Verify: charts render (bar, line, donut), report preview displays
 
 ### State Components
-- [ ] Create `StateLayout.tsx` — desktop sidebar (formal design)
-- [ ] Create `StateSidebar.tsx` — 4 nav items
-- [ ] Create `StateMap.tsx` — Maharashtra map with MC regions (color-coded)
-- [ ] Create `MCPerformanceTable.tsx` — MC comparison table
-- [ ] Create `EscalationPanel.tsx` — GUARDIAN alert cards with Escalate button
-- [ ] Create `ReportViewer.tsx` — rich report display (narrative + charts)
-- [ ] Create `AllocationTable.tsx` — editable fund table with validation
-- [ ] Create `ScorecardGrid.tsx` — MC grade cards (A-F)
-- [ ] Create `LeagueTable.tsx` — ranked leaderboard
+- [x] Create `StateLayout.tsx` — desktop sidebar (formal design)
+- [x] Create `StateSidebar.tsx` — 4 nav items
+- [x] Create `StateMap.tsx` — Maharashtra map with MC regions (color-coded)
+- [x] Create `MCPerformanceTable.tsx` — MC comparison table
+- [x] Create `EscalationPanel.tsx` — GUARDIAN alert cards with Escalate button
+- [x] Create `ReportViewer.tsx` — rich report display (narrative + charts)
+- [x] Create `AllocationTable.tsx` — editable fund table with validation
+- [x] Create `ScorecardGrid.tsx` — MC grade cards (A-F)
+- [x] Create `LeagueTable.tsx` — ranked leaderboard
 
 ### State Pages
-- [ ] Create `OverviewPage.tsx` — 5 KPI cards, state map, MC table, escalation panel
-- [ ] Verify: map shows MC regions, table sorts, escalation panel has buttons
-- [ ] Create `WeeklyReports.tsx` — report inbox (left), viewer (right) with charts
-- [ ] Verify: report list selectable, viewer shows narrative + charts
-- [ ] Create `AllocationPage.tsx` — ORACLE panel, editable table, resource recs, approval bar
-- [ ] Verify: table cells editable, total validates, approve buttons work
-- [ ] Create `AccountabilityPage.tsx` — scorecard grid, league table, trend charts
-- [ ] Verify: grade cards show correct colors, league table ranks correctly
+- [x] Create `OverviewPage.tsx` — 5 KPI cards, state map, MC table, escalation panel
+- [x] Verify: map shows MC regions, table sorts, escalation panel has buttons
+- [x] Create `WeeklyReports.tsx` — report inbox (left), viewer (right) with charts
+- [x] Verify: report list selectable, viewer shows narrative + charts
+- [x] Create `AllocationPage.tsx` — ORACLE panel, editable table, resource recs, approval bar
+- [x] Verify: table cells editable, total validates, approve buttons work
+- [x] Create `AccountabilityPage.tsx` — scorecard grid, league table, trend charts
+- [x] Verify: grade cards show correct colors, league table ranks correctly
 
 ### Final Checks
-- [ ] All 8 pages render without errors
-- [ ] Sidebar navigation works for both dashboards
-- [ ] Desktop layout responsive (no overflow/scroll issues)
-- [ ] Charts render with mock data
-- [ ] Commit: `feat(frontend): BMC dashboard (4 pages) + state dashboard (4 pages)`
+- [x] All 8 pages render without errors
+- [x] Sidebar navigation works for both dashboards
+- [x] Desktop layout responsive (no overflow/scroll issues)
+- [x] Charts render with mock data
+- [x] Commit: `feat(frontend): BMC dashboard (4 pages) + state dashboard (4 pages)`
 
 ---
 

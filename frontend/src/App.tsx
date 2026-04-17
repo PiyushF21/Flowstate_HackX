@@ -16,6 +16,16 @@ import TasksPage from './pages/worker/TasksPage'
 import AssistantPage from './pages/worker/AssistantPage'
 import WorkerProfilePage from './pages/worker/WorkerProfilePage'
 
+import IssuesDashboard from './pages/bmc/IssuesDashboard'
+import WorkersPage from './pages/bmc/WorkersPage'
+import CompletedPage from './pages/bmc/CompletedPage'
+import ReportsPage from './pages/bmc/ReportsPage'
+
+import OverviewPage from './pages/state/OverviewPage'
+import WeeklyReportsPage from './pages/state/WeeklyReportsPage'
+import AllocationPage from './pages/state/AllocationPage'
+import AccountabilityPage from './pages/state/AccountabilityPage'
+
 function App() {
   return (
     <BrowserRouter>
@@ -25,84 +35,28 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
 
           {/* === Citizen Dashboard (4 pages) === */}
-          <Route
-            path="/citizen/area-map"
-            element={
-              <ProtectedRoute allowedRoles={['citizen']}>
-                <AreaMapPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/citizen/my-cars"
-            element={
-              <ProtectedRoute allowedRoles={['citizen']}>
-                <MyCarsPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/citizen/report"
-            element={
-              <ProtectedRoute allowedRoles={['citizen']}>
-                <ReportPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/citizen/profile"
-            element={
-              <ProtectedRoute allowedRoles={['citizen']}>
-                <CitizenProfilePage />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/citizen/area-map" element={<ProtectedRoute allowedRoles={['citizen']}><AreaMapPage /></ProtectedRoute>} />
+          <Route path="/citizen/my-cars" element={<ProtectedRoute allowedRoles={['citizen']}><MyCarsPage /></ProtectedRoute>} />
+          <Route path="/citizen/report" element={<ProtectedRoute allowedRoles={['citizen']}><ReportPage /></ProtectedRoute>} />
+          <Route path="/citizen/profile" element={<ProtectedRoute allowedRoles={['citizen']}><CitizenProfilePage /></ProtectedRoute>} />
 
           {/* === Worker Dashboard (4 pages) === */}
-          <Route
-            path="/worker/dashboard"
-            element={
-              <ProtectedRoute allowedRoles={['field_worker']}>
-                <WorkerDashboardPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/worker/tasks"
-            element={
-              <ProtectedRoute allowedRoles={['field_worker']}>
-                <TasksPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/worker/assistant"
-            element={
-              <ProtectedRoute allowedRoles={['field_worker']}>
-                <AssistantPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/worker/profile"
-            element={
-              <ProtectedRoute allowedRoles={['field_worker']}>
-                <WorkerProfilePage />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="/worker/dashboard" element={<ProtectedRoute allowedRoles={['field_worker']}><WorkerDashboardPage /></ProtectedRoute>} />
+          <Route path="/worker/tasks" element={<ProtectedRoute allowedRoles={['field_worker']}><TasksPage /></ProtectedRoute>} />
+          <Route path="/worker/assistant" element={<ProtectedRoute allowedRoles={['field_worker']}><AssistantPage /></ProtectedRoute>} />
+          <Route path="/worker/profile" element={<ProtectedRoute allowedRoles={['field_worker']}><WorkerProfilePage /></ProtectedRoute>} />
 
-          {/* === BMC Dashboard (4 pages — still placeholders) === */}
-          <Route path="/bmc/dashboard" element={<ProtectedRoute allowedRoles={['bmc_supervisor']}><PlaceholderPage title="Issues Dashboard" role="bmc_supervisor" icon="📊" /></ProtectedRoute>} />
-          <Route path="/bmc/workers" element={<ProtectedRoute allowedRoles={['bmc_supervisor']}><PlaceholderPage title="Workers Management" role="bmc_supervisor" icon="👷" /></ProtectedRoute>} />
-          <Route path="/bmc/completed" element={<ProtectedRoute allowedRoles={['bmc_supervisor']}><PlaceholderPage title="Completed Work" role="bmc_supervisor" icon="✅" /></ProtectedRoute>} />
-          <Route path="/bmc/reports" element={<ProtectedRoute allowedRoles={['bmc_supervisor']}><PlaceholderPage title="Reports & Analytics" role="bmc_supervisor" icon="📈" /></ProtectedRoute>} />
+          {/* === BMC Dashboard (4 pages) === */}
+          <Route path="/bmc/dashboard" element={<ProtectedRoute allowedRoles={['bmc_supervisor']}><IssuesDashboard /></ProtectedRoute>} />
+          <Route path="/bmc/workers" element={<ProtectedRoute allowedRoles={['bmc_supervisor']}><WorkersPage /></ProtectedRoute>} />
+          <Route path="/bmc/completed" element={<ProtectedRoute allowedRoles={['bmc_supervisor']}><CompletedPage /></ProtectedRoute>} />
+          <Route path="/bmc/reports" element={<ProtectedRoute allowedRoles={['bmc_supervisor']}><ReportsPage /></ProtectedRoute>} />
 
-          {/* === State Government Dashboard (4 pages — still placeholders) === */}
-          <Route path="/state/overview" element={<ProtectedRoute allowedRoles={['state_official']}><PlaceholderPage title="State Overview" role="state_official" icon="🏛️" /></ProtectedRoute>} />
-          <Route path="/state/reports" element={<ProtectedRoute allowedRoles={['state_official']}><PlaceholderPage title="Weekly Reports" role="state_official" icon="📑" /></ProtectedRoute>} />
-          <Route path="/state/allocation" element={<ProtectedRoute allowedRoles={['state_official']}><PlaceholderPage title="Fund Allocation" role="state_official" icon="💰" /></ProtectedRoute>} />
-          <Route path="/state/accountability" element={<ProtectedRoute allowedRoles={['state_official']}><PlaceholderPage title="Accountability Board" role="state_official" icon="🏆" /></ProtectedRoute>} />
+          {/* === State Government Dashboard (4 pages) === */}
+          <Route path="/state/overview" element={<ProtectedRoute allowedRoles={['state_official']}><OverviewPage /></ProtectedRoute>} />
+          <Route path="/state/reports" element={<ProtectedRoute allowedRoles={['state_official']}><WeeklyReportsPage /></ProtectedRoute>} />
+          <Route path="/state/allocation" element={<ProtectedRoute allowedRoles={['state_official']}><AllocationPage /></ProtectedRoute>} />
+          <Route path="/state/accountability" element={<ProtectedRoute allowedRoles={['state_official']}><AccountabilityPage /></ProtectedRoute>} />
 
           {/* === NEXUS Agent Dashboard (3 pages — still placeholders) === */}
           <Route path="/nexus/constellation" element={<ProtectedRoute allowedRoles={['nexus_admin']}><PlaceholderPage title="Agent Constellation" role="nexus_admin" icon="🌌" /></ProtectedRoute>} />
