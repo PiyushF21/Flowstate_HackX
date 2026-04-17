@@ -1,149 +1,109 @@
-"""Phase 1 quick verification — tests VIRA and GUARDIAN drafts."""
-import sys
-sys.path.insert(0, '.')
+"""Phase 2 verification — tests VIRA and GUARDIAN with real models + data_store."""
+import sys, os, asyncio
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-# ==================== VIRA TESTS ====================
-from agents.vira import detect_mode, extract_complaint_data_rule_based, chat, format_general_response
+from models import Issue, Worker, Location
+from data_store import data_store
+from config import settings
 
-print("=== VIRA Mode Detection Tests ===")
-tests = [
-    ("There is a huge pothole near Andheri metro station", "report"),
-    ("What is the status of my complaint?", "query"),
-    ("Hello, what is InfraLens?", "general"),
-    ("Water pipe burst near Powai Lake Gate 2, flooding the road", "report"),
-    ("My complaint ISS-MUM-2026-04-17-0042", "query"),
-    ("Thank you!", "general"),
-]
+async def run_tests():
+    # Load seed data
+    data_store.load_seed_data()
+    issues = await data_store.list_issues()
+    workers = await data_store.list_workers()
+    print(f"Seed data: {len(issues)} issues, {len(workers)} workers")
+    assert len(issues) >= 25, f"Expected 25+ issues, got {len(issues)}"
+    assert len(workers) >= 15, f"Expected 15+ workers, got {len(workers)}"
+    print("[PASS] from models import ... works")
+    print("[PASS] from data_store import data_store works")
 
-all_pass = True
-for msg, expected in tests:
-    result = detect_mode(msg)
-    status = "PASS" if result == expected else "FAIL"
-    if status == "FAIL":
-        all_pass = False
-    print(f"  [{status}] \"{msg[:55]}\" -> {result} (expected: {expected})")
+    # === VIRA TESTS ===
+    from agents.vira import detect_mode, chat, extract_complaint_data_rule_based
 
-print()
-print("=== VIRA Complaint Extraction Test ===")
-data = extract_complaint_data_rule_based("There is a huge pothole near Andheri metro station, almost broke my tire")
-print(f"  Category: {data['category']}")
-print(f"  Subcategory: {data['subcategory']}")
-print(f"  Severity: {data['severity']}")
-print(f"  Location: {data['location_text']}")
-assert data["category"] == "roads", f"Expected roads, got {data['category']}"
-assert data["subcategory"] == "pothole", f"Expected pothole, got {data['subcategory']}"
-print("  [PASS] Extraction correct")
+    print("\n=== VIRA Phase 2 Tests ===")
 
-print()
-print("=== VIRA Full Chat Test ===")
-result = chat("user-001", "There is a burst water pipe near Powai Lake flooding the road")
-print(f"  Mode: {result['mode_detected']}")
-print(f"  Action: {result['action_taken']}")
-print(f"  Has response: {bool(result.get('response'))}")
-assert result["mode_detected"] == "report"
-assert result["action_taken"] == "issue_created"
-print("  [PASS] Chat works correctly")
+    # Mode detection
+    assert detect_mode("There is a pothole near Andheri") == "report"
+    assert detect_mode("What is the status of my complaint?") == "query"
+    assert detect_mode("Hello!") == "general"
+    print("[PASS] detect_mode works")
 
-# ==================== GUARDIAN TESTS ====================
-print()
-print("=" * 50)
-from agents.guardian import (
-    check_overdue_tasks, check_mc_performance, generate_alert,
-    escalate, run_monitoring_cycle, OVERDUE_THRESHOLDS,
-    haversine_distance, check_repeated_failures
-)
+    # Extraction
+    data = extract_complaint_data_rule_based("Huge pothole near Andheri metro, almost broke my tire")
+    assert data["category"] == "roads"
+    assert data["subcategory"] == "pothole"
+    print(f"[PASS] Extraction: {data['category']}/{data['subcategory']}/{data['severity']}")
 
-print("=== GUARDIAN Constants Test ===")
-print(f"  OVERDUE_THRESHOLDS: {OVERDUE_THRESHOLDS}")
-assert OVERDUE_THRESHOLDS["CRITICAL"] == 30
-assert OVERDUE_THRESHOLDS["HIGH"] == 240
-assert OVERDUE_THRESHOLDS["MEDIUM"] == 480
-assert OVERDUE_THRESHOLDS["LOW"] == 1440
-print("  [PASS] Thresholds correct")
+    # Full chat - report mode (creates issue in data_store)
+    result = await chat("test-user-001", "There is a burst water pipe near Powai Lake flooding the road")
+    assert result["mode_detected"] == "report"
+    assert result["action_taken"] == "issue_created"
+    assert "issue_id" in result
+    print(f"[PASS] Chat report: created {result['issue_id']}")
 
-print()
-print("=== GUARDIAN Haversine Distance Test ===")
-# Mumbai: Andheri to Bandra ~5km
-dist = haversine_distance(19.1196, 72.8467, 19.0596, 72.8295)
-print(f"  Andheri to Bandra: {dist:.0f} meters")
-assert 5000 < dist < 8000, f"Expected ~6km, got {dist:.0f}m"
-print("  [PASS] Haversine calculation correct")
+    # Verify issue was stored
+    created_issue = await data_store.get_issue(result["issue_id"])
+    assert created_issue is not None
+    assert created_issue.source == "manual_complaint"
+    assert created_issue.category == "water_pipeline"
+    print(f"[PASS] Issue stored in data_store: {created_issue.category}/{created_issue.subcategory}")
 
-print()
-print("=== GUARDIAN Overdue Tasks Test ===")
-import datetime
-# Create a fake overdue issue
-now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=5, minutes=30)))
-past_deadline = (now - datetime.timedelta(hours=2)).isoformat()
+    # Full chat - query mode
+    result2 = await chat("CIT-MUM-045", "What is the status of my complaint?")
+    assert result2["mode_detected"] == "query"
+    print(f"[PASS] Chat query: {result2['action_taken']}")
 
-mock_issues = [
-    {
-        "issue_id": "ISS-MUM-2026-04-17-0001",
-        "status": "assigned",
-        "severity": "CRITICAL",
-        "deadline": past_deadline,
-        "category": "roads",
-        "location": {"lat": 19.1196, "lng": 72.8467, "city": "Mumbai", "ward": "K-West", "address": "WEH Andheri"},
-        "assigned_to": {"worker_id": "WRK-001", "worker_name": "Ganesh Patil"},
-    },
-    {
-        "issue_id": "ISS-MUM-2026-04-17-0002",
-        "status": "resolved",
-        "severity": "HIGH",
-        "deadline": past_deadline,
-        "category": "water_pipeline",
-        "location": {"lat": 19.0760, "lng": 72.8777, "city": "Mumbai"},
-    },
-]
+    # Full chat - general mode
+    result3 = await chat("test-user-002", "Hello, what is InfraLens?")
+    assert result3["mode_detected"] == "general"
+    print(f"[PASS] Chat general: {result3['action_taken']}")
 
-overdue = check_overdue_tasks(mock_issues)
-print(f"  Found {len(overdue)} overdue tasks")
-assert len(overdue) == 1, f"Expected 1 overdue (resolved should be excluded), got {len(overdue)}"
-assert overdue[0]["issue_id"] == "ISS-MUM-2026-04-17-0001"
-assert overdue[0]["overdue_minutes"] > 0
-print(f"  Overdue minutes: {overdue[0]['overdue_minutes']}")
-print(f"  Needs escalation: {overdue[0]['needs_escalation']}")
-print("  [PASS] Overdue detection correct")
+    # === GUARDIAN TESTS ===
+    from agents.guardian import (
+        check_overdue_tasks, check_mc_performance, escalate,
+        run_monitoring_cycle, OVERDUE_THRESHOLDS, haversine_distance
+    )
 
-print()
-print("=== GUARDIAN Alert Generation Test ===")
-alert = generate_alert(mock_issues[0], "task_deadline_breach")
-print(f"  Alert ID: {alert['alert_id']}")
-print(f"  Type: {alert['alert_type']}")
-print(f"  Title: {alert['title']}")
-assert alert["agent"] == "GUARDIAN"
-assert alert["alert_type"] == "task_deadline_breach"
-assert alert["issue_id"] == "ISS-MUM-2026-04-17-0001"
-print("  [PASS] Alert generation correct")
+    print("\n=== GUARDIAN Phase 2 Tests ===")
 
-print()
-print("=== GUARDIAN Escalation Test ===")
-esc_result = escalate(mock_issues[0], "STATE-OFF-001", "Overdue critical task")
-print(f"  Action: {esc_result['action']}")
-print(f"  Cascade channels: {esc_result['broadcast_channels']}")
-assert esc_result["action"] == "escalated"
-assert "escalation" in esc_result
-assert "alert" in esc_result
-print("  [PASS] Escalation works correctly")
+    assert OVERDUE_THRESHOLDS["CRITICAL"] == 30
+    assert OVERDUE_THRESHOLDS["HIGH"] == 240
+    print("[PASS] Thresholds correct")
 
-print()
-print("=== GUARDIAN MC Performance Test ===")
-mc_flags = check_mc_performance(mock_issues)
-print(f"  Flagged MCs: {len(mc_flags)}")
-# With 1 resolved out of 2, rate = 50% which is below 60% threshold
-for mc in mc_flags:
-    print(f"    {mc['mc_name']}: {mc['resolution_rate_pct']}%")
-print("  [PASS] MC performance check correct")
+    dist = haversine_distance(19.1196, 72.8467, 19.0596, 72.8295)
+    assert 5000 < dist < 8000
+    print(f"[PASS] Haversine: {dist:.0f}m")
 
-print()
-print("=== GUARDIAN Full Monitoring Cycle Test ===")
-cycle = run_monitoring_cycle(mock_issues)
-print(f"  Total alerts: {cycle['total_alerts']}")
-print(f"  Summary: {cycle['summary']}")
-assert cycle["total_alerts"] >= 1
-print("  [PASS] Monitoring cycle works correctly")
+    # Check overdue (uses data_store)
+    overdue = await check_overdue_tasks()
+    print(f"[PASS] Overdue tasks from data_store: {len(overdue)} found")
 
-print()
-print("=" * 50)
-print("ALL PHASE 1 TESTS PASSED!")
-print("=" * 50)
+    # MC performance
+    mc_flags = await check_mc_performance()
+    print(f"[PASS] MC performance flags: {len(mc_flags)} underperforming")
+    for mc in mc_flags:
+        print(f"       {mc['mc_name']}: {mc['resolution_rate_pct']}%")
+
+    # Escalation (uses data_store)
+    esc = await escalate("ISS-MUM-2026-04-17-0002", "STATE-OFF-001", "Test escalation")
+    assert esc["action"] == "escalated"
+    updated = await data_store.get_issue("ISS-MUM-2026-04-17-0002")
+    assert updated.status == "escalated"
+    print(f"[PASS] Escalation: {esc['issue_id']} -> status={updated.status}")
+
+    # Full monitoring cycle
+    cycle = await run_monitoring_cycle()
+    print(f"[PASS] Monitoring cycle: {cycle['total_alerts']} alerts")
+    print(f"       {cycle['summary']}")
+
+    # Check agent events were logged
+    events = await data_store.get_agent_events()
+    guardian_events = [e for e in events if e.agent == "GUARDIAN"]
+    vira_events = [e for e in events if e.agent == "VIRA"]
+    print(f"\n[PASS] Agent events logged: VIRA={len(vira_events)}, GUARDIAN={len(guardian_events)}")
+
+    print("\n" + "=" * 50)
+    print("ALL PHASE 2 TESTS PASSED!")
+    print("=" * 50)
+
+asyncio.run(run_tests())

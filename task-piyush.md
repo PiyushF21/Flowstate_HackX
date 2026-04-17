@@ -23,11 +23,11 @@
 
 ## Phase 2: Pull models.py → Add Real Types (Day 1 — PARALLEL with all)
 
-- [ ] `git pull origin main` (Stavan's models.py should be there)
-- [ ] Verify: `from models import Issue, Worker, DailyReport, AuditEntry, AgentEvent` works
-- [ ] Verify: `from data_store import data_store` works
-- [ ] Add imports to VIRA draft, wrap returns in models
-- [ ] Add imports to GUARDIAN draft, connect to data_store
+- [x] `git pull origin main` (Stavan's models.py should be there)
+- [x] Verify: `from models import Issue, Worker, DailyReport, AuditEntry, AgentEvent` works
+- [x] Verify: `from data_store import data_store` works
+- [x] Add imports to VIRA draft, wrap returns in models
+- [x] Add imports to GUARDIAN draft, connect to data_store
 - [ ] Create your feature branch: `git checkout -b feat/agents-group-b`
 - [ ] Commit: `feat(backend): VIRA + GUARDIAN agents with real model imports`
 

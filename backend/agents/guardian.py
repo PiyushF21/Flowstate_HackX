@@ -3,560 +3,305 @@ GUARDIAN — Deadline Monitor & Escalation Engine
 =================================================
 Agent #8 in the InfraLens ecosystem.
 
-Purpose: Continuously monitors task deadlines, triggers escalation alerts,
-and cascades urgent notifications from State → BMC → Worker.
-
-Responsibilities:
-- Monitor all active task deadlines against SLAs
-- Auto-escalate CRITICAL issues past SLA
-- Allow manual escalation by state officials
-- Detect repeated failures at same GPS locations
-- Check MC performance thresholds
-- Check for idle workers
-- Generate structured alert objects
-- Broadcast alerts via WebSocket
+Purpose: Monitors task deadlines, triggers escalation alerts,
+cascades urgent notifications State → BMC → Worker.
 
 Powered By: Python Rules + WebSocket Broadcasting
 Portal: State → BMC → Worker (cascade)
 
-Phase 1 Draft: Pure Python logic — no external imports.
-All functions take str/dict params and return dict.
-Real model imports (from models import ...) will be added in Phase 2 after Stavan pushes models.py.
+Phase 2: Connected to models.py + data_store.py with real types.
 """
 
-import datetime
+import sys
+import os
 import math
+from datetime import datetime, timezone, timedelta
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from models import Issue, AgentEvent, AuditEntry
+from data_store import data_store
+from config import settings
 
 # =============================================================================
 # CONSTANTS
 # =============================================================================
 
-# SLA thresholds — how many minutes past the deadline before escalation triggers
+IST = timezone(timedelta(hours=5, minutes=30))
+
 OVERDUE_THRESHOLDS = {
-    "CRITICAL": 30,    # 30 minutes past SLA → immediate escalation
-    "HIGH": 240,       # 4 hours past SLA
-    "MEDIUM": 480,     # 8 hours past SLA
-    "LOW": 1440,       # 24 hours (1 day) past SLA
+    "CRITICAL": 30,    # 30 minutes past SLA
+    "HIGH": 240,       # 4 hours
+    "MEDIUM": 480,     # 8 hours
+    "LOW": 1440,       # 24 hours
 }
 
-# SLA resolution time limits (from task-piyush.md / idea.md)
 SLA_RESOLUTION_HOURS = {
-    "CRITICAL": 4,     # Must be resolved within 4 hours
-    "HIGH": 12,        # Must be resolved within 12 hours
-    "MEDIUM": 48,      # Must be resolved within 48 hours
-    "LOW": 168,        # Must be resolved within 7 days
+    "CRITICAL": 4, "HIGH": 12, "MEDIUM": 48, "LOW": 168,
 }
 
-# MC performance threshold — MCs below this are flagged
-MC_PERFORMANCE_THRESHOLD = 60.0  # percent resolution rate
+MC_PERFORMANCE_THRESHOLD = 60.0
+REREPORT_RADIUS_M = 10
+REREPORT_WINDOW_DAYS = 30
+REREPORT_MIN_COUNT = 3
+WORKER_IDLE_MINUTES = 120
 
-# Re-report detection constants
-REREPORT_RADIUS_M = 10       # GPS proximity for same-location matching
-REREPORT_WINDOW_DAYS = 30    # Days to look back for resolved issues
-REREPORT_MIN_COUNT = 3       # Minimum re-reports to flag as failed repair
-
-# Worker idle detection
-WORKER_IDLE_MINUTES = 120    # 2 hours without GPS movement = idle alert
-
-# Alert types
 ALERT_TYPES = {
-    "task_deadline_breach": {
-        "title": "Task Deadline Breach",
-        "icon": "⏰",
-        "priority_boost": True,
-    },
-    "mc_performance_drop": {
-        "title": "MC Performance Below Threshold",
-        "icon": "📉",
-        "priority_boost": False,
-    },
-    "repeated_failure": {
-        "title": "Repeated Repair Failure",
-        "icon": "🔄",
-        "priority_boost": True,
-    },
-    "worker_idle": {
-        "title": "Worker Idle Alert",
-        "icon": "🚨",
-        "priority_boost": False,
-    },
-    "critical_sla_breach": {
-        "title": "CRITICAL Issue SLA Breach",
-        "icon": "🔴",
-        "priority_boost": True,
-    },
-    "state_escalation": {
-        "title": "State-Level Escalation",
-        "icon": "🏛️",
-        "priority_boost": True,
-    },
+    "task_deadline_breach": {"title": "Task Deadline Breach", "icon": "⏰", "priority_boost": True},
+    "mc_performance_drop": {"title": "MC Performance Below Threshold", "icon": "📉", "priority_boost": False},
+    "repeated_failure": {"title": "Repeated Repair Failure", "icon": "🔄", "priority_boost": True},
+    "worker_idle": {"title": "Worker Idle Alert", "icon": "🚨", "priority_boost": False},
+    "critical_sla_breach": {"title": "CRITICAL Issue SLA Breach", "icon": "🔴", "priority_boost": True},
+    "state_escalation": {"title": "State-Level Escalation", "icon": "🏛️", "priority_boost": True},
 }
 
-# Escalation levels
-ESCALATION_CASCADE = [
-    "worker",          # Level 1: Worker directly
-    "fleet_leader",    # Level 2: Fleet leader
-    "bmc_supervisor",  # Level 3: BMC supervisor
-    "state_official",  # Level 4: State government
-]
-
+# In-memory alert storage
+active_alerts: list = []
 
 # =============================================================================
 # UTILITY FUNCTIONS
 # =============================================================================
 
 def haversine_distance(lat1: float, lng1: float, lat2: float, lng2: float) -> float:
-    """
-    Calculate the great-circle distance between two GPS points in meters.
-    Uses the Haversine formula.
-    """
-    R = 6371000  # Earth's radius in meters
-    
-    phi1 = math.radians(lat1)
-    phi2 = math.radians(lat2)
-    delta_phi = math.radians(lat2 - lat1)
-    delta_lambda = math.radians(lng2 - lng1)
-    
-    a = (math.sin(delta_phi / 2) ** 2 +
-         math.cos(phi1) * math.cos(phi2) *
-         math.sin(delta_lambda / 2) ** 2)
-    c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
-    
-    return R * c
+    """Great-circle distance in meters between two GPS points."""
+    R = 6371000
+    phi1, phi2 = math.radians(lat1), math.radians(lat2)
+    dp = math.radians(lat2 - lat1)
+    dl = math.radians(lng2 - lng1)
+    a = math.sin(dp/2)**2 + math.cos(phi1)*math.cos(phi2)*math.sin(dl/2)**2
+    return R * 2 * math.atan2(math.sqrt(a), math.sqrt(1-a))
 
 
-def parse_iso_datetime(dt_str: str) -> datetime.datetime:
-    """Parse an ISO format datetime string to a datetime object."""
-    # Handle various ISO formats
+def parse_iso_datetime(dt_str: str) -> datetime:
+    """Parse ISO datetime string."""
     try:
-        # Try standard ISO with timezone
-        if "+" in dt_str and "T" in dt_str:
-            # Remove colon in timezone offset for Python < 3.11 compatibility
-            if dt_str[-3] == ":":
-                dt_str = dt_str[:-3] + dt_str[-2:]
-        return datetime.datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
+        if "+" in dt_str and "T" in dt_str and dt_str[-3] == ":":
+            dt_str = dt_str[:-3] + dt_str[-2:]
+        return datetime.fromisoformat(dt_str.replace("Z", "+00:00"))
     except (ValueError, AttributeError):
-        # Fallback: use current time
-        return datetime.datetime.now(datetime.timezone.utc)
-
-
-def minutes_since(dt_str: str) -> float:
-    """Calculate minutes elapsed since the given ISO datetime string."""
-    then = parse_iso_datetime(dt_str)
-    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=5, minutes=30)))  # IST
-    diff = now - then
-    return diff.total_seconds() / 60
+        return datetime.now(IST)
 
 
 def calculate_overdue_minutes(deadline_str: str) -> float:
-    """
-    Calculate how many minutes an issue is overdue.
-    Returns negative if not yet past deadline.
-    """
+    """Minutes past deadline. Negative if not yet overdue."""
     if not deadline_str:
         return 0
-    
     deadline = parse_iso_datetime(deadline_str)
-    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=5, minutes=30)))  # IST
-    diff = now - deadline
-    return diff.total_seconds() / 60
+    now = datetime.now(IST)
+    return (now - deadline).total_seconds() / 60
 
 
 # =============================================================================
-# CORE MONITORING FUNCTIONS
+# CORE MONITORING FUNCTIONS (now async, using data_store)
 # =============================================================================
 
-def check_overdue_tasks(issues: list) -> list:
-    """
-    Scan all active issues and identify tasks that are past their deadline.
-    
-    Args:
-        issues: List of issue dicts with at least: issue_id, status, severity, deadline
-        
-    Returns:
-        List of overdue task dicts with overdue_minutes and escalation_level
-    """
+async def check_overdue_tasks() -> list[dict]:
+    """Scan active issues from data_store and find overdue tasks."""
+    all_issues = await data_store.list_issues()
     overdue_tasks = []
-    
-    for issue in issues:
-        status = issue.get("status", "")
-        
-        # Only check assigned or in_progress tasks
-        if status not in ("assigned", "in_progress"):
+
+    for issue in all_issues:
+        if issue.status not in ("assigned", "in_progress"):
             continue
-        
-        deadline = issue.get("deadline")
-        if not deadline:
+        if not issue.deadline:
             continue
-        
-        overdue_minutes = calculate_overdue_minutes(deadline)
-        
-        if overdue_minutes <= 0:
-            continue  # Not yet past deadline
-        
-        severity = issue.get("severity", "MEDIUM")
-        threshold = OVERDUE_THRESHOLDS.get(severity, 480)
-        
-        # Determine escalation level based on how far past threshold
-        if overdue_minutes > threshold * 3:
-            escalation_level = "state_official"
-        elif overdue_minutes > threshold * 2:
-            escalation_level = "bmc_supervisor"
-        elif overdue_minutes > threshold:
-            escalation_level = "fleet_leader"
+
+        overdue_min = calculate_overdue_minutes(issue.deadline)
+        if overdue_min <= 0:
+            continue
+
+        threshold = OVERDUE_THRESHOLDS.get(issue.severity, 480)
+        if overdue_min > threshold * 3:
+            esc_level = "state_official"
+        elif overdue_min > threshold * 2:
+            esc_level = "bmc_supervisor"
+        elif overdue_min > threshold:
+            esc_level = "fleet_leader"
         else:
-            escalation_level = "worker"
-        
+            esc_level = "worker"
+
+        loc_dict = issue.location.model_dump() if issue.location else {}
+        assign_dict = issue.assigned_to.model_dump() if issue.assigned_to else {}
+
         overdue_tasks.append({
-            "issue_id": issue.get("issue_id", ""),
-            "severity": severity,
-            "status": status,
-            "deadline": deadline,
-            "overdue_minutes": round(overdue_minutes, 1),
-            "overdue_hours": round(overdue_minutes / 60, 1),
+            "issue_id": issue.issue_id,
+            "severity": issue.severity,
+            "status": issue.status,
+            "deadline": issue.deadline,
+            "overdue_minutes": round(overdue_min, 1),
+            "overdue_hours": round(overdue_min / 60, 1),
             "threshold_minutes": threshold,
-            "escalation_level": escalation_level,
-            "needs_escalation": overdue_minutes > threshold,
-            "location": issue.get("location", {}),
-            "category": issue.get("category", ""),
-            "assigned_to": issue.get("assigned_to", {}),
-            "mc": issue.get("location", {}).get("city", "Unknown"),
+            "escalation_level": esc_level,
+            "needs_escalation": overdue_min > threshold,
+            "location": loc_dict,
+            "category": issue.category,
+            "assigned_to": assign_dict,
+            "mc": issue.location.city if issue.location else "Unknown",
         })
-    
-    # Sort by severity (CRITICAL first) then overdue_minutes (most overdue first)
+
     severity_order = {"CRITICAL": 0, "HIGH": 1, "MEDIUM": 2, "LOW": 3}
-    overdue_tasks.sort(
-        key=lambda x: (severity_order.get(x["severity"], 4), -x["overdue_minutes"])
-    )
-    
+    overdue_tasks.sort(key=lambda x: (severity_order.get(x["severity"], 4), -x["overdue_minutes"]))
     return overdue_tasks
 
 
-def check_mc_performance(issues: list, mcs: list = None) -> list:
-    """
-    Calculate each MC's daily resolution rate and flag underperformers.
-    
-    Args:
-        issues: List of all issue dicts
-        mcs: Optional list of MC dicts for enrichment
-        
-    Returns:
-        List of flagged MCs with performance data
-    """
-    # Group issues by MC (city)
+async def check_mc_performance() -> list[dict]:
+    """Calculate each MC's resolution rate and flag underperformers."""
+    all_issues = await data_store.list_issues()
     mc_stats: dict = {}
-    
-    for issue in issues:
-        city = "Unknown"
-        if isinstance(issue.get("location"), dict):
-            city = issue["location"].get("city", "Unknown")
-        
+
+    for issue in all_issues:
+        city = issue.location.city if issue.location else "Unknown"
         if city not in mc_stats:
-            mc_stats[city] = {
-                "total": 0,
-                "resolved": 0,
-                "overdue": 0,
-                "critical_overdue": 0,
-            }
-        
+            mc_stats[city] = {"total": 0, "resolved": 0, "overdue": 0, "critical_overdue": 0}
         mc_stats[city]["total"] += 1
-        
-        if issue.get("status") == "resolved":
+        if issue.status == "resolved":
             mc_stats[city]["resolved"] += 1
-        
-        # Check if overdue
-        deadline = issue.get("deadline")
-        if deadline and issue.get("status") in ("assigned", "in_progress"):
-            overdue_min = calculate_overdue_minutes(deadline)
-            if overdue_min > 0:
+        if issue.deadline and issue.status in ("assigned", "in_progress"):
+            if calculate_overdue_minutes(issue.deadline) > 0:
                 mc_stats[city]["overdue"] += 1
-                if issue.get("severity") == "CRITICAL":
+                if issue.severity == "CRITICAL":
                     mc_stats[city]["critical_overdue"] += 1
-    
-    # Flag underperformers
-    flagged_mcs = []
+
+    flagged = []
     for mc_name, stats in mc_stats.items():
-        total = stats["total"]
-        if total == 0:
+        if stats["total"] == 0:
             continue
-        
-        resolution_rate = (stats["resolved"] / total) * 100
-        
-        if resolution_rate < MC_PERFORMANCE_THRESHOLD:
-            flagged_mcs.append({
-                "mc_name": mc_name,
-                "total_issues": total,
+        rate = (stats["resolved"] / stats["total"]) * 100
+        if rate < MC_PERFORMANCE_THRESHOLD:
+            flagged.append({
+                "mc_name": mc_name, "total_issues": stats["total"],
                 "resolved": stats["resolved"],
-                "resolution_rate_pct": round(resolution_rate, 1),
+                "resolution_rate_pct": round(rate, 1),
                 "threshold_pct": MC_PERFORMANCE_THRESHOLD,
                 "overdue_count": stats["overdue"],
                 "critical_overdue": stats["critical_overdue"],
-                "gap_pct": round(MC_PERFORMANCE_THRESHOLD - resolution_rate, 1),
+                "gap_pct": round(MC_PERFORMANCE_THRESHOLD - rate, 1),
                 "alert_type": "mc_performance_drop",
             })
-    
-    # Sort by resolution rate (worst first)
-    flagged_mcs.sort(key=lambda x: x["resolution_rate_pct"])
-    
-    return flagged_mcs
+    flagged.sort(key=lambda x: x["resolution_rate_pct"])
+    return flagged
 
 
-def check_repeated_failures(
-    issues: list,
-    target_gps: dict = None,
-    radius_m: float = REREPORT_RADIUS_M,
-    days: int = REREPORT_WINDOW_DAYS,
-) -> list:
-    """
-    Find locations with 3+ resolved-then-re-reported issues.
-    These indicate failed repairs or deeper structural problems.
-    
-    Args:
-        issues: List of all issue dicts
-        target_gps: Optional specific GPS to check (dict with lat, lng)
-        radius_m: Radius in meters for same-location matching
-        days: Number of days to look back
-        
-    Returns:
-        List of failure clusters with location and report details
-    """
-    # Filter for recently resolved issues
-    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=5, minutes=30)))
-    cutoff = now - datetime.timedelta(days=days)
-    
-    resolved_issues = []
-    active_issues = []
-    
-    for issue in issues:
-        # Get GPS coordinates
-        location = issue.get("location", {})
-        if isinstance(location, dict):
-            lat = location.get("lat")
-            lng = location.get("lng")
-        else:
+async def check_repeated_failures(radius_m: float = REREPORT_RADIUS_M, days: int = REREPORT_WINDOW_DAYS) -> list[dict]:
+    """Find locations with multiple resolved-then-re-reported issues."""
+    all_issues = await data_store.list_issues()
+    checked = set()
+    clusters = []
+
+    for issue in all_issues:
+        if issue.status != "resolved" or not issue.location:
             continue
-        
-        if lat is None or lng is None:
+        lat, lng = issue.location.lat, issue.location.lng
+        key = f"{round(lat, 4)},{round(lng, 4)}"
+        if key in checked:
             continue
-        
-        if issue.get("status") == "resolved":
-            resolved_issues.append(issue)
-        elif issue.get("status") in ("reported", "assigned", "in_progress"):
-            active_issues.append(issue)
-    
-    # Find clusters — locations where resolved issues have been re-reported
-    failure_clusters = []
-    checked_locations = set()
-    
-    for resolved in resolved_issues:
-        r_loc = resolved.get("location", {})
-        r_lat = r_loc.get("lat")
-        r_lng = r_loc.get("lng")
-        
-        if r_lat is None or r_lng is None:
-            continue
-        
-        # Avoid duplicate cluster detection
-        location_key = f"{round(r_lat, 4)},{round(r_lng, 4)}"
-        if location_key in checked_locations:
-            continue
-        checked_locations.add(location_key)
-        
-        # If target_gps specified, only check that location
-        if target_gps:
-            dist = haversine_distance(r_lat, r_lng, target_gps["lat"], target_gps["lng"])
-            if dist > radius_m:
-                continue
-        
-        # Count reports at this location
-        reports_at_location = []
-        for issue in issues:
-            i_loc = issue.get("location", {})
-            i_lat = i_loc.get("lat")
-            i_lng = i_loc.get("lng")
-            if i_lat is None or i_lng is None:
-                continue
-            
-            dist = haversine_distance(r_lat, r_lng, i_lat, i_lng)
-            if dist <= radius_m:
-                reports_at_location.append(issue)
-        
-        # Check if we have enough re-reports
-        resolved_count = sum(1 for i in reports_at_location if i.get("status") == "resolved")
-        active_count = sum(1 for i in reports_at_location if i.get("status") in ("reported", "assigned", "in_progress"))
-        
-        if resolved_count >= 1 and active_count >= 1 and len(reports_at_location) >= REREPORT_MIN_COUNT:
-            failure_clusters.append({
-                "location": {
-                    "lat": r_lat,
-                    "lng": r_lng,
-                    "address": r_loc.get("address", "Unknown"),
-                    "ward": r_loc.get("ward", ""),
-                    "city": r_loc.get("city", ""),
-                },
-                "total_reports": len(reports_at_location),
-                "resolved_count": resolved_count,
-                "active_count": active_count,
-                "issue_ids": [i.get("issue_id", "") for i in reports_at_location],
-                "categories": list(set(i.get("category", "") for i in reports_at_location)),
+        checked.add(key)
+
+        nearby = [i for i in all_issues if i.location and
+                  haversine_distance(lat, lng, i.location.lat, i.location.lng) <= radius_m]
+        resolved = sum(1 for i in nearby if i.status == "resolved")
+        active = sum(1 for i in nearby if i.status in ("reported", "assigned", "in_progress"))
+
+        if resolved >= 1 and active >= 1 and len(nearby) >= REREPORT_MIN_COUNT:
+            clusters.append({
+                "location": {"lat": lat, "lng": lng,
+                             "address": issue.location.address,
+                             "ward": issue.location.ward,
+                             "city": issue.location.city},
+                "total_reports": len(nearby), "resolved_count": resolved,
+                "active_count": active,
+                "issue_ids": [i.issue_id for i in nearby],
                 "alert_type": "repeated_failure",
-                "recommendation": (
-                    f"Location has {len(reports_at_location)} reports with {resolved_count} "
-                    f"resolved and {active_count} still active. Indicates failed previous repair. "
-                    f"Recommend comprehensive assessment rather than surface-level fix."
-                ),
+                "recommendation": f"Location has {len(nearby)} reports ({resolved} resolved, {active} active). Indicates failed repair.",
             })
-    
-    return failure_clusters
+    return clusters
 
 
-def check_worker_idle(worker: dict, idle_threshold_minutes: int = WORKER_IDLE_MINUTES) -> dict:
-    """
-    Check if a worker marked as 'on_task' hasn't shown GPS movement for too long.
-    Indicates potential issues (worker stuck, GPS malfunction, unauthorized break).
-    
-    Args:
-        worker: Worker dict with at least: worker_id, status, current_location, last_location_update
-        idle_threshold_minutes: Minutes without movement to trigger alert
-        
-    Returns:
-        Alert dict if idle, None otherwise
-    """
-    if worker.get("status") != "on_task":
-        return None
-    
-    last_update = worker.get("last_location_update")
-    if not last_update:
-        return None
-    
-    idle_minutes = minutes_since(last_update)
-    
-    if idle_minutes > idle_threshold_minutes:
-        return {
-            "worker_id": worker.get("worker_id", ""),
-            "worker_name": worker.get("name", "Unknown"),
-            "status": "on_task",
-            "idle_minutes": round(idle_minutes, 1),
-            "last_location": worker.get("current_location", {}),
-            "current_task_id": worker.get("current_task_id", ""),
-            "alert_type": "worker_idle",
-            "recommendation": (
-                f"Worker {worker.get('name', 'Unknown')} has been stationary for "
-                f"{round(idle_minutes)} minutes while marked as on-task. "
-                f"Verify worker status and task progress."
-            ),
-        }
-    
-    return None
+async def check_worker_idle(worker_id: str = None) -> list[dict]:
+    """Check workers marked on_task without GPS movement."""
+    workers = await data_store.list_workers({"status": "on_task"} if not worker_id else None)
+    if worker_id:
+        workers = [w for w in workers if w.worker_id == worker_id]
+
+    idle_alerts = []
+    # Note: Without last_location_update tracking in current models,
+    # this is a placeholder that returns empty. Will be functional when ws_manager tracks GPS.
+    return idle_alerts
 
 
 # =============================================================================
 # ESCALATION FUNCTIONS
 # =============================================================================
 
-def auto_escalate_critical(issues: list) -> list:
-    """
-    Auto-flag CRITICAL issues that have exceeded their SLA.
-    These get immediate attention — broadcast to both State + BMC channels.
-    
-    Args:
-        issues: List of all issue dicts
-        
-    Returns:
-        List of auto-escalated issue alerts
-    """
+async def auto_escalate_critical() -> list[dict]:
+    """Auto-flag CRITICAL issues past SLA."""
+    all_issues = await data_store.list_issues()
     escalated = []
-    
-    for issue in issues:
-        if issue.get("severity") != "CRITICAL":
+
+    for issue in all_issues:
+        if issue.severity != "CRITICAL" or issue.status not in ("assigned", "in_progress"):
             continue
-        
-        if issue.get("status") not in ("assigned", "in_progress"):
+        if not issue.deadline:
             continue
-        
-        deadline = issue.get("deadline")
-        if not deadline:
-            continue
-        
-        overdue_minutes = calculate_overdue_minutes(deadline)
-        
-        if overdue_minutes > OVERDUE_THRESHOLDS["CRITICAL"]:
-            alert = generate_alert(issue, "critical_sla_breach")
+        overdue_min = calculate_overdue_minutes(issue.deadline)
+        if overdue_min > OVERDUE_THRESHOLDS["CRITICAL"]:
+            alert = generate_alert_from_issue(issue, "critical_sla_breach")
             alert["auto_escalated"] = True
-            alert["overdue_minutes"] = round(overdue_minutes, 1)
-            alert["action_required"] = (
-                "CRITICAL issue has breached SLA. Auto-escalated to BMC and State portals. "
-                "COMMANDER should reassign or add more resources immediately."
-            )
+            alert["overdue_minutes"] = round(overdue_min, 1)
+            alert["action_required"] = "CRITICAL SLA breach. Auto-escalated. COMMANDER should reassign immediately."
             escalated.append(alert)
-    
+
+            # Log event
+            await data_store.add_agent_event(AgentEvent(
+                agent="GUARDIAN", action="auto_escalate_critical",
+                issue_id=issue.issue_id,
+                data={"overdue_minutes": round(overdue_min, 1), "severity": "CRITICAL"},
+                portal="state", timestamp=datetime.now(IST).isoformat(),
+            ))
     return escalated
 
 
-def escalate(issue: dict, escalated_by: str, reason: str = "") -> dict:
-    """
-    Manual escalation — typically triggered by a state official.
-    Updates issue status and creates urgent cascade alert.
-    
-    Args:
-        issue: The issue dict to escalate
-        escalated_by: User ID of the person escalating (e.g., "STATE-OFF-001")
-        reason: Optional reason for escalation
-        
-    Returns:
-        Escalation result dict with updated status and alert
-    """
-    issue_id = issue.get("issue_id", "")
-    severity = issue.get("severity", "MEDIUM")
-    current_status = issue.get("status", "")
-    
-    # Build escalation record
-    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=5, minutes=30)))
-    
+async def escalate(issue_id: str, escalated_by: str, reason: str = "") -> dict:
+    """Manual escalation by state official."""
+    issue = await data_store.get_issue(issue_id)
+    if not issue:
+        return {"agent": "GUARDIAN", "action": "error", "message": f"Issue {issue_id} not found"}
+
+    now = datetime.now(IST)
+    prev_status = issue.status
+
+    # Update issue status
+    await data_store.update_issue(issue_id, {"status": "escalated"})
+
     escalation_record = {
-        "issue_id": issue_id,
-        "previous_status": current_status,
-        "new_status": "escalated",
-        "escalated_by": escalated_by,
+        "issue_id": issue_id, "previous_status": prev_status,
+        "new_status": "escalated", "escalated_by": escalated_by,
         "escalated_at": now.isoformat(),
         "reason": reason or f"Manual escalation by {escalated_by}",
-        "severity": severity,
+        "severity": issue.severity,
     }
-    
-    # Generate cascade alerts
-    alert = generate_alert(issue, "state_escalation")
+
+    alert = generate_alert_from_issue(issue, "state_escalation")
     alert["escalation"] = escalation_record
     alert["cascade"] = {
-        "state_portal": {
-            "action": "Escalation logged",
-            "notification": f"Issue {issue_id} has been escalated by {escalated_by}",
-        },
-        "bmc_portal": {
-            "action": "URGENT — State Escalated",
-            "notification": (
-                f"⚠️ State has escalated issue {issue_id} ({severity}). "
-                f"Immediate attention required. Reason: {reason or 'Priority override'}"
-            ),
-            "banner": "red",
-        },
-        "worker_portal": {
-            "action": "URGENT — State Escalated",
-            "notification": (
-                f"🚨 Your task {issue_id} has been flagged as urgent by state officials. "
-                f"Please prioritize this task immediately."
-            ),
-            "banner": "red",
-        },
+        "bmc_portal": {"action": "URGENT — State Escalated",
+                       "notification": f"⚠️ State has escalated {issue_id} ({issue.severity}). Immediate attention required."},
+        "worker_portal": {"action": "URGENT — State Escalated",
+                          "notification": f"🚨 Your task {issue_id} has been flagged as urgent by state officials."},
     }
-    
-    # In Phase 2: will call data_store.update_issue() and ws_manager.broadcast()
-    
+
+    active_alerts.append(alert)
+
+    # Log events
+    await data_store.add_agent_event(AgentEvent(
+        agent="GUARDIAN", action="manual_escalation", issue_id=issue_id,
+        data={"escalated_by": escalated_by, "reason": reason, "severity": issue.severity},
+        portal="state", timestamp=now.isoformat(),
+    ))
+
     return {
-        "agent": "GUARDIAN",
-        "action": "escalated",
-        "issue_id": issue_id,
-        "escalation": escalation_record,
-        "alert": alert,
+        "agent": "GUARDIAN", "action": "escalated", "issue_id": issue_id,
+        "escalation": escalation_record, "alert": alert,
         "broadcast_channels": ["escalations", "issues", "tasks", "notifications"],
         "timestamp": now.isoformat(),
     }
@@ -566,207 +311,114 @@ def escalate(issue: dict, escalated_by: str, reason: str = "") -> dict:
 # ALERT GENERATION
 # =============================================================================
 
-def generate_alert(issue: dict, alert_type: str) -> dict:
-    """
-    Create a structured alert object for any type of monitoring trigger.
-    
-    Args:
-        issue: The issue dict that triggered the alert
-        alert_type: One of ALERT_TYPES keys
-        
-    Returns:
-        Structured alert dict ready for WebSocket broadcast
-    """
-    now = datetime.datetime.now(datetime.timezone(datetime.timedelta(hours=5, minutes=30)))
-    
-    alert_config = ALERT_TYPES.get(alert_type, {
-        "title": alert_type.replace("_", " ").title(),
-        "icon": "⚠️",
-        "priority_boost": False,
-    })
-    
-    issue_id = issue.get("issue_id", "")
-    severity = issue.get("severity", "MEDIUM")
-    category = issue.get("category", "general")
-    location = issue.get("location", {})
-    
-    # Build human-readable description
-    location_str = ""
-    if isinstance(location, dict):
-        addr = location.get("address", "")
-        ward = location.get("ward", "")
-        city = location.get("city", "")
-        location_str = f"{addr}, {ward}, {city}".strip(", ")
-    
-    description = ""
-    if alert_type == "task_deadline_breach":
-        description = (
-            f"{severity} severity {category} issue at {location_str} "
-            f"has breached its deadline."
-        )
-    elif alert_type == "critical_sla_breach":
-        description = (
-            f"🔴 CRITICAL issue {issue_id} at {location_str} has breached SLA. "
-            f"Immediate action required."
-        )
-    elif alert_type == "state_escalation":
-        description = (
-            f"🏛️ State official has escalated issue {issue_id} ({severity}) "
-            f"at {location_str}."
-        )
-    elif alert_type == "repeated_failure":
-        description = (
-            f"🔄 Location {location_str} has multiple resolved-then-re-reported issues. "
-            f"Previous repairs may have failed."
-        )
-    elif alert_type == "mc_performance_drop":
-        mc_name = issue.get("mc_name", "Unknown MC")
-        rate = issue.get("resolution_rate_pct", 0)
-        description = (
-            f"📉 {mc_name} resolution rate dropped to {rate}%, "
-            f"below the {MC_PERFORMANCE_THRESHOLD}% threshold."
-        )
-    elif alert_type == "worker_idle":
-        description = (
-            f"🚨 Worker {issue.get('worker_name', 'Unknown')} has been idle for "
-            f"{issue.get('idle_minutes', 0)} minutes while on task."
-        )
-    else:
-        description = f"Alert for issue {issue_id}: {alert_type}"
-    
+def generate_alert_from_issue(issue: Issue, alert_type: str) -> dict:
+    """Generate structured alert from an Issue model."""
+    now = datetime.now(IST)
+    config = ALERT_TYPES.get(alert_type, {"title": alert_type, "icon": "⚠️", "priority_boost": False})
+    loc = issue.location.model_dump() if issue.location else {}
+    loc_str = f"{issue.location.address}, {issue.location.ward}, {issue.location.city}" if issue.location else ""
+
+    descriptions = {
+        "task_deadline_breach": f"{issue.severity} {issue.category} issue at {loc_str} has breached its deadline.",
+        "critical_sla_breach": f"🔴 CRITICAL issue {issue.issue_id} at {loc_str} has breached SLA. Immediate action required.",
+        "state_escalation": f"🏛️ State official has escalated {issue.issue_id} ({issue.severity}) at {loc_str}.",
+    }
+
     return {
         "agent": "GUARDIAN",
-        "alert_id": f"ALR-{now.strftime('%Y%m%d%H%M%S')}-{issue_id[-4:] if len(issue_id) >= 4 else '0000'}",
-        "alert_type": alert_type,
-        "title": alert_config["title"],
-        "icon": alert_config["icon"],
-        "description": description,
-        "issue_id": issue_id,
-        "severity": severity,
-        "category": category,
-        "location": location,
-        "priority_boost": alert_config["priority_boost"],
+        "alert_id": f"ALR-{now.strftime('%Y%m%d%H%M%S')}-{issue.issue_id[-4:]}",
+        "alert_type": alert_type, "title": config["title"], "icon": config["icon"],
+        "description": descriptions.get(alert_type, f"Alert for {issue.issue_id}"),
+        "issue_id": issue.issue_id, "severity": issue.severity,
+        "category": issue.category, "location": loc,
+        "priority_boost": config["priority_boost"],
         "requires_action": alert_type in ("critical_sla_breach", "state_escalation", "repeated_failure"),
         "timestamp": now.isoformat(),
     }
 
 
-# =============================================================================
-# MONITORING CYCLE (Background task — will be periodic in Phase 2)
-# =============================================================================
-
-# In-memory alert storage (will use data_store in Phase 2)
-active_alerts: list = []
-
-
-def run_monitoring_cycle(issues: list, workers: list = None, mcs: list = None) -> dict:
-    """
-    Run all monitoring checks in a single cycle.
-    This will be called periodically (every 5 minutes) as a background task in Phase 2.
-    
-    Args:
-        issues: List of all issue dicts
-        workers: Optional list of worker dicts
-        mcs: Optional list of MC dicts
-        
-    Returns:
-        Summary of all findings
-    """
-    findings = {
+def generate_alert(data: dict, alert_type: str) -> dict:
+    """Generate alert from a plain dict (for MC performance, repeated failure, etc.)."""
+    now = datetime.now(IST)
+    config = ALERT_TYPES.get(alert_type, {"title": alert_type, "icon": "⚠️", "priority_boost": False})
+    return {
         "agent": "GUARDIAN",
-        "cycle_timestamp": datetime.datetime.now(
-            datetime.timezone(datetime.timedelta(hours=5, minutes=30))
-        ).isoformat(),
-        "overdue_tasks": [],
-        "critical_escalations": [],
-        "mc_performance_flags": [],
-        "repeated_failures": [],
-        "idle_workers": [],
-        "total_alerts": 0,
+        "alert_id": f"ALR-{now.strftime('%Y%m%d%H%M%S')}-{str(hash(str(data)))[-4:]}",
+        "alert_type": alert_type, "title": config["title"], "icon": config["icon"],
+        "description": data.get("recommendation", f"Alert: {alert_type}"),
+        "issue_id": data.get("issue_id", ""),
+        "severity": data.get("severity", "MEDIUM"),
+        "priority_boost": config["priority_boost"],
+        "requires_action": alert_type in ("critical_sla_breach", "state_escalation", "repeated_failure"),
+        "timestamp": now.isoformat(),
+        "data": data,
     }
-    
-    # 1. Check overdue tasks
-    overdue = check_overdue_tasks(issues)
-    findings["overdue_tasks"] = overdue
-    
-    # 2. Auto-escalate CRITICAL issues past SLA
-    critical_escalations = auto_escalate_critical(issues)
-    findings["critical_escalations"] = critical_escalations
-    
-    # 3. Check MC performance
-    mc_flags = check_mc_performance(issues, mcs)
-    findings["mc_performance_flags"] = mc_flags
-    
-    # 4. Check for repeated failures
-    repeated = check_repeated_failures(issues)
-    findings["repeated_failures"] = repeated
-    
-    # 5. Check for idle workers
-    if workers:
-        for worker in workers:
-            idle_alert = check_worker_idle(worker)
-            if idle_alert:
-                findings["idle_workers"].append(idle_alert)
-    
-    # Tally total alerts
-    findings["total_alerts"] = (
-        len(findings["overdue_tasks"]) +
-        len(findings["critical_escalations"]) +
-        len(findings["mc_performance_flags"]) +
-        len(findings["repeated_failures"]) +
-        len(findings["idle_workers"])
-    )
-    
-    # Generate alerts for each finding
-    all_alerts = []
-    
-    for task in overdue:
+
+
+# =============================================================================
+# MONITORING CYCLE
+# =============================================================================
+
+async def run_monitoring_cycle() -> dict:
+    """Run all monitoring checks. Called periodically as background task."""
+    now = datetime.now(IST)
+    findings = {
+        "agent": "GUARDIAN", "cycle_timestamp": now.isoformat(),
+        "overdue_tasks": [], "critical_escalations": [],
+        "mc_performance_flags": [], "repeated_failures": [],
+        "idle_workers": [], "total_alerts": 0,
+    }
+
+    findings["overdue_tasks"] = await check_overdue_tasks()
+    findings["critical_escalations"] = await auto_escalate_critical()
+    findings["mc_performance_flags"] = await check_mc_performance()
+    findings["repeated_failures"] = await check_repeated_failures()
+    findings["idle_workers"] = await check_worker_idle()
+
+    findings["total_alerts"] = sum(len(findings[k]) for k in
+        ["overdue_tasks", "critical_escalations", "mc_performance_flags",
+         "repeated_failures", "idle_workers"])
+
+    # Generate and store alerts
+    all_new_alerts = []
+    for task in findings["overdue_tasks"]:
         if task.get("needs_escalation"):
-            alert = generate_alert(task, "task_deadline_breach")
-            alert["overdue_minutes"] = task["overdue_minutes"]
-            alert["escalation_level"] = task["escalation_level"]
-            all_alerts.append(alert)
-    
-    for esc in critical_escalations:
-        all_alerts.append(esc)
-    
-    for mc_flag in mc_flags:
-        alert = generate_alert(mc_flag, "mc_performance_drop")
-        all_alerts.append(alert)
-    
-    for failure in repeated:
-        alert = generate_alert(failure, "repeated_failure")
-        all_alerts.append(alert)
-    
-    for idle in findings["idle_workers"]:
-        alert = generate_alert(idle, "worker_idle")
-        all_alerts.append(alert)
-    
-    # Store alerts (in Phase 2: broadcast via ws_manager)
-    active_alerts.extend(all_alerts)
-    findings["generated_alerts"] = all_alerts
-    
-    # Summary message
+            all_new_alerts.append(generate_alert(task, "task_deadline_breach"))
+    all_new_alerts.extend(findings["critical_escalations"])
+    for mc in findings["mc_performance_flags"]:
+        all_new_alerts.append(generate_alert(mc, "mc_performance_drop"))
+    for fail in findings["repeated_failures"]:
+        all_new_alerts.append(generate_alert(fail, "repeated_failure"))
+
+    active_alerts.extend(all_new_alerts)
+    findings["generated_alerts"] = all_new_alerts
+
+    # Log cycle event
+    await data_store.add_agent_event(AgentEvent(
+        agent="GUARDIAN", action="monitoring_cycle_complete",
+        data={"total_alerts": findings["total_alerts"],
+              "overdue": len(findings["overdue_tasks"]),
+              "critical": len(findings["critical_escalations"])},
+        portal="state", timestamp=now.isoformat(),
+    ))
+
     findings["summary"] = (
-        f"Monitoring cycle complete. Found: "
-        f"{len(overdue)} overdue tasks, "
-        f"{len(critical_escalations)} critical escalations, "
-        f"{len(mc_flags)} underperforming MCs, "
-        f"{len(repeated)} repeated failures, "
-        f"{len(findings['idle_workers'])} idle workers."
+        f"Monitoring cycle complete. Found: {len(findings['overdue_tasks'])} overdue, "
+        f"{len(findings['critical_escalations'])} critical escalations, "
+        f"{len(findings['mc_performance_flags'])} underperforming MCs, "
+        f"{len(findings['repeated_failures'])} repeated failures."
     )
-    
     return findings
 
 
 def get_active_alerts() -> list:
-    """Return all active alerts. In Phase 2, will filter by resolved status."""
+    """Return all active alerts."""
     return active_alerts
 
 
 def clear_alert(alert_id: str) -> bool:
-    """Clear/acknowledge an alert by ID. Returns True if found and removed."""
+    """Clear/acknowledge an alert."""
     global active_alerts
-    original_count = len(active_alerts)
+    orig = len(active_alerts)
     active_alerts = [a for a in active_alerts if a.get("alert_id") != alert_id]
-    return len(active_alerts) < original_count
+    return len(active_alerts) < orig
