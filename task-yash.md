@@ -60,21 +60,21 @@
 ## Phase 3: Shared Components (Day 1–2 — PARALLEL with all)
 
 ### Shared Components (13)
-- [ ] Create `SeverityBadge.tsx` — colored badge (CRITICAL/HIGH/MEDIUM/LOW)
-- [ ] Create `StatusPill.tsx` — status indicator pill with color
-- [ ] Create `KPICard.tsx` — metric card with icon, animated value, label, trend
-- [ ] Create `MapView.tsx` — mapcn.dev wrapper (markers, onClick, center, zoom)
-- [ ] Create `IssueDetailModal.tsx` — full issue detail modal
-- [ ] Create `CategoryIcon.tsx` — category → emoji mapping
-- [ ] Create `SourceIcon.tsx` — source type → icon mapping
-- [ ] Create `Chart.tsx` — Recharts wrapper (bar, line, donut, area)
-- [ ] Create `GlassCard.tsx` — glassmorphic card container
-- [ ] Create `AnimatedCounter.tsx` — count-up animation (Framer Motion)
-- [ ] Create `LoadingSpinner.tsx` — branded spinner
-- [ ] Create `NotificationBell.tsx` — bell with badge count
-- [ ] Create `Timeline.tsx` — vertical status timeline
-- [ ] Verify: all 13 components render correctly in isolation
-- [ ] Commit: `feat(frontend): 13 shared components`
+- [x] Create `SeverityBadge.tsx` — colored badge (CRITICAL/HIGH/MEDIUM/LOW)
+- [x] Create `StatusPill.tsx` — status indicator pill with color
+- [x] Create `KPICard.tsx` — metric card with icon, animated value, label, trend
+- [x] Create `MapView.tsx` — mapcn.dev wrapper (markers, onClick, center, zoom)
+- [x] Create `IssueDetailModal.tsx` — full issue detail modal
+- [x] Create `CategoryIcon.tsx` — category → emoji mapping
+- [x] Create `SourceIcon.tsx` — source type → icon mapping
+- [x] Create `Chart.tsx` — Recharts wrapper (bar, line, donut, area)
+- [x] Create `GlassCard.tsx` — glassmorphic card container
+- [x] Create `AnimatedCounter.tsx` — count-up animation (Framer Motion)
+- [x] Create `LoadingSpinner.tsx` — branded spinner
+- [x] Create `NotificationBell.tsx` — bell with badge count
+- [x] Create `Timeline.tsx` — vertical status timeline
+- [x] Verify: all 13 components render correctly in isolation
+- [x] Commit: `feat(frontend): 13 shared components`
 
 ---
 
