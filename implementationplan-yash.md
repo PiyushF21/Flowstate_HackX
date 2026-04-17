@@ -1,7 +1,7 @@
 # InfraLens — Yash's Implementation Plan
 
 > **Role:** Frontend Lead
-> **Owns:** Entire `frontend/` directory — React 19 + Vite 6 + TailwindCSS v4, all 5 dashboards (19 pages), design system, mapcn.dev maps, Framer Motion animations
+> **Owns:** Entire `frontend/` directory — React 19 + Vite 6 + TailwindCSS v3, all 5 dashboards (19 pages), design system, mapcn.dev maps, Framer Motion animations
 
 ---
 
@@ -18,7 +18,8 @@
 2. **Install dependencies:**
    ```bash
    npm install react-router-dom framer-motion recharts lucide-react clsx date-fns
-   npm install -D @tailwindcss/vite
+   npm install -D tailwindcss postcss autoprefixer
+   npx tailwindcss init -p
    ```
 
 3. **Install mapcn.dev (MapLibre GL):**
@@ -26,9 +27,9 @@
    - Add map components to `src/components/shared/MapView.tsx`
    - No API key needed (uses free CARTO/OpenStreetMap tiles)
 
-4. **Configure TailwindCSS v4:**
-   - Add `@tailwindcss/vite` plugin to `vite.config.ts`
-   - Set up `src/index.css` with `@import "tailwindcss"` 
+4. **Configure TailwindCSS v3:**
+   - Configure `tailwind.config.js` with correct content paths
+   - Add Tailwind directives (`@tailwind base; @tailwind components; @tailwind utilities;`) to `src/index.css` 
 
 5. **Verify:** `npm run dev` → blank React app loads on `http://localhost:5173`
 

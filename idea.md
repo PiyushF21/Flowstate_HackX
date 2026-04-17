@@ -622,7 +622,7 @@ This is the core differentiator of InfraLens — **the system enforces accountab
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | React 19, TypeScript, Vite 6, TailwindCSS v4, Framer Motion |
+| **Frontend** | React 19, TypeScript, Vite 6, TailwindCSS v3, Framer Motion |
 | **Backend** | Python 3.11+, FastAPI, Uvicorn, WebSockets |
 | **AI Orchestration** | LangGraph (StateGraph), LangChain, Grok by xAI (grok-3) |
 | **Voice** | Web Speech API (STT), Sarvam AI (TTS) |

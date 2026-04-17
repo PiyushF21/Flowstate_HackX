@@ -189,9 +189,9 @@ Steps:
    - lucide-react (icons)
    - clsx (conditional classnames)
    - date-fns (date formatting)
-   - @tailwindcss/vite (TailwindCSS v4)
+   - tailwindcss postcss autoprefixer (TailwindCSS v3)
 3. Install mapcn.dev components — this is a MapLibre GL based map library following shadcn/ui patterns. Visit mapcn.dev for installation instructions. It provides <Map />, markers, popups with zero API key needed.
-4. Configure vite.config.ts with the TailwindCSS v4 plugin
+4. Configure tailwind.config.js with TailwindCSS v3 paths
 5. Clean up default Vite boilerplate (remove App.css, remove default content from App.tsx)
 6. Create a minimal App.tsx that just renders "InfraLens" text
 
@@ -205,7 +205,7 @@ I am building InfraLens — a civic infrastructure platform with 5 dashboards an
 
 Your job: Set up the frontend core — design system, routing, auth, shared components.
 
-Tech: React 19, TypeScript, Vite 6, TailwindCSS v4, Framer Motion, mapcn.dev (MapLibre GL maps), recharts, lucide-react
+Tech: React 19, TypeScript, Vite 6, TailwindCSS v3, Framer Motion, mapcn.dev (MapLibre GL maps), recharts, lucide-react
 
 DESIGN SYSTEM (src/index.css):
 - Import Google Fonts: Inter (300-800), Space Grotesk (400-700)

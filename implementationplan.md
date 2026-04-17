@@ -10,7 +10,7 @@
 | Member | Role | Scope |
 |---|---|---|
 | **Stavan** | Backend Lead | Project scaffolding, FastAPI core, data layer, NEXUS orchestrator, SENTINEL middleware, WebSocket manager, COGNOS agent, COMMANDER agent |
-| **Yash** | Frontend Lead | Entire frontend — React 19 + Vite 6 + TailwindCSS v4, all 5 dashboards (19 pages), design system, mapcn.dev maps, Framer Motion animations |
+| **Yash** | Frontend Lead | Entire frontend — React 19 + Vite 6 + TailwindCSS v3, all 5 dashboards (19 pages), design system, mapcn.dev maps, Framer Motion animations |
 | **Piyush** | Backend Agent Dev | VIRA agent, GUARDIAN agent, PRESCIENT agent, FLEET agent, all their routers |
 | **Amit** | Backend Agent Dev + Data | LOOP agent, ORACLE agent, FIELD_COPILOT agent, seed data creation, all their routers |
 
@@ -20,7 +20,7 @@
 
 | Layer | Technology |
 |---|---|
-| **Frontend** | React 19, TypeScript, Vite 6, TailwindCSS v4, Framer Motion, mapcn.dev (MapLibre GL), recharts, lucide-react |
+| **Frontend** | React 19, TypeScript, Vite 6, TailwindCSS v3, Framer Motion, mapcn.dev (MapLibre GL), recharts, lucide-react |
 | **Backend** | Python 3.11+, FastAPI, Uvicorn, WebSockets |
 | **AI Orchestration** | LangGraph (StateGraph), LangChain, Grok by xAI (grok-3) |
 | **Voice** | Web Speech API (STT), Sarvam AI (TTS) |
@@ -107,7 +107,7 @@ hackx2.0_flowstate/
     ├── tsconfig.json
     ├── tsconfig.app.json
     ├── tsconfig.node.json
-    ├── tailwind.config.ts                      # TailwindCSS v4 config (if needed)
+    ├── tailwind.config.ts                      # TailwindCSS v3 config (if needed)
     │
     ├── public/
     │   └── favicon.svg
@@ -248,7 +248,7 @@ DAY 1 MORNING — ALL START SIMULTANEOUSLY
 │  ───────                   ────                  ──────              ────    │
 │  backend/ scaffold         frontend/ scaffold    seed_data/*.json    Agent   │
 │  models.py (FAST!)         Vite + React + TS     mcs.json            logic   │
-│  data_store.py             TailwindCSS v4        workers.json        drafts  │
+│  data_store.py             TailwindCSS v3        workers.json        drafts  │
 │  config.py                 mapcn.dev install     issues.json         (pure   │
 │                                                  reports.json         Python │
 │  ↓ PUSH models.py                                                    no     │
@@ -356,7 +356,7 @@ T+4:00+ — Everyone coding agents in parallel, no waiting
 **Yash (fully independent):**
 - Scaffold `frontend/` with Vite + React + TypeScript
 - Install all dependencies (react-router-dom, framer-motion, recharts, lucide-react, clsx, date-fns)
-- Install mapcn.dev + TailwindCSS v4
+- Install mapcn.dev + TailwindCSS v3
 - Verify `npm run dev` works
 
 **Piyush (no dependencies — pure Python):**

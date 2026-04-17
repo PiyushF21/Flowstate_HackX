@@ -10,8 +10,8 @@
 
 - [ ] Scaffold Vite + React + TS: `npx -y create-vite@latest ./ --template react-ts`
 - [ ] Install dependencies: `react-router-dom`, `framer-motion`, `recharts`, `lucide-react`, `clsx`, `date-fns`
-- [ ] Install TailwindCSS v4: `@tailwindcss/vite`
-- [ ] Configure `vite.config.ts` with TailwindCSS plugin
+- [ ] Install TailwindCSS v3: `npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p`
+- [ ] Configure `tailwind.config.js` with content paths and directives into index.css
 - [ ] Install mapcn.dev components (follow mapcn.dev docs)
 - [ ] Clean default Vite boilerplate (remove App.css, assets)
 - [ ] Verify: `npm run dev` runs on localhost:5173
