@@ -1,10 +1,15 @@
 from fastapi import APIRouter, HTTPException
+from pydantic import BaseModel
 from typing import List, Optional
 from models import Issue
 from data_store import data_store
 from datetime import datetime, timezone
 
 router = APIRouter(prefix="/api/issues", tags=["Issues"])
+
+class StatusUpdate(BaseModel):
+    status: str
+
 
 @router.get("/", response_model=List[Issue])
 async def get_issues(
@@ -62,6 +67,18 @@ async def get_issue(issue_id: str):
     if not issue:
         raise HTTPException(status_code=404, detail="Issue not found")
     return issue
+
+
+@router.patch("/{issue_id}/status", response_model=Issue)
+async def update_issue_status(issue_id: str, req: StatusUpdate):
+    """
+    Update the status of an issue directly (e.g. from assigned -> in_progress).
+    """
+    issue = await data_store.get_issue(issue_id)
+    if not issue:
+        raise HTTPException(status_code=404, detail="Issue not found")
+    res = await data_store.update_issue(issue_id, {"status": req.status})
+    return res
 
 
 @router.post("/", response_model=Issue)

@@ -60,6 +60,45 @@ export default function TasksPage() {
 
   // Task Detail View
   if (selectedTask) {
+    const handleStartTask = async () => {
+      try {
+        await fetchApi(`/api/issues/${selectedTask.issue_id}/status`, {
+          method: 'PATCH',
+          body: { status: 'in_progress' }
+        })
+        setSelectedTask({ ...selectedTask, status: 'in_progress' } as TaskData)
+      } catch (error) {
+        console.error("Failed to start task:", error)
+      }
+    }
+
+    const handleProofSubmit = async (photos: string[], notes: string) => {
+      try {
+        await fetchApi('/api/loop/proof', {
+          method: 'POST',
+          body: {
+            issue_id: selectedTask.issue_id,
+            images: photos,
+            notes: notes
+          }
+        })
+        // Automatically verify for the demo to resolve the task immediately
+        await fetchApi('/api/loop/verify', {
+          method: 'POST',
+          body: {
+            issue_id: selectedTask.issue_id,
+            verifier_id: 'SYSTEM_AUTOVERIFY',
+            approved: true,
+            rejection_reason: ''
+          }
+        })
+        setShowProof(false)
+        setSelectedTask(null)
+      } catch (error) {
+        console.error("Failed to submit proof:", error)
+      }
+    }
+
     return (
       <WorkerLayout>
         <div>
@@ -133,12 +172,15 @@ export default function TasksPage() {
             )}
 
             {/* Proof Upload */}
-            {showProof && <ProofUpload />}
+            {showProof && <ProofUpload onSubmit={handleProofSubmit} />}
 
             {/* Action buttons */}
             <div className="pb-4">
               {selectedTask.status === 'assigned' && (
-                <button className="w-full py-3 rounded-xl bg-agent-commander text-white font-semibold text-sm flex items-center justify-center gap-2">
+                <button 
+                  onClick={handleStartTask}
+                  className="w-full py-3 rounded-xl bg-agent-commander text-white font-semibold text-sm flex items-center justify-center gap-2"
+                >
                   ▶️ Start Task
                 </button>
               )}

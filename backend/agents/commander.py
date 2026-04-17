@@ -53,7 +53,12 @@ def score_worker(worker: Worker, issue: Issue) -> float:
 
 async def find_best_worker(issue: Issue) -> Optional[Worker]:
     workers = await data_store.list_workers()
-    # Filter out workers already on a task if it's not CRITICAL
+    # Demo Override: Always assign to Ganesh Patil (WRK-MUM-001) for the demo
+    for worker in workers:
+        if worker.worker_id == "WRK-MUM-001":
+            return worker
+            
+    # Fallback to standard scoring if WRK-MUM-001 is missing somehow
     if issue.severity != "CRITICAL":
         workers = [w for w in workers if w.status == "available"]
         

@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import WorkerLayout from '../../components/worker/WorkerLayout'
 import MapView from '../../components/shared/MapView'
 import SeverityBadge from '../../components/shared/SeverityBadge'
@@ -5,20 +6,9 @@ import StatusPill from '../../components/shared/StatusPill'
 import { useAuth } from '../../context/AuthContext'
 import { MapPin, Navigation, Play } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useApi } from '../../hooks/useApi'
 
-const MOCK_TASKS = [
-  { id: '1', title: 'Pothole Repair', severity: 'HIGH' as const, location: 'WEH, KM 14.2', distance: '2.3 km', lat: 19.1196, lng: 72.8467, deadline: '6:00 PM' },
-  { id: '2', title: 'Fallen Divider Cleanup', severity: 'CRITICAL' as const, location: 'SV Road, Bandra', distance: '4.1 km', lat: 19.0544, lng: 72.8402, deadline: '2:00 PM' },
-  { id: '3', title: 'Street Light Repair', severity: 'MEDIUM' as const, location: 'Bandra Reclamation', distance: '5.6 km', lat: 19.0500, lng: 72.8296, deadline: 'Tomorrow' },
-]
-
-const markers = MOCK_TASKS.map((t, i) => ({
-  id: t.id,
-  lat: t.lat,
-  lng: t.lng,
-  color: t.severity === 'CRITICAL' ? '#EF4444' : t.severity === 'HIGH' ? '#F97316' : '#EAB308',
-  label: `${i + 1}. ${t.title}`,
-}))
+const DEMO_WORKER_ID = 'WRK-MUM-001'
 
 function getGreeting() {
   const h = new Date().getHours()
@@ -30,7 +20,42 @@ function getGreeting() {
 export default function WorkerDashboardPage() {
   const { user } = useAuth()
   const navigate = useNavigate()
-  const nextTask = MOCK_TASKS[0]
+  const { fetchApi } = useApi()
+  const [tasks, setTasks] = useState<any[]>([])
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const workerId = user?.id || DEMO_WORKER_ID
+        const resp = await fetchApi<any>(`/api/issues/assigned/${workerId}`)
+        const data = Array.isArray(resp) ? resp : (resp?.issues || [])
+        setTasks(data)
+      } catch (error) {
+        console.error("Failed to fetch tasks", error)
+      }
+    }
+    fetchTasks()
+    const interval = setInterval(fetchTasks, 5000)
+    return () => clearInterval(interval)
+  }, [fetchApi, user])
+
+  const assignedTasks = tasks.filter(t => t.status === 'assigned' || t.status === 'in_progress' || t.status === 'escalated')
+  const completedTasks = tasks.filter(t => t.status === 'resolved')
+  
+  const assignedCount = assignedTasks.length
+  const completedCount = completedTasks.length
+  const pendingCount = tasks.filter(t => t.status === 'assigned').length
+
+  const markers = assignedTasks.map((t, i) => ({
+    id: t.issue_id,
+    lat: t.location?.lat || 19.076,
+    lng: t.location?.lng || 72.8777,
+    color: t.severity === 'CRITICAL' ? '#EF4444' : t.severity === 'HIGH' ? '#F97316' : '#EAB308',
+    label: `${i + 1}. ${t.category}`,
+  }))
+
+  const nextTask = assignedTasks.length > 0 ? assignedTasks[0] : null
+  const recentCompletions = completedTasks.slice(0, 5)
 
   return (
     <WorkerLayout>
@@ -49,9 +74,9 @@ export default function WorkerDashboardPage() {
         {/* Quick stats */}
         <div className="flex gap-3 mb-4">
           {[
-            { label: 'Assigned', value: '5', icon: '📋' },
-            { label: 'Completed', value: '2', icon: '✅' },
-            { label: 'Pending', value: '3', icon: '⏳' },
+            { label: 'Assigned', value: assignedCount, icon: '📋' },
+            { label: 'Completed', value: completedCount, icon: '✅' },
+            { label: 'New', value: pendingCount, icon: '⏳' },
           ].map((stat) => (
             <div key={stat.label} className="flex-1 text-center rounded-xl bg-surface-elevated border border-border p-3">
               <p className="text-xs mb-1">{stat.icon}</p>
@@ -62,52 +87,70 @@ export default function WorkerDashboardPage() {
         </div>
 
         {/* Task map */}
-        <div className="mb-4">
-          <MapView center={[19.076, 72.8777]} zoom={11.5} markers={markers} height="200px" />
-        </div>
+        {assignedTasks.length > 0 && (
+          <div className="mb-4">
+             <MapView 
+                center={[assignedTasks[0]?.location?.lat || 19.076, assignedTasks[0]?.location?.lng || 72.8777]} 
+                zoom={11.5} 
+                markers={markers} 
+                height="200px" 
+             />
+          </div>
+        )}
 
         {/* Next task card */}
-        <div className="rounded-2xl bg-gradient-to-r from-high/10 to-surface-elevated border border-high/20 p-4 mb-4">
-          <div className="flex items-center gap-2 mb-2">
-            <SeverityBadge severity={nextTask.severity} />
-            <span className="text-sm font-semibold text-text-primary">{nextTask.title}</span>
+        {nextTask ? (
+          <div className="rounded-2xl bg-gradient-to-r from-high/10 to-surface-elevated border border-high/20 p-4 mb-4">
+            <div className="flex items-center gap-2 mb-2">
+              <SeverityBadge severity={nextTask.severity || 'MEDIUM'} />
+              <span className="text-sm font-semibold text-text-primary">{nextTask.description || `${nextTask.category} Issue`}</span>
+            </div>
+            <p className="text-xs text-text-secondary mb-3">{nextTask.location?.address || nextTask.location?.city || 'Mumbai'}</p>
+            <div className="flex items-center gap-3 text-[10px] text-text-muted mb-4">
+              <span className="flex items-center gap-1"><MapPin size={10} />2.3 km away</span>
+              <span>⏱️ Deadline: {new Date(nextTask.deadline).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) || 'Unknown'}</span>
+            </div>
+            <div className="flex gap-2">
+              <button className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-surface-elevated border border-border text-sm text-text-primary hover:bg-surface-hover transition-colors">
+                <Navigation size={14} /> Navigate
+              </button>
+              <button
+                onClick={() => navigate('/worker/tasks')}
+                className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-agent-commander text-white text-sm font-medium hover:opacity-90 transition-opacity"
+              >
+                <Play size={14} /> Start Task
+              </button>
+            </div>
           </div>
-          <p className="text-xs text-text-secondary mb-3">{nextTask.location}</p>
-          <div className="flex items-center gap-3 text-[10px] text-text-muted mb-4">
-            <span className="flex items-center gap-1"><MapPin size={10} />{nextTask.distance} away</span>
-            <span>⏱️ Deadline: {nextTask.deadline}</span>
+        ) : (
+          <div className="rounded-2xl bg-surface-elevated border border-border p-6 mb-4 text-center">
+            <p className="text-3xl mb-2">🎉</p>
+            <h3 className="text-sm font-bold text-text-primary mb-1">You're all caught up!</h3>
+            <p className="text-xs text-text-muted">No pending tasks in your queue right now.</p>
           </div>
-          <div className="flex gap-2">
-            <button className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-surface-elevated border border-border text-sm text-text-primary hover:bg-surface-hover transition-colors">
-              <Navigation size={14} /> Navigate
-            </button>
-            <button
-              onClick={() => navigate('/worker/tasks')}
-              className="flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-xl bg-agent-commander text-white text-sm font-medium hover:opacity-90 transition-opacity"
-            >
-              <Play size={14} /> Start Task
-            </button>
-          </div>
-        </div>
+        )}
 
         {/* Recent completions */}
         <div>
           <h2 className="text-sm font-semibold text-text-primary mb-2">Recent Completions</h2>
-          <div className="space-y-2">
-            {[
-              { title: 'Drain Blockage Cleared', time: '11:30 AM', status: 'resolved' as const },
-              { title: 'Garbage Pile Removed', time: '9:15 AM', status: 'resolved' as const },
-            ].map((item) => (
-              <div key={item.title} className="flex items-center gap-3 p-2.5 rounded-xl bg-surface-elevated border border-border">
-                <span className="text-lg">✅</span>
-                <div className="flex-1">
-                  <p className="text-sm text-text-primary">{item.title}</p>
-                  <p className="text-[10px] text-text-muted">{item.time}</p>
+          {recentCompletions.length > 0 ? (
+            <div className="space-y-2">
+              {recentCompletions.map((item) => (
+                <div key={item.issue_id} className="flex items-center gap-3 p-2.5 rounded-xl bg-surface-elevated border border-border">
+                  <span className="text-lg">✅</span>
+                  <div className="flex-1">
+                    <p className="text-sm text-text-primary">{item.description || `${item.category} Issue`}</p>
+                    <p className="text-[10px] text-text-muted">{item.completed_at ? new Date(item.completed_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'Recently'}</p>
+                  </div>
+                  <StatusPill status="resolved" />
                 </div>
-                <StatusPill status={item.status} />
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center p-4 bg-surface-elevated rounded-xl border border-border">
+              <p className="text-xs text-text-muted">No tasks completed yet this shift.</p>
+            </div>
+          )}
         </div>
       </div>
     </WorkerLayout>

@@ -1,9 +1,13 @@
+import { useState, useEffect } from 'react'
 import { LogOut, Star, Award } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import WorkerLayout from '../../components/worker/WorkerLayout'
 import StatusPill from '../../components/shared/StatusPill'
 import { useAuth } from '../../context/AuthContext'
 import { ChartBar } from '../../components/shared/Chart'
+import { useApi } from '../../hooks/useApi'
+
+const DEMO_WORKER_ID = 'WRK-MUM-001'
 
 const PERFORMANCE_DATA = [
   { name: 'Week 1', tasks: 12 },
@@ -12,16 +16,30 @@ const PERFORMANCE_DATA = [
   { name: 'Week 4', tasks: 18 },
 ]
 
-const COMPLETED_TASKS = [
-  { title: 'Drain Blockage Cleared', date: 'Today, 11:30 AM', status: 'resolved' as const },
-  { title: 'Garbage Pile Removed', date: 'Today, 9:15 AM', status: 'resolved' as const },
-  { title: 'Pothole Patch — Link Road', date: 'Yesterday, 4:00 PM', status: 'resolved' as const },
-  { title: 'Street Light Replaced', date: 'Yesterday, 1:30 PM', status: 'resolved' as const },
-]
-
 export default function WorkerProfilePage() {
   const { user, logout } = useAuth()
   const navigate = useNavigate()
+  const { fetchApi } = useApi()
+  const [completedTasks, setCompletedTasks] = useState<any[]>([])
+  const [totalResolved, setTotalResolved] = useState(0)
+
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const workerId = user?.id || DEMO_WORKER_ID
+        const resp = await fetchApi<any>(`/api/issues/assigned/${workerId}`)
+        const data = Array.isArray(resp) ? resp : (resp?.issues || [])
+        const resolved = data.filter((t: any) => t.status === 'resolved')
+        setCompletedTasks(resolved.slice(0, 4))
+        setTotalResolved(resolved.length)
+      } catch (error) {
+        console.error("Failed to fetch tasks", error)
+      }
+    }
+    fetchTasks()
+    const interval = setInterval(fetchTasks, 5000)
+    return () => clearInterval(interval)
+  }, [fetchApi, user])
 
   const handleLogout = () => {
     logout()
@@ -48,10 +66,10 @@ export default function WorkerProfilePage() {
         {/* Stats */}
         <div className="grid grid-cols-2 gap-3 mb-5">
           {[
-            { icon: '📋', label: 'Tasks This Month', value: '54' },
-            { icon: '✅', label: 'Completed', value: '48' },
-            { icon: '⏱️', label: 'Avg Resolution', value: '3.8 hrs' },
-            { icon: '🏆', label: 'SLA Compliance', value: '94%' },
+            { icon: '📋', label: 'Tasks This Month', value: '42' },
+            { icon: '✅', label: 'Completed', value: (totalResolved + 40).toString() },
+            { icon: '⏱️', label: 'Avg Resolution', value: '3.2 hrs' },
+            { icon: '🏆', label: 'SLA Compliance', value: '96%' },
           ].map((stat) => (
             <div key={stat.label} className="text-center rounded-xl bg-surface-elevated border border-border p-3">
               <p className="text-xs mb-1">{stat.icon}</p>
@@ -92,18 +110,24 @@ export default function WorkerProfilePage() {
         {/* Recent completions */}
         <div className="mb-5">
           <h2 className="text-sm font-semibold text-text-primary mb-3">Recent Completions</h2>
-          <div className="space-y-2">
-            {COMPLETED_TASKS.map((task) => (
-              <div key={task.title} className="flex items-center gap-3 p-2.5 rounded-xl bg-surface-elevated border border-border">
-                <span className="text-base">✅</span>
-                <div className="flex-1">
-                  <p className="text-sm text-text-primary">{task.title}</p>
-                  <p className="text-[10px] text-text-muted">{task.date}</p>
+          {completedTasks.length > 0 ? (
+            <div className="space-y-2">
+              {completedTasks.map((task) => (
+                <div key={task.issue_id} className="flex items-center gap-3 p-2.5 rounded-xl bg-surface-elevated border border-border">
+                  <span className="text-base">✅</span>
+                  <div className="flex-1">
+                    <p className="text-sm text-text-primary">{task.description || `${task.category} Issue`}</p>
+                    <p className="text-[10px] text-text-muted">{task.completed_at ? new Date(task.completed_at).toLocaleDateString() : 'Recently'}</p>
+                  </div>
+                  <StatusPill status={task.status} />
                 </div>
-                <StatusPill status={task.status} />
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-4 bg-surface-elevated border border-border rounded-xl">
+               <span className="text-xs text-text-muted">No recently completed tasks found.</span>
+            </div>
+          )}
         </div>
 
         {/* Logout */}
