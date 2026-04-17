@@ -8,16 +8,16 @@
 
 ## Phase 1: Scaffolding (Day 1 Morning — PARALLEL with all)
 
-- [ ] Scaffold Vite + React + TS: `npx -y create-vite@latest ./ --template react-ts`
-- [ ] Install dependencies: `react-router-dom`, `framer-motion`, `recharts`, `lucide-react`, `clsx`, `date-fns`
-- [ ] Install TailwindCSS v3: `npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p`
-- [ ] Configure `tailwind.config.js` with content paths and directives into index.css
-- [ ] Install mapcn.dev components (follow mapcn.dev docs)
-- [ ] Clean default Vite boilerplate (remove App.css, assets)
-- [ ] Verify: `npm run dev` runs on localhost:5173
-- [ ] Verify: TailwindCSS classes render
-- [ ] Verify: mapcn Map component renders
-- [ ] Commit: `feat: frontend scaffold — Vite + React + TS + TailwindCSS + mapcn`
+- [x] Scaffold Vite + React + TS: `npx -y create-vite@latest ./ --template react-ts`
+- [x] Install dependencies: `react-router-dom`, `framer-motion`, `recharts`, `lucide-react`, `clsx`, `date-fns`
+- [x] Install TailwindCSS v3: `npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p`
+- [x] Configure `tailwind.config.js` with content paths and directives into index.css
+- [x] Install mapcn.dev components (follow mapcn.dev docs)
+- [x] Clean default Vite boilerplate (remove App.css, assets)
+- [x] Verify: `npm run dev` runs on localhost:5173
+- [x] Verify: TailwindCSS classes render
+- [x] Verify: mapcn Map component renders
+- [x] Commit: `feat: frontend scaffold — Vite + React + TS + TailwindCSS + mapcn`
 
 ---
 
