@@ -66,7 +66,7 @@ async def llm_analyze(raw_data: dict, source: str) -> CognosLLMOutput:
             description="Mock LLM Description due to missing API key.", confidence=0.5
         )
         
-    llm = ChatXAI(xai_api_key=settings.XAI_API_KEY, model="grok-beta", temperature=0.2)
+    llm = ChatXAI(xai_api_key=settings.XAI_API_KEY, model="grok-2-latest", temperature=0.2)
     llm_with_struct = llm.with_structured_output(CognosLLMOutput)
     
     prompt = PromptTemplate.from_template(

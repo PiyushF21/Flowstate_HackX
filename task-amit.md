@@ -195,12 +195,12 @@
 
 ## Phase 5: Integration Testing (Day 2–3 — PARALLEL with Yash)
 
-- [ ] Test LOOP completion flow through NEXUS pipeline
-- [ ] Test ORACLE fund recommendations with real seed data
-- [ ] Test FIELD_COPILOT with real task context from seed data
-- [ ] Test notifications reach WebSocket channel
-- [ ] Update seed data if needed for better demo
-- [ ] Commit: `fix(backend): agents C integration verified`
+- [x] Test LOOP completion flow through NEXUS pipeline
+- [x] Test ORACLE fund recommendations with real seed data
+- [x] Test FIELD_COPILOT with real task context from seed data
+- [x] Test notifications reach WebSocket channel
+- [x] Update seed data if needed for better demo
+- [x] Commit: `fix(backend): agents C integration verified`
 
 ---
 

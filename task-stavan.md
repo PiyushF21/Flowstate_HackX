@@ -144,16 +144,16 @@
 
 ## Phase 5: Full Pipeline Integration (Day 2–3 — PARALLEL with Yash)
 
-- [ ] End-to-end test: sensor data → NEXUS → COGNOS → COMMANDER → assignment
-- [ ] End-to-end test: citizen complaint → VIRA → NEXUS → COGNOS → COMMANDER
-- [ ] End-to-end test: task completion → LOOP → verification → notification
-- [ ] Verify WebSocket: agent_events channel broadcasts all pipeline steps
-- [ ] Verify WebSocket: issues channel broadcasts status updates
-- [ ] Verify WebSocket: tasks channel broadcasts new assignments
-- [ ] Verify WebSocket: notifications channel broadcasts citizen updates
-- [ ] Test GUARDIAN monitoring cycle with overdue seed data
-- [ ] Test all 11 agents accessible via their API endpoints
-- [ ] Commit: `feat(backend): end-to-end pipeline verified, WebSocket live`
+- [x] End-to-end test: sensor data → NEXUS → COGNOS → COMMANDER → assignment
+- [x] End-to-end test: citizen complaint → VIRA → NEXUS → COGNOS → COMMANDER
+- [x] End-to-end test: task completion → LOOP → verification → notification
+- [x] Verify WebSocket: agent_events channel broadcasts all pipeline steps
+- [x] Verify WebSocket: issues channel broadcasts status updates
+- [x] Verify WebSocket: tasks channel broadcasts new assignments
+- [x] Verify WebSocket: notifications channel broadcasts citizen updates
+- [x] Test GUARDIAN monitoring cycle with overdue seed data
+- [x] Test all 11 agents accessible via their API endpoints
+- [x] Commit: `feat(backend): end-to-end pipeline verified, WebSocket live`
 
 ---
 
