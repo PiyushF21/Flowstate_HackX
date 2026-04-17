@@ -60,6 +60,15 @@ def score_sensor_data_rule(data: dict, nearby_count: int) -> dict:
 
 async def llm_analyze(raw_data: dict, source: str) -> CognosLLMOutput:
     if not settings.has_xai_key:
+        if source == "manual_complaint":
+            return CognosLLMOutput(
+                category=raw_data.get("category", "roads"),
+                subcategory=raw_data.get("subcategory", "pothole"),
+                severity=raw_data.get("severity", "MEDIUM"),
+                fault_code="RD-001",
+                description=raw_data.get("description", "Mock LLM Description due to missing API key."),
+                confidence=0.9
+            )
         return CognosLLMOutput(
             category="unknown", subcategory="unknown",
             severity="MEDIUM", fault_code="RD-001",
