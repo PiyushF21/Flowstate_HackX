@@ -19,7 +19,11 @@ from contextlib import asynccontextmanager
 from config import settings
 from data_store import data_store
 from ws_manager import ws_manager
-from routers import issues_router
+from routers import (
+    issues_router, nexus_router, cognos_router, 
+    commander_router, sentinel_router, loop_router, 
+    oracle_router, field_copilot_router
+)
 from middleware.sentinel_middleware import SentinelMiddleware
 
 # ---------------------------------------------------------------------------
@@ -64,6 +68,13 @@ app.add_middleware(SentinelMiddleware)
 # Routers
 # ---------------------------------------------------------------------------
 app.include_router(issues_router.router)
+app.include_router(nexus_router.router)
+app.include_router(cognos_router.router)
+app.include_router(commander_router.router)
+app.include_router(sentinel_router.router)
+app.include_router(loop_router.router)
+app.include_router(oracle_router.router)
+app.include_router(field_copilot_router.router)
 
 # ---------------------------------------------------------------------------
 # WebSockets
