@@ -24,36 +24,36 @@
 ## Phase 2: Frontend Core Setup (Day 1 — PARALLEL with all)
 
 ### Design System
-- [ ] Create `src/index.css` — import Google Fonts (Inter, Space Grotesk)
-- [ ] Add all CSS variables (primary, bg, surface, severity colors, agent colors)
-- [ ] Add glassmorphism utility classes
-- [ ] Add animation keyframes (pulse, glow, slide-in, fade-in, orbit, data-packet)
-- [ ] Add dark scrollbar styles
-- [ ] Add base body styles (dark theme default)
-- [ ] Verify: CSS variables accessible, fonts load, animations work
+- [x] Create `src/index.css` — import Google Fonts (Inter, Space Grotesk)
+- [x] Add all CSS variables (primary, bg, surface, severity colors, agent colors)
+- [x] Add glassmorphism utility classes
+- [x] Add animation keyframes (pulse, glow, slide-in, fade-in, orbit, data-packet)
+- [x] Add dark scrollbar styles
+- [x] Add base body styles (dark theme default)
+- [x] Verify: CSS variables accessible, fonts load, animations work
 
 ### Routing & Auth
-- [ ] Create `src/App.tsx` — React Router with all 20 routes
-- [ ] Create `src/context/AuthContext.tsx` — AuthProvider, login/logout, useAuth hook
-- [ ] Create ProtectedRoute component (redirects to /login if not authed)
-- [ ] Verify: routes resolve without errors, protected routes redirect
+- [x] Create `src/App.tsx` — React Router with all 20 routes
+- [x] Create `src/context/AuthContext.tsx` — AuthProvider, login/logout, useAuth hook
+- [x] Create ProtectedRoute component (redirects to /login if not authed)
+- [x] Verify: routes resolve without errors, protected routes redirect
 
 ### Login Page
-- [ ] Create `src/pages/LoginPage.tsx` — 5 role cards in grid
-- [ ] Style: glassmorphic cards, dark background, hover scale+glow
-- [ ] InfraLens logo + tagline at top
-- [ ] Click card → login → redirect to role's home
-- [ ] Verify: each role redirects correctly
+- [x] Create `src/pages/LoginPage.tsx` — 5 role cards in grid
+- [x] Style: glassmorphic cards, dark background, hover scale+glow
+- [x] InfraLens logo + tagline at top
+- [x] Click card → login → redirect to role's home
+- [x] Verify: each role redirects correctly
 
 ### Hooks
-- [ ] Create `src/hooks/useWebSocket.ts` — WebSocket connect, auto-reconnect, message handler
-- [ ] Create `src/hooks/useApi.ts` — fetchApi with base URL + auth header
-- [ ] Create `src/hooks/useRealtime.ts` — subscribe to WS channel, return live data
+- [x] Create `src/hooks/useWebSocket.ts` — WebSocket connect, auto-reconnect, message handler
+- [x] Create `src/hooks/useApi.ts` — fetchApi with base URL + auth header
+- [x] Create `src/hooks/useRealtime.ts` — subscribe to WS channel, return live data
 
 ### Utility
-- [ ] Create `src/lib/utils.ts` — clsx helper, date formatters
+- [x] Create `src/lib/utils.ts` — clsx helper, date formatters
 
-- [ ] Commit: `feat(frontend): design system, auth, routing, login page, hooks`
+- [x] Commit: `feat(frontend): design system, auth, routing, login page, hooks`
 
 ---
 

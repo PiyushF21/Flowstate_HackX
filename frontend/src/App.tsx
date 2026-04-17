@@ -1,57 +1,184 @@
-import MapView from './components/shared/MapView'
-
-const demoMarkers = [
-  { id: '1', lat: 19.1196, lng: 72.8467, color: '#EF4444', label: 'Pothole — WEH KM 14.2' },
-  { id: '2', lat: 19.0760, lng: 72.8777, color: '#F97316', label: 'Fallen divider — SV Road' },
-  { id: '3', lat: 19.1334, lng: 72.9133, color: '#22C55E', label: 'Water pipe — Powai (Resolved)' },
-  { id: '4', lat: 19.0550, lng: 72.8296, color: '#EAB308', label: 'Street light — Bandra' },
-]
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/shared/ProtectedRoute'
+import PlaceholderPage from './components/shared/PlaceholderPage'
+import LoginPage from './pages/LoginPage'
 
 function App() {
   return (
-    <div className="min-h-screen p-8 flex flex-col items-center gap-8">
-      {/* Header */}
-      <div className="glass-card text-center max-w-lg w-full">
-        <h1 className="text-3xl font-bold font-display text-text-primary mb-2">
-          🔍 InfraLens
-        </h1>
-        <p className="text-text-secondary text-sm">
-          AI-Powered Civic Infrastructure Intelligence Platform
-        </p>
-        <div className="mt-4 flex gap-3 justify-center flex-wrap">
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-critical/10 text-critical border border-critical/20">
-            CRITICAL
-          </span>
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-high/10 text-high border border-high/20">
-            HIGH
-          </span>
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-medium/10 text-medium border border-medium/20">
-            MEDIUM
-          </span>
-          <span className="px-3 py-1 rounded-full text-xs font-medium bg-low/10 text-low border border-low/20">
-            LOW
-          </span>
-        </div>
-      </div>
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          {/* Public */}
+          <Route path="/login" element={<LoginPage />} />
 
-      {/* Map Demo */}
-      <div className="w-full max-w-3xl">
-        <h2 className="text-lg font-semibold text-text-primary mb-3 font-display">
-          📍 Mumbai Infrastructure Map
-        </h2>
-        <MapView
-          center={[19.076, 72.8777]}
-          zoom={11.5}
-          markers={demoMarkers}
-          height="400px"
-        />
-      </div>
+          {/* === Citizen Dashboard (4 pages) === */}
+          <Route
+            path="/citizen/area-map"
+            element={
+              <ProtectedRoute allowedRoles={['citizen']}>
+                <PlaceholderPage title="Area Map" role="citizen" icon="🗺️" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/citizen/my-cars"
+            element={
+              <ProtectedRoute allowedRoles={['citizen']}>
+                <PlaceholderPage title="My Cars" role="citizen" icon="🚗" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/citizen/report"
+            element={
+              <ProtectedRoute allowedRoles={['citizen']}>
+                <PlaceholderPage title="Report Complaint" role="citizen" icon="✍️" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/citizen/profile"
+            element={
+              <ProtectedRoute allowedRoles={['citizen']}>
+                <PlaceholderPage title="My Profile" role="citizen" icon="👤" />
+              </ProtectedRoute>
+            }
+          />
 
-      {/* Status */}
-      <p className="text-text-muted text-xs">
-        Phase 1 Scaffold — All systems operational ✅
-      </p>
-    </div>
+          {/* === BMC Dashboard (4 pages) === */}
+          <Route
+            path="/bmc/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['bmc_supervisor']}>
+                <PlaceholderPage title="Issues Dashboard" role="bmc_supervisor" icon="📊" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bmc/workers"
+            element={
+              <ProtectedRoute allowedRoles={['bmc_supervisor']}>
+                <PlaceholderPage title="Workers Management" role="bmc_supervisor" icon="👷" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bmc/completed"
+            element={
+              <ProtectedRoute allowedRoles={['bmc_supervisor']}>
+                <PlaceholderPage title="Completed Work" role="bmc_supervisor" icon="✅" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/bmc/reports"
+            element={
+              <ProtectedRoute allowedRoles={['bmc_supervisor']}>
+                <PlaceholderPage title="Reports & Analytics" role="bmc_supervisor" icon="📈" />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* === State Government Dashboard (4 pages) === */}
+          <Route
+            path="/state/overview"
+            element={
+              <ProtectedRoute allowedRoles={['state_official']}>
+                <PlaceholderPage title="State Overview" role="state_official" icon="🏛️" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/state/reports"
+            element={
+              <ProtectedRoute allowedRoles={['state_official']}>
+                <PlaceholderPage title="Weekly Reports" role="state_official" icon="📑" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/state/allocation"
+            element={
+              <ProtectedRoute allowedRoles={['state_official']}>
+                <PlaceholderPage title="Fund & Resource Allocation" role="state_official" icon="💰" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/state/accountability"
+            element={
+              <ProtectedRoute allowedRoles={['state_official']}>
+                <PlaceholderPage title="Accountability Board" role="state_official" icon="🏆" />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* === Worker Dashboard (4 pages) === */}
+          <Route
+            path="/worker/dashboard"
+            element={
+              <ProtectedRoute allowedRoles={['field_worker']}>
+                <PlaceholderPage title="Worker Dashboard" role="field_worker" icon="🏠" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/worker/tasks"
+            element={
+              <ProtectedRoute allowedRoles={['field_worker']}>
+                <PlaceholderPage title="My Tasks" role="field_worker" icon="📋" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/worker/assistant"
+            element={
+              <ProtectedRoute allowedRoles={['field_worker']}>
+                <PlaceholderPage title="AI Assistant" role="field_worker" icon="🤖" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/worker/profile"
+            element={
+              <ProtectedRoute allowedRoles={['field_worker']}>
+                <PlaceholderPage title="Worker Profile" role="field_worker" icon="👤" />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* === NEXUS Agent Dashboard (3 pages) === */}
+          <Route
+            path="/nexus/constellation"
+            element={
+              <ProtectedRoute allowedRoles={['nexus_admin']}>
+                <PlaceholderPage title="Agent Constellation" role="nexus_admin" icon="🌌" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/nexus/events"
+            element={
+              <ProtectedRoute allowedRoles={['nexus_admin']}>
+                <PlaceholderPage title="Event Stream" role="nexus_admin" icon="📡" />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/nexus/pipeline"
+            element={
+              <ProtectedRoute allowedRoles={['nexus_admin']}>
+                <PlaceholderPage title="Pipeline View" role="nexus_admin" icon="🔗" />
+              </ProtectedRoute>
+            }
+          />
+
+          {/* Catch-all → redirect to login */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   )
 }
 
