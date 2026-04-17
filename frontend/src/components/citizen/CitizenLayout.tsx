@@ -1,4 +1,3 @@
-import { Outlet } from 'react-router-dom'
 import BottomTabNav from './BottomTabNav'
 
 export default function CitizenLayout({ children }: { children: React.ReactNode }) {

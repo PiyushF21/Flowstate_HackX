@@ -24,7 +24,7 @@ export default function ProofUpload({ onSubmit }: ProofUploadProps) {
 
       {/* Photo grid */}
       <div className="grid grid-cols-3 gap-2 mb-3">
-        {photos.map((photo, idx) => (
+        {photos.map((_, idx) => (
           <div key={idx} className="relative aspect-square rounded-lg bg-surface-hover flex items-center justify-center">
             <span className="text-xl">📸</span>
             <button

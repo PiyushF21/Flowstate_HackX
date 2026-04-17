@@ -4,6 +4,7 @@ import NexusCentralNode from '../../components/nexus/NexusCentralNode'
 import AgentNode from '../../components/nexus/AgentNode'
 import ConnectionLine from '../../components/nexus/ConnectionLine'
 import AgentDetailPanel from '../../components/nexus/AgentDetailPanel'
+import { useWebSocket } from '../../hooks/useWebSocket'
 
 const AGENTS = [
   { id: 'SYS-02', name: 'COGNOS', icon: '🧠', color: 'var(--agent-cognos)', x: 'top-[20%] left-[30%]', desc: 'Issue Detection Engine', status: 'Optimal', uptime: '99.9%', processed: 14205, rpm: 120 },
@@ -33,26 +34,23 @@ export default function ConstellationPage() {
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null)
   const [activeConnections, setActiveConnections] = useState<string[]>([])
   const [processingNodes, setProcessingNodes] = useState<string[]>([])
+  
+  useWebSocket({
+    channel: 'agent_events?role=nexus_admin',
+    onMessage: (data: any) => {
+      if (data && data.agent) {
+        setActiveConnections(prev => [...prev.filter(id => id !== data.agent), data.agent].slice(-3))
+        setProcessingNodes(prev => [...prev.filter(id => id !== data.agent), data.agent].slice(-2))
+      }
+    }
+  })
 
-  // Mock activity generator
   useEffect(() => {
+    // Clear processing states every few seconds if no activities
     const interval = setInterval(() => {
-       // Randomly pick 1-2 agents to connect to NEXUS
-       const numActive = Math.floor(Math.random() * 2) + 1
-       const shuffled = [...AGENTS].sort(() => 0.5 - Math.random())
-       const activeIds = shuffled.slice(0, numActive).map(a => a.id)
-       
-       setActiveConnections(activeIds)
-       
-       // Optional: Add some direct node-to-node routing (e.g. COGNOS -> COMMANDER)
-       if (Math.random() > 0.7) {
-         setProcessingNodes([activeIds[0], shuffled[2].id])
-       } else {
-         setProcessingNodes(activeIds)
-       }
-
-    }, 3000)
-
+      setActiveConnections(prev => prev.slice(1)) // fade out oldest
+      setProcessingNodes(prev => prev.slice(1))
+    }, 4000)
     return () => clearInterval(interval)
   }, [])
 

@@ -1,5 +1,5 @@
 import { useRef, useCallback } from 'react'
-import Map, { Marker, NavigationControl, type MapRef, type ViewStateChangeEvent } from 'react-map-gl/maplibre'
+import Map, { Marker, NavigationControl, type MapRef } from 'react-map-gl/maplibre'
 import 'maplibre-gl/dist/maplibre-gl.css'
 
 // Free CARTO dark basemap tiles — no API key needed

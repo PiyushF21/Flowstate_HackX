@@ -1,8 +1,10 @@
-import { useState } from 'react'
-import { Camera, Upload, Mic, CheckCircle2 } from 'lucide-react'
+import { useState, useCallback } from 'react'
+import { Camera, Upload, Mic, CheckCircle2, Loader2 } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import CitizenLayout from '../../components/citizen/CitizenLayout'
 import CategoryTile from '../../components/citizen/CategoryTile'
+import { useApi } from '../../hooks/useApi'
+import { useAuth } from '../../context/AuthContext'
 import { cn } from '../../lib/utils'
 
 const CATEGORIES = [
@@ -22,6 +24,9 @@ const SEVERITY_OPTIONS = [
 ]
 
 export default function ReportPage() {
+  const { fetchApi } = useApi()
+  const { user } = useAuth()
+  
   const [photoTaken, setPhotoTaken] = useState(false)
   const [aiAnalyzing, setAiAnalyzing] = useState(false)
   const [aiResult, setAiResult] = useState<string | null>(null)
@@ -29,6 +34,9 @@ export default function ReportPage() {
   const [description, setDescription] = useState('')
   const [severity, setSeverity] = useState<string | null>(null)
   const [submitted, setSubmitted] = useState(false)
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [issueId, setIssueId] = useState<string | null>(null)
+  const [isListening, setIsListening] = useState(false)
 
   const handleCapturePhoto = () => {
     setPhotoTaken(true)
@@ -40,8 +48,53 @@ export default function ReportPage() {
     }, 2000)
   }
 
-  const handleSubmit = () => {
-    setSubmitted(true)
+  const startListening = useCallback(() => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      alert("Speech recognition isn't supported in your browser.")
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'en-US'
+    recognition.continuous = false
+    recognition.interimResults = false
+
+    recognition.onstart = () => setIsListening(true)
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = (event: any) => {
+      const transcript = event.results[0][0].transcript
+      setDescription(prev => prev ? `${prev} ${transcript}` : transcript)
+    }
+    recognition.onerror = () => setIsListening(false)
+    recognition.onend = () => setIsListening(false)
+    
+    recognition.start()
+  }, [])
+
+  const handleSubmit = async () => {
+    if (!selectedCategory) return
+    setIsSubmitting(true)
+    try {
+      const resp = await fetchApi<{ id: string }>('/api/issues', {
+        method: 'POST',
+        body: {
+          category: selectedCategory,
+          description: description,
+          severity: severity || 'low',
+          location: { lat: 19.1196, lng: 72.8467, address: 'Powai Lake Gate 2', ward: 'S-Ward' },
+          reporter_id: user?.userName || 'citizen_anon'
+        }
+      })
+      setIssueId(resp.id)
+      setSubmitted(true)
+    } catch (err) {
+      console.error(err)
+      alert("Failed to report issue. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   if (submitted) {
@@ -53,7 +106,7 @@ export default function ReportPage() {
           </motion.div>
           <h2 className="text-xl font-bold text-text-primary font-display mb-2">Issue Reported!</h2>
           <p className="text-sm text-text-secondary mb-1">Your complaint ID:</p>
-          <p className="text-primary font-mono font-bold text-sm mb-6">ISS-MUM-2026-04-17-0078</p>
+          <p className="text-primary font-mono font-bold text-sm mb-6">{issueId || 'ISS-PENDING'}</p>
           <p className="text-xs text-text-muted mb-8">You'll be notified when a team is assigned.</p>
           <div className="flex gap-3">
             <button
@@ -165,8 +218,11 @@ export default function ReportPage() {
             />
             <div className="absolute bottom-2 right-2 flex items-center gap-2">
               <span className="text-[10px] text-text-muted">{description.length}/500</span>
-              <button className="p-1 text-text-muted hover:text-primary">
-                <Mic size={14} />
+              <button 
+                onClick={startListening}
+                className={cn("p-1 hover:text-primary transition-colors", isListening ? "text-red-500 animate-pulse" : "text-text-muted")}
+              >
+                {isListening ? <Loader2 size={14} className="animate-spin" /> : <Mic size={14} />}
               </button>
             </div>
           </div>
@@ -196,10 +252,10 @@ export default function ReportPage() {
         {/* Submit */}
         <button
           onClick={handleSubmit}
-          disabled={!selectedCategory}
-          className="w-full py-3 rounded-xl bg-primary text-white font-semibold text-sm disabled:opacity-40 transition-opacity hover:bg-primary-dark"
+          disabled={!selectedCategory || isSubmitting}
+          className="w-full py-3 rounded-xl bg-primary text-white font-semibold text-sm disabled:opacity-40 transition-opacity hover:bg-primary-dark flex justify-center items-center gap-2"
         >
-          Report Issue
+          {isSubmitting ? <Loader2 size={16} className="animate-spin" /> : 'Report Issue'}
         </button>
       </div>
     </CitizenLayout>

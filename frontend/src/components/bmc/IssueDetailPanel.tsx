@@ -1,4 +1,4 @@
-import { X, Navigation, Image as ImageIcon } from 'lucide-react'
+import { X } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import SeverityBadge from '../shared/SeverityBadge'
 import StatusPill from '../shared/StatusPill'

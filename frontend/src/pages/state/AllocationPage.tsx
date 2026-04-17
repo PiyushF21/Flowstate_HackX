@@ -1,16 +1,40 @@
+import { useState, useEffect } from 'react'
 import StateLayout from '../../components/state/StateLayout'
 import AllocationTable, { type AllocationRow } from '../../components/state/AllocationTable'
 import { Bot, Check, X, PencilLine, Download } from 'lucide-react'
-
-const MOCK_ALLOCATIONS: AllocationRow[] = [
-  { id: '1', mcName: 'BMC Mumbai', current: 120, recommended: 145, status: 'on_track', rationale: 'Population density multiplier + aging sewage network requires capex.' },
-  { id: '2', mcName: 'PMC Pune', current: 85, recommended: 65, status: 'watch', rationale: 'Prior year fund utilisation <60%. Redirecting to higher priority zones.' },
-  { id: '3', mcName: 'NMC Nagpur', current: 45, recommended: 35, status: 'audit', rationale: 'SLA breach continuous. Audit recommended before further allocation.' },
-  { id: '4', mcName: 'TMC Thane', current: 60, recommended: 75, status: 'on_track', rationale: 'Consistent performance. Rapid urban expansion demands fleet upgrade.' },
-  { id: '5', mcName: 'NMC Nashik', current: 40, recommended: 30, status: 'on_track', rationale: 'Requirements fulfilled in previous cycle.' },
-]
+import { useApi } from '../../hooks/useApi'
 
 export default function AllocationPage() {
+  const { fetchApi } = useApi()
+  const [allocations, setAllocations] = useState<AllocationRow[]>([
+    { id: '1', mcName: 'BMC Mumbai', current: 120, recommended: 145, status: 'on_track', rationale: 'Population density multiplier + aging sewage network requires capex.' },
+    { id: '2', mcName: 'PMC Pune', current: 85, recommended: 65, status: 'watch', rationale: 'Prior year fund utilisation <60%. Redirecting to higher priority zones.' },
+    { id: '3', mcName: 'NMC Nagpur', current: 45, recommended: 35, status: 'audit', rationale: 'SLA breach continuous. Audit recommended before further allocation.' },
+    { id: '4', mcName: 'TMC Thane', current: 60, recommended: 75, status: 'on_track', rationale: 'Consistent performance. Rapid urban expansion demands fleet upgrade.' },
+    { id: '5', mcName: 'NMC Nashik', current: 40, recommended: 30, status: 'on_track', rationale: 'Requirements fulfilled in previous cycle.' },
+  ])
+
+  useEffect(() => {
+    const fetchOracle = async () => {
+      try {
+        const data = await fetchApi<{ recommendations: any[] }>('/api/oracle/recommend-funds')
+        if (data && data.recommendations) {
+           setAllocations(data.recommendations.map((r, i) => ({
+             id: String(i),
+             mcName: r.mc_name,
+             current: r.current_allocation_cr,
+             recommended: r.recommended_allocation_cr,
+             status: r.status as any,
+             rationale: r.rationale
+           })))
+        }
+      } catch (err) {
+        console.error("Failed to fetch ORACLE allocations", err)
+      }
+    }
+    fetchOracle()
+  }, [fetchApi])
+
   return (
     <StateLayout>
       <div className="p-6 pb-28">
@@ -40,7 +64,7 @@ export default function AllocationPage() {
 
         <div className="mb-8">
           <h2 className="text-lg font-semibold text-text-primary mb-4">Fund Distribution Matrix</h2>
-          <AllocationTable data={MOCK_ALLOCATIONS} totalBudget={350} />
+          <AllocationTable data={allocations} totalBudget={350} />
         </div>
 
         <div className="mb-8">

@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { Send, Mic, MicOff, Bot } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '../../lib/utils'
+import { useApi } from '../../hooks/useApi'
 
 interface Message {
   id: string
@@ -15,6 +16,7 @@ interface ViraChatProps {
 }
 
 export default function ViraChat({ className }: ViraChatProps) {
+  const { fetchApi } = useApi();
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -28,6 +30,15 @@ export default function ViraChat({ className }: ViraChatProps) {
   const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
+  const speak = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel() // Stop any current speech
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = 'en-IN'
+      window.speechSynthesis.speak(utterance)
+    }
+  }
+
   const addMessage = (role: 'user' | 'assistant', text: string) => {
     const msg: Message = {
       id: Date.now().toString(),
@@ -37,6 +48,10 @@ export default function ViraChat({ className }: ViraChatProps) {
     }
     setMessages((prev) => [...prev, msg])
     setTimeout(() => scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' }), 100)
+    
+    if (role === 'assistant') {
+      speak(text)
+    }
   }
 
   const handleSend = async () => {
@@ -47,12 +62,10 @@ export default function ViraChat({ className }: ViraChatProps) {
 
     setIsTyping(true)
     try {
-      const res = await fetch('http://localhost:8000/api/vira/chat', {
+      const data = await fetchApi<{ response: string }>('/api/vira/chat', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ user_id: 'CITIZEN-MUM-01', message: userText })
+        body: { user_id: 'CITIZEN-MUM-01', message: userText }
       })
-      const data = await res.json()
       setIsTyping(false)
       addMessage('assistant', data.response || "I didn't quite get that.")
     } catch (err) {
@@ -62,29 +75,49 @@ export default function ViraChat({ className }: ViraChatProps) {
   }
 
   const toggleVoice = () => {
-    setIsListening(!isListening)
-    if (!isListening) {
-      // Simulate voice recording
-      setTimeout(async () => {
-        setIsListening(false)
-        const voiceText = 'There is a burst water pipe near Powai Lake'
-        addMessage('user', '🎤 ' + voiceText)
-        setIsTyping(true)
-        try {
-          const res = await fetch('http://localhost:8000/api/vira/voice', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ user_id: 'CITIZEN-MUM-01', transcribed_text: voiceText })
-          })
-          const data = await res.json()
-          setIsTyping(false)
-          addMessage('assistant', data.response || "Voice processed.")
-        } catch (err) {
-          setIsTyping(false)
-          addMessage('assistant', "Error processing voice.")
-        }
-      }, 3000)
+    if (isListening) {
+      setIsListening(false)
+      return
     }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      alert("Speech recognition isn't supported in your browser.")
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'en-IN'
+    recognition.continuous = false
+    recognition.interimResults = false
+
+    recognition.onstart = () => setIsListening(true)
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = async (event: any) => {
+      setIsListening(false)
+      const voiceText = event.results[0][0].transcript
+      addMessage('user', '🎤 ' + voiceText)
+      
+      setIsTyping(true)
+      try {
+        const data = await fetchApi<{ response: string }>('/api/vira/chat', {
+          method: 'POST',
+          body: { user_id: 'CITIZEN-MUM-01', message: voiceText }
+        })
+        setIsTyping(false)
+        addMessage('assistant', data.response || "Voice processed.")
+      } catch (err) {
+        setIsTyping(false)
+        addMessage('assistant', "Error processing voice.")
+      }
+    }
+
+    recognition.onerror = () => setIsListening(false)
+    recognition.onend = () => setIsListening(false)
+
+    recognition.start()
   }
 
   return (

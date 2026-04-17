@@ -1,5 +1,6 @@
 import { motion, AnimatePresence } from 'framer-motion'
 import { useEffect, useState } from 'react'
+import { useWebSocket } from '../../hooks/useWebSocket'
 
 interface ActivityEvent {
   id: string
@@ -23,27 +24,30 @@ const MOCK_EVENTS: ActivityEvent[] = [
   { id: '2', agent: 'COMMANDER', action: 'Assigned WRK-015 to ISS-0042 (2.3 km, score 0.87)', timestamp: '10:35 AM' },
   { id: '3', agent: 'GUARDIAN', action: 'ISS-0014 is 75 min overdue — escalating to BMC supervisor', timestamp: '10:42 AM' },
   { id: '4', agent: 'LOOP', action: 'ISS-0038 verified and resolved by Fleet Leader Suresh Naik', timestamp: '10:45 AM' },
-  { id: '5', agent: 'COGNOS', action: 'Vision: Fallen divider detected — CRITICAL (SV Road)', timestamp: '11:16 AM' },
-  { id: '6', agent: 'COMMANDER', action: 'Preempting: Reassigned WRK-008 from LOW to CRITICAL task', timestamp: '11:18 AM' },
-  { id: '7', agent: 'SENTINEL', action: 'Access granted: BMC-SUP-003 viewed ISS-0042 details', timestamp: '11:20 AM' },
-  { id: '8', agent: 'COGNOS', action: 'Sensor cluster: 4 reports within 10m radius — CONFIRMED', timestamp: '11:30 AM' },
-  { id: '9', agent: 'LOOP', action: 'Citizen notified: ISS-0038 resolution confirmed', timestamp: '11:35 AM' },
-  { id: '10', agent: 'GUARDIAN', action: 'SLA warning: ISS-0067 at 80% deadline', timestamp: '11:45 AM' },
-]
+] as ActivityEvent[]
 
 export default function ActivityFeed({ className }: { className?: string }) {
-  const [events, setEvents] = useState(MOCK_EVENTS.slice(0, 6))
+  const [events, setEvents] = useState<ActivityEvent[]>(MOCK_EVENTS)
 
-  // Simulate new events arriving
+  useWebSocket({
+    channel: 'agent_events?role=bmc_supervisor',
+    onMessage: (data: any) => {
+       if (data && data.agent) {
+         setEvents(prev => {
+            const newEvent: ActivityEvent = {
+               id: Date.now().toString(),
+               agent: data.agent,
+               action: data.action || `Executed workflow step: ${data.graph_mode || 'task_assigned'}`,
+               timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+            }
+            return [newEvent, ...prev].slice(0, 50) // keep last 50
+         })
+       }
+    }
+  })
+
   useEffect(() => {
-    let idx = 6
-    const interval = setInterval(() => {
-      if (idx < MOCK_EVENTS.length) {
-        setEvents((prev) => [MOCK_EVENTS[idx], ...prev].slice(0, 15))
-        idx++
-      }
-    }, 5000)
-    return () => clearInterval(interval)
+    // keeping mock just in case there's no data
   }, [])
 
   return (

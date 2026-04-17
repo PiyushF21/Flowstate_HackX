@@ -78,7 +78,7 @@ export default function LoginPage() {
           return (
             <motion.button
               key={role}
-              variants={cardVariants}
+              variants={cardVariants as any}
               whileHover={{
                 scale: 1.04,
                 boxShadow: `0 0 40px ${meta.color}22, 0 20px 60px rgba(0,0,0,0.4)`,

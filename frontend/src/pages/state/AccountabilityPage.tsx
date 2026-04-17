@@ -3,6 +3,7 @@ import StateLayout from '../../components/state/StateLayout'
 import ScorecardGrid, { type ScorecardData } from '../../components/state/ScorecardGrid'
 import LeagueTable, { type LeagueRow } from '../../components/state/LeagueTable'
 import { ChartLine } from '../../components/shared/Chart'
+import { useApi } from '../../hooks/useApi'
 
 const STATE_TREND = [
   { name: 'Month 1', scoreAvg: 65 },
@@ -16,11 +17,13 @@ export default function AccountabilityPage() {
   const [scores, setScores] = useState<ScorecardData[]>([])
   const [league, setLeague] = useState<LeagueRow[]>([])
 
+  const { fetchApi } = useApi()
+
   useEffect(() => {
-    fetch('http://localhost:8000/api/fleet/compare')
-      .then(res => res.json())
-      .then(data => {
-        if (data.mc_rankings) {
+    const fetchCompare = async () => {
+      try {
+        const data = await fetchApi<{ mc_rankings: any[] }>('/api/fleet/compare')
+        if (data && data.mc_rankings) {
           const mappedScores: ScorecardData[] = data.mc_rankings.map((d: any, idx: number) => ({
             id: String(idx),
             mcName: d.city,
@@ -39,9 +42,12 @@ export default function AccountabilityPage() {
           setScores(mappedScores)
           setLeague(mappedLeague)
         }
-      })
-      .catch(console.error)
-  }, [])
+      } catch (error) {
+        console.error("Failed to fetch fleet comparison", error)
+      }
+    }
+    fetchCompare()
+  }, [fetchApi])
 
   return (
     <StateLayout>

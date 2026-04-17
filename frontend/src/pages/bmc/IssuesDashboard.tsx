@@ -1,20 +1,36 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import BMCLayout from '../../components/bmc/BMCLayout'
 import KPICard from '../../components/shared/KPICard'
 import IssueTable, { type IssueRow } from '../../components/bmc/IssueTable'
 import IssueDetailPanel from '../../components/bmc/IssueDetailPanel'
 import ActivityFeed from '../../components/bmc/ActivityFeed'
-
-const MOCK_ISSUES: IssueRow[] = [
-  { id: 'ISS-MUM-0042', source: 'car_sensor', category: 'roads', severity: 'HIGH', confidence: 92, status: 'assigned', assignedTo: 'WRK-015', reportedAt: '2026-04-17T10:30:00' },
-  { id: 'ISS-MUM-0089', source: '360_capture', category: 'traffic', severity: 'CRITICAL', confidence: 98, status: 'escalated', assignedTo: 'WRK-008', reportedAt: '2026-04-17T11:15:00' },
-  { id: 'ISS-MUM-0012', source: 'manual', category: 'water_pipeline', severity: 'MEDIUM', confidence: 65, status: 'reported', reportedAt: '2026-04-17T09:05:00' },
-  { id: 'ISS-MUM-0038', source: 'manual', category: 'sanitation', severity: 'LOW', confidence: 85, status: 'resolved', assignedTo: 'WRK-022', reportedAt: '2026-04-16T14:20:00' },
-  { id: 'ISS-MUM-0067', source: 'car_sensor', category: 'roads', severity: 'HIGH', confidence: 88, status: 'in_progress', assignedTo: 'WRK-012', reportedAt: '2026-04-17T08:45:00' },
-]
+import { useApi } from '../../hooks/useApi'
 
 export default function IssuesDashboard() {
+  const { fetchApi } = useApi()
   const [selectedIssue, setSelectedIssue] = useState<IssueRow | null>(null)
+  const [issues, setIssues] = useState<IssueRow[]>([])
+
+  useEffect(() => {
+    const fetchIssues = async () => {
+      try {
+        const data = await fetchApi<{ issues: any[] }>('/api/issues?mc=BMC%20Mumbai')
+        setIssues(data.issues.map(i => ({
+          id: i.issue_id,
+          source: i.source as any,
+          category: i.category,
+          severity: i.severity as any,
+          confidence: 90,
+          status: i.status as any,
+          assignedTo: i.assignment?.worker_id,
+          reportedAt: i.created_at
+        })))
+      } catch (err) {
+        console.error("Failed to fetch dashboard issues", err)
+      }
+    }
+    fetchIssues()
+  }, [fetchApi])
 
   return (
     <BMCLayout>
@@ -54,7 +70,7 @@ export default function IssuesDashboard() {
                 ))}
               </div>
             </div>
-            <IssueTable data={MOCK_ISSUES} onRowClick={setSelectedIssue} />
+            <IssueTable data={issues} onRowClick={setSelectedIssue} />
           </div>
 
           {/* Activity Feed */}

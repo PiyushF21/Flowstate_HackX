@@ -16,7 +16,6 @@ interface PipelineNodeProps {
 export default function PipelineNode({
   stepIndex,
   agentId,
-  agentName,
   color,
   actionName,
   status,

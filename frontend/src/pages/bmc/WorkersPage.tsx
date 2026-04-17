@@ -1,26 +1,45 @@
+import { useState, useEffect } from 'react'
 import BMCLayout from '../../components/bmc/BMCLayout'
 import WorkerMap from '../../components/bmc/WorkerMap'
 import WorkerTable, { type WorkerRow } from '../../components/bmc/WorkerTable'
 import { Bot } from 'lucide-react'
-
-const MOCK_WORKERS: WorkerRow[] = [
-  { id: 'WRK-015', name: 'Ganesh Patil', specialization: 'Roads & Asphalt', status: 'on_task', currentTask: 'Pothole Repair — WEH KM 14.2', distance: '2.3 km', performanceScore: 92 },
-  { id: 'WRK-008', name: 'Suresh Naik', specialization: 'Structural', status: 'on_task', currentTask: 'Fallen Divider — SV Road', distance: '1.1 km', performanceScore: 85 },
-  { id: 'WRK-022', name: 'Ravi Shinde', specialization: 'Roads & Asphalt', status: 'available', performanceScore: 78 },
-  { id: 'WRK-012', name: 'Manoj Yadav', specialization: 'Electrical', status: 'on_task', currentTask: 'Street Light Repair', distance: '5.6 km', performanceScore: 64 },
-  { id: 'WRK-031', name: 'Amit Desai', specialization: 'Hydraulic', status: 'off_duty', performanceScore: 88 },
-]
-
-const mapWorkers = MOCK_WORKERS.map((w) => ({
-  id: w.id,
-  name: w.name,
-  lat: 19.076 + (Math.random() - 0.5) * 0.1,
-  lng: 72.8777 + (Math.random() - 0.5) * 0.1,
-  status: w.status,
-  task: w.currentTask
-}))
+import { useApi } from '../../hooks/useApi'
 
 export default function WorkersPage() {
+  const { fetchApi } = useApi()
+  const [workers, setWorkers] = useState<WorkerRow[]>([])
+
+  useEffect(() => {
+    const fetchWorkers = async () => {
+      try {
+        const data = await fetchApi<{ workers: any[] }>('/api/commander/workers')
+        if(data && data.workers) {
+          setWorkers(data.workers.map(w => ({
+            id: w.id,
+            name: w.name,
+            specialization: w.specialization,
+            status: w.status as 'on_task' | 'available' | 'off_duty',
+            currentTask: w.current_task,
+            distance: w.distance || '1.2 km',
+            performanceScore: w.performance_score || 85
+          })))
+        }
+      } catch (err) {
+        console.error("Failed to fetch workers", err)
+      }
+    }
+    fetchWorkers()
+  }, [fetchApi])
+
+  const mapWorkers = workers.map(w => ({
+    id: w.id,
+    name: w.name,
+    lat: 19.076 + (Math.random() - 0.5) * 0.1, // mock spread
+    lng: 72.8777 + (Math.random() - 0.5) * 0.1, // mock spread
+    status: w.status,
+    task: w.currentTask
+  }))
+
   return (
     <BMCLayout>
       <div className="p-6">
@@ -59,7 +78,7 @@ export default function WorkersPage() {
           {/* Table */}
           <div className="flex flex-col">
             <h2 className="text-lg font-semibold text-text-primary mb-4">Worker Directory</h2>
-            <WorkerTable workers={MOCK_WORKERS} />
+            <WorkerTable workers={workers} />
           </div>
         </div>
       </div>

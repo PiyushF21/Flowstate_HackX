@@ -4,6 +4,7 @@ import KPICard from '../../components/shared/KPICard'
 import StateMap from '../../components/state/StateMap'
 import MCPerformanceTable, { type MCPerformanceRow } from '../../components/state/MCPerformanceTable'
 import EscalationPanel from '../../components/state/EscalationPanel'
+import { useApi } from '../../hooks/useApi'
 
 const REGIONS = [
   { id: '1', name: 'BMC Mumbai', lat: 19.076, lng: 72.8777, performanceScore: 82 },
@@ -16,11 +17,13 @@ const REGIONS = [
 export default function OverviewPage() {
   const [tableData, setTableData] = useState<MCPerformanceRow[]>([])
 
+  const { fetchApi } = useApi()
+
   useEffect(() => {
-    fetch('http://localhost:8000/api/fleet/compare')
-      .then(res => res.json())
-      .then(data => {
-        if (data.mc_rankings) {
+    const fetchMatrix = async () => {
+      try {
+        const data = await fetchApi<{ mc_rankings: any[] }>('/api/fleet/compare')
+        if (data && data.mc_rankings) {
           const mapped = data.mc_rankings.map((d: any, idx: number) => ({
             id: String(idx),
             name: d.city,
@@ -32,14 +35,17 @@ export default function OverviewPage() {
             avgTime: d.avg_resolution_hours,
             workers: 0,
             utilization: 0,
-            sla: 0,
-            trend: 'stable'
+            trend: 'stable' as 'up' | 'down' | 'stable',
+            sla: 0
           }))
           setTableData(mapped)
         }
-      })
-      .catch(console.error)
-  }, [])
+      } catch (err) {
+        console.error("Failed to fetch matrix", err)
+      }
+    }
+    fetchMatrix()
+  }, [fetchApi])
 
   return (
     <StateLayout>
@@ -51,8 +57,8 @@ export default function OverviewPage() {
 
         {/* KPIs */}
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-4 mb-8">
-          <KPICard title="Total MCs" value={27} change={0} isPositive={true} format="number" />
-          <KPICard title="Issues This Week" value={4280} change={-124} isPositive={true} format="number" agentSource="FLEET" />
+          <KPICard title="Total MCs" value={27} change={0} isPositive={true} />
+          <KPICard title="Issues This Week" value={4280} change={-124} isPositive={true} agentSource="FLEET" />
           <KPICard title="Resolution Rate" value={78.4} suffix="%" change={+2.1} isPositive={true} />
           <KPICard title="Avg Resolve Time" value={6.1} suffix="h" change={-0.4} isPositive={true} />
           <KPICard title="Overdue Tasks" value={134} change={+18} isPositive={false} agentSource="GUARDIAN" />

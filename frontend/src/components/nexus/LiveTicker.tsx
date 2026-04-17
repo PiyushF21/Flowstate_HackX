@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useWebSocket } from '../../hooks/useWebSocket'
 
 const MOCK_MESSAGES = [
   "COGNOS VERIFIED ISSUE ISS-782: SEVERITY CRITICAL",
@@ -10,15 +11,27 @@ const MOCK_MESSAGES = [
 ]
 
 export default function LiveTicker() {
-  const [messages, setMessages] = useState(MOCK_MESSAGES)
+  const [messages, setMessages] = useState<string[]>(MOCK_MESSAGES)
+
+  useWebSocket({
+    channel: 'agent_events?role=nexus_admin',
+    onMessage: (data: any) => {
+       if (data && data.action) {
+         setMessages(prev => {
+            const rawEventMsg = `${data.agent} PERFORMED ${data.action.toUpperCase()}`
+            return [rawEventMsg, ...prev.slice(0, 9)]
+         })
+       }
+    }
+  })
 
   useEffect(() => {
+    // We only cycle mock if no real msgs are coming in fast enough, just to keep it alive
     const interval = setInterval(() => {
-      // Simulate rotating messages
       setMessages(prev => {
         const newArr = [...prev]
-        const first = newArr.shift()
-        if (first) newArr.push(first)
+        const last = newArr.pop()
+        if (last) newArr.unshift(last) // Reverse shifting to allow real msgs to drop in at front
         return newArr
       })
     }, 4000)

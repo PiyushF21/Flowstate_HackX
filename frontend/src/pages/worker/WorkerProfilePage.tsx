@@ -1,4 +1,4 @@
-import { LogOut, Star, Award, Clock } from 'lucide-react'
+import { LogOut, Star, Award } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import WorkerLayout from '../../components/worker/WorkerLayout'
 import StatusPill from '../../components/shared/StatusPill'

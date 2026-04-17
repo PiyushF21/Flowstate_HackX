@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ArrowLeft, Navigation, Phone } from 'lucide-react'
 import WorkerLayout from '../../components/worker/WorkerLayout'
 import TaskCard, { type TaskData } from '../../components/worker/TaskCard'
@@ -6,38 +6,44 @@ import ProcedureAccordion from '../../components/worker/ProcedureAccordion'
 import ProofUpload from '../../components/worker/ProofUpload'
 import SeverityBadge from '../../components/shared/SeverityBadge'
 import MapView from '../../components/shared/MapView'
+import { useApi } from '../../hooks/useApi'
 import { cn } from '../../lib/utils'
 
-const MOCK_TASKS: TaskData[] = [
-  {
-    id: '1', issue_id: 'ISS-MUM-2026-04-17-0042', title: 'Pothole Repair — WEH KM 14.2', category: 'roads', severity: 'HIGH',
-    status: 'assigned', location: 'WEH, KM 14.2, Andheri', distance: '2.3 km', deadline: '2026-04-17T18:00:00',
-    procedure: ['Assess pothole dimensions', 'Clear loose debris and standing water', 'Cut edges to create clean vertical walls', 'Apply tack coat to edges and base', 'Fill with cold-mix asphalt in 5cm layers', 'Compact each layer with vibrating plate compactor', 'Final surface flush with surrounding road', 'Upload before/after photos', 'Flag for permanent overlay if depth >15cm'],
-    materials: ['Cold-mix asphalt (50kg × 2)', 'Tack coat spray', 'Vibrating plate compactor', 'Safety cones (4)', 'High-vis vest'],
-    team: [{ name: 'Ganesh Patil', role: 'Fleet Leader' }, { name: 'Ravi Shinde', role: 'Field Worker' }, { name: 'Manoj Yadav', role: 'Field Worker' }],
-  },
-  {
-    id: '2', issue_id: 'ISS-MUM-2026-04-17-0089', title: 'Fallen Divider Cleanup — SV Road', category: 'traffic', severity: 'CRITICAL',
-    status: 'assigned', location: 'SV Road, Bandra Station', distance: '4.1 km', deadline: '2026-04-17T14:00:00', escalated: true,
-    procedure: ['Cordon area with safety barriers', 'Assess structural damage', 'Remove loose concrete debris', 'Clear roadway for traffic', 'Upload proof photos'],
-    materials: ['Safety barriers (6)', 'Heavy gloves', 'Wheelbarrow', 'High-vis vest'],
-    team: [{ name: 'Ganesh Patil', role: 'Fleet Leader' }, { name: 'Suresh Naik', role: 'Field Worker' }],
-  },
-  {
-    id: '3', issue_id: 'ISS-MUM-2026-04-17-0056', title: 'Street Light Repair — Bandra', category: 'electrical', severity: 'MEDIUM',
-    status: 'in_progress', location: 'Bandra Reclamation', distance: '5.6 km', deadline: '2026-04-19T18:00:00',
-    procedure: ['Inspect wiring and bulb', 'Replace faulty component', 'Test operation', 'Upload proof photos'],
-    materials: ['LED bulb replacement', 'Wire stripper', 'Insulation tape', 'Ladder'],
-    team: [{ name: 'Ganesh Patil', role: 'Fleet Leader' }],
-  },
-]
-
 export default function TasksPage() {
+  const { fetchApi } = useApi()
   const [filterTab, setFilterTab] = useState<'all' | 'active' | 'completed'>('all')
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null)
   const [showProof, setShowProof] = useState(false)
+  const [tasks, setTasks] = useState<TaskData[]>([])
 
-  const filtered = MOCK_TASKS.filter((t) => {
+  useEffect(() => {
+    const fetchTasks = async () => {
+      try {
+        const data = await fetchApi<{ tasks: any[] }>('/api/tasks/mine')
+        if (data && data.tasks) {
+          setTasks(data.tasks.map(t => ({
+             id: t.id,
+             issue_id: t.issue_id,
+             title: t.title || 'Infrastructure Task',
+             category: t.category,
+             severity: t.severity as any,
+             status: t.status as any,
+             location: t.location?.address || 'Mumbai',
+             distance: t.distance || '2.3 km',
+             deadline: t.deadline,
+             procedure: t.procedure || [],
+             materials: t.materials || [],
+             team: t.team || []
+          })))
+        }
+      } catch (error) {
+        console.error("Failed to fetch tasks", error)
+      }
+    }
+    fetchTasks()
+  }, [fetchApi])
+
+  const filtered = tasks.filter((t) => {
     if (filterTab === 'active') return t.status !== 'resolved'
     if (filterTab === 'completed') return t.status === 'resolved'
     return true

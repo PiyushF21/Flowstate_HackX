@@ -1,5 +1,5 @@
 import BMCLayout from '../../components/bmc/BMCLayout'
-import StatusPill from '../../components/shared/StatusPill'
+
 import { formatSmartDate } from '../../lib/utils'
 
 const COMPLETED = [

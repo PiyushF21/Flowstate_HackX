@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { ArrowUpDown, Filter } from 'lucide-react'
+import { ArrowUpDown } from 'lucide-react'
 import SeverityBadge from '../shared/SeverityBadge'
 import StatusPill from '../shared/StatusPill'
 import ConfidenceScore from './ConfidenceScore'
@@ -53,6 +53,7 @@ export default function IssueTable({ data, onRowClick }: IssueTableProps) {
       valB = statOrder[b.status]
     }
 
+    if (valA === undefined || valB === undefined) return 0
     if (valA < valB) return sortDesc ? 1 : -1
     if (valA > valB) return sortDesc ? -1 : 1
     return 0

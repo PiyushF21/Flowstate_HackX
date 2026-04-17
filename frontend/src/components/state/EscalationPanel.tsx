@@ -1,5 +1,7 @@
 import { useEffect, useState } from 'react'
 import { AlertTriangle, ChevronRight } from 'lucide-react'
+import { useApi } from '../../hooks/useApi'
+import { useWebSocket } from '../../hooks/useWebSocket'
 
 interface EscalationAlert {
   id: string
@@ -11,11 +13,32 @@ interface EscalationAlert {
 export default function EscalationPanel() {
   const [alerts, setAlerts] = useState<EscalationAlert[]>([])
 
+  const { fetchApi } = useApi()
+
+  useWebSocket({
+     channel: 'escalations',
+     onMessage: (data: any) => {
+        if (data && data.alert_id) {
+           setAlerts(prev => {
+              const newAlert = {
+                id: data.alert_id,
+                mc: data.location?.city || data.data?.mc_name || 'System',
+                description: data.description,
+                timeStr: new Date(data.timestamp || Date.now()).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+              }
+              // Prevent duplicates
+              if (prev.find(a => a.id === newAlert.id)) return prev
+              return [newAlert, ...prev].slice(0, 50)
+           })
+        }
+     }
+  })
+
   useEffect(() => {
-    fetch('http://localhost:8000/api/guardian/alerts')
-      .then(res => res.json())
-      .then(data => {
-        if (data.alerts) {
+    const fetchAlerts = async () => {
+      try {
+        const data = await fetchApi<{ alerts: any[] }>('/api/guardian/alerts')
+        if (data && data.alerts) {
           const mapped = data.alerts.map((a: any) => ({
             id: a.alert_id,
             mc: a.location?.city || a.data?.mc_name || 'System',
@@ -24,9 +47,12 @@ export default function EscalationPanel() {
           }))
           setAlerts(mapped)
         }
-      })
-      .catch(console.error)
-  }, [])
+      } catch (err) {
+        console.error("Failed to fetch GUARDIAN alerts", err)
+      }
+    }
+    fetchAlerts()
+  }, [fetchApi])
 
   return (
     <div className="bg-surface rounded-2xl border border-agent-guardian/30 overflow-hidden flex flex-col h-full">

@@ -1,4 +1,5 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useApi } from '../../hooks/useApi'
 import { Search, Plus, Camera, PenSquare } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import MapView from '../../components/shared/MapView'
@@ -19,109 +20,40 @@ const CATEGORIES = [
   { key: 'structural', label: '🏗️ Structural' },
 ]
 
-// Mock issues
-const MOCK_ISSUES: IssueData[] = [
-  {
-    issue_id: 'ISS-MUM-2026-04-17-0042',
-    source: 'car_sensor',
-    category: 'roads',
-    subcategory: 'pothole',
-    fault_code: 'RD-001',
-    severity: 'HIGH',
-    status: 'assigned',
-    description: 'Confirmed pothole on Western Express Highway near Andheri, KM 14.2. Severity HIGH based on 3 vehicle sensor reports within 2 hours.',
-    location: { lat: 19.1196, lng: 72.8467, address: 'WEH, KM 14.2, Andheri', ward: 'K-West' },
-    assignment: { worker_id: 'WRK-MUM-015', worker_name: 'Ganesh Patil', deadline: '2026-04-17T18:00:00' },
-    created_at: '2026-04-17T10:31:00',
-    timeline: [
-      { status: 'reported', timestamp: '2026-04-17T10:31:00' },
-      { status: 'assigned', timestamp: '2026-04-17T10:35:00', note: 'Auto-assigned by COMMANDER' },
-    ],
-  },
-  {
-    issue_id: 'ISS-MUM-2026-04-17-0089',
-    source: '360_capture',
-    category: 'traffic',
-    subcategory: 'broken_divider',
-    fault_code: 'OB-001',
-    severity: 'CRITICAL',
-    status: 'in_progress',
-    description: 'Concrete road divider has collapsed across two lanes of SV Road near Bandra Station. Approximately 60% lane blockage.',
-    location: { lat: 19.0544, lng: 72.8402, address: 'SV Road, Bandra Station', ward: 'H-West' },
-    assignment: { worker_id: 'WRK-MUM-008', worker_name: 'Suresh Naik', deadline: '2026-04-17T14:00:00' },
-    created_at: '2026-04-17T11:16:00',
-    timeline: [
-      { status: 'reported', timestamp: '2026-04-17T11:16:00' },
-      { status: 'assigned', timestamp: '2026-04-17T11:18:00' },
-      { status: 'in_progress', timestamp: '2026-04-17T11:45:00' },
-    ],
-  },
-  {
-    issue_id: 'ISS-MUM-2026-04-16-0034',
-    source: 'manual_complaint',
-    category: 'water_pipeline',
-    subcategory: 'burst_pipe',
-    severity: 'HIGH',
-    status: 'resolved',
-    description: 'Burst water pipe flooding the road near Powai Lake Gate 2. Water main appears to have cracked.',
-    location: { lat: 19.1176, lng: 72.9060, address: 'Powai Lake Gate 2', ward: 'S-Ward' },
-    created_at: '2026-04-16T08:00:00',
-    timeline: [
-      { status: 'reported', timestamp: '2026-04-16T08:00:00' },
-      { status: 'assigned', timestamp: '2026-04-16T08:10:00' },
-      { status: 'in_progress', timestamp: '2026-04-16T09:00:00' },
-      { status: 'resolved', timestamp: '2026-04-16T13:30:00' },
-    ],
-  },
-  {
-    issue_id: 'ISS-MUM-2026-04-17-0056',
-    source: 'manual_complaint',
-    category: 'electrical',
-    subcategory: 'street_light',
-    severity: 'MEDIUM',
-    status: 'reported',
-    description: 'Street light malfunctioning — flickering on and off continuously at Bandra Reclamation junction.',
-    location: { lat: 19.0500, lng: 72.8296, address: 'Bandra Reclamation', ward: 'H-West' },
-    created_at: '2026-04-17T14:20:00',
-    timeline: [{ status: 'reported', timestamp: '2026-04-17T14:20:00' }],
-  },
-  {
-    issue_id: 'ISS-MUM-2026-04-17-0071',
-    source: 'car_sensor',
-    category: 'roads',
-    subcategory: 'pothole',
-    severity: 'LOW',
-    status: 'assigned',
-    description: 'Minor road surface irregularity detected by single vehicle sensor. Speed bump likely.',
-    location: { lat: 19.0760, lng: 72.8777, address: 'CST Road, Fort', ward: 'A-Ward' },
-    created_at: '2026-04-17T15:00:00',
-    timeline: [
-      { status: 'reported', timestamp: '2026-04-17T15:00:00' },
-      { status: 'assigned', timestamp: '2026-04-17T15:30:00' },
-    ],
-  },
-]
-
-const mapMarkers = MOCK_ISSUES.map((issue) => ({
-  id: issue.issue_id,
-  lat: issue.location.lat,
-  lng: issue.location.lng,
-  color:
-    issue.status === 'reported' ? '#EF4444'
-    : issue.status === 'assigned' ? '#F97316'
-    : issue.status === 'in_progress' ? '#EAB308'
-    : '#22C55E',
-  label: issue.description,
-}))
-
 export default function AreaMapPage() {
+  const { fetchApi } = useApi()
   const [activeFilter, setActiveFilter] = useState('all')
   const [selectedIssue, setSelectedIssue] = useState<IssueData | null>(null)
   const [showFab, setShowFab] = useState(false)
+  const [issues, setIssues] = useState<IssueData[]>([])
+
+  useEffect(() => {
+    const fetchIssues = async () => {
+      try {
+        const data = await fetchApi<{ issues: IssueData[] }>('/api/issues')
+        setIssues(data.issues || [])
+      } catch (err) {
+        console.error("Failed to fetch issues", err)
+      }
+    }
+    fetchIssues()
+  }, [fetchApi])
 
   const filtered = activeFilter === 'all'
-    ? MOCK_ISSUES
-    : MOCK_ISSUES.filter((i) => i.category === activeFilter)
+    ? issues
+    : issues.filter((i) => i.category === activeFilter)
+
+  const mapMarkers = issues.map((issue) => ({
+    id: issue.issue_id,
+    lat: issue.location.lat,
+    lng: issue.location.lng,
+    color:
+      issue.status === 'reported' ? '#EF4444'
+      : issue.status === 'assigned' ? '#F97316'
+      : issue.status === 'in_progress' ? '#EAB308'
+      : '#22C55E',
+    label: issue.description,
+  }))
 
   return (
     <CitizenLayout>

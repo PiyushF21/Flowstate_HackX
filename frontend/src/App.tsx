@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/shared/ProtectedRoute'
-import PlaceholderPage from './components/shared/PlaceholderPage'
 import LoginPage from './pages/LoginPage'
 
 // Citizen Pages

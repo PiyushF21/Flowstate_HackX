@@ -40,7 +40,7 @@ export function useWebSocket({
   enabled = true,
 }: UseWebSocketOptions): UseWebSocketReturn {
   const wsRef = useRef<WebSocket | null>(null)
-  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const reconnectTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
   const [isConnected, setIsConnected] = useState(false)
 
   // Store latest callbacks in refs to avoid reconnection loops

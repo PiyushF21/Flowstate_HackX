@@ -2,6 +2,7 @@ import { useState, useRef } from 'react'
 import { Send, Mic, MicOff, Bot, Wrench, HelpCircle, FileText } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '../../lib/utils'
+import { useApi } from '../../hooks/useApi'
 
 interface Message {
   id: string
@@ -17,6 +18,7 @@ const QUICK_ACTIONS = [
 ]
 
 export default function CopilotChat({ className }: { className?: string }) {
+  const { fetchApi } = useApi()
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -30,22 +32,89 @@ export default function CopilotChat({ className }: { className?: string }) {
   const [isTyping, setIsTyping] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
 
+  const speak = (text: string) => {
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel() // Stop any current speech
+      const utterance = new SpeechSynthesisUtterance(text)
+      utterance.lang = 'en-IN'
+      window.speechSynthesis.speak(utterance)
+    }
+  }
+
   const addMessage = (role: 'user' | 'assistant', text: string) => {
     const msg: Message = { id: Date.now().toString(), role, text, timestamp: new Date() }
     setMessages((prev) => [...prev, msg])
     setTimeout(() => scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' }), 100)
+    
+    if (role === 'assistant') {
+      speak(text)
+    }
   }
 
-  const handleSend = (text?: string) => {
+  const handleSend = async (text?: string) => {
     const msg = text || input.trim()
     if (!msg) return
     addMessage('user', msg)
     setInput('')
+    
     setIsTyping(true)
-    setTimeout(() => {
+    try {
+      const data = await fetchApi<{ response: string }>('/api/field-copilot/voice', {
+        method: 'POST',
+        body: { user_id: 'WRK-MUM-015', message: msg, issue_id: 'ISS-MUM-2026-04-17-0042' }
+      })
       setIsTyping(false)
-      addMessage('assistant', "For pothole repair, start by assessing the dimensions. If it's deeper than 15cm, you'll want to use the vibrating plate compactor on each 5cm layer. Make sure to clean all loose debris first. Shall I walk you through each step?")
-    }, 1800)
+      addMessage('assistant', data.response || "Task updated.")
+    } catch (err) {
+      setIsTyping(false)
+      addMessage('assistant', "Network Error. Unable to process.")
+    }
+  }
+
+  const toggleVoice = () => {
+    if (isListening) {
+      setIsListening(false)
+      return
+    }
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition
+    if (!SpeechRecognition) {
+      alert("Speech recognition isn't supported in your browser.")
+      return
+    }
+
+    const recognition = new SpeechRecognition()
+    recognition.lang = 'en-IN'
+    recognition.continuous = false
+    recognition.interimResults = false
+
+    recognition.onstart = () => setIsListening(true)
+
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    recognition.onresult = async (event: any) => {
+      setIsListening(false)
+      const voiceText = event.results[0][0].transcript
+      addMessage('user', '🎤 ' + voiceText)
+      
+      setIsTyping(true)
+      try {
+        const data = await fetchApi<{ response: string }>('/api/field-copilot/voice', {
+          method: 'POST',
+          body: { user_id: 'WRK-MUM-015', message: voiceText, issue_id: 'ISS-MUM-2026-04-17-0042' }
+        })
+        setIsTyping(false)
+        addMessage('assistant', data.response || "Voice processed.")
+      } catch (err) {
+        setIsTyping(false)
+        addMessage('assistant', "Network Error. Unable to process.")
+      }
+    }
+
+    recognition.onerror = () => setIsListening(false)
+    recognition.onend = () => setIsListening(false)
+
+    recognition.start()
   }
 
   return (
@@ -109,7 +178,7 @@ export default function CopilotChat({ className }: { className?: string }) {
       <div className="px-3 pb-3 pt-2 border-t border-border">
         <div className="flex items-center gap-2">
           <button
-            onClick={() => setIsListening(!isListening)}
+            onClick={toggleVoice}
             className={cn(
               'p-2.5 rounded-xl transition-all',
               isListening ? 'bg-critical/20 text-critical animate-pulse' : 'bg-surface-elevated text-text-muted hover:text-text-secondary'

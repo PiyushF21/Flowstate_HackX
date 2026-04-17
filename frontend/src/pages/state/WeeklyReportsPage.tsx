@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import StateLayout from '../../components/state/StateLayout'
 import ReportViewer from '../../components/state/ReportViewer'
-import { FileText, Bot } from 'lucide-react'
+import { Bot } from 'lucide-react'
 import { cn } from '../../lib/utils'
 
 const REPORTS = [
