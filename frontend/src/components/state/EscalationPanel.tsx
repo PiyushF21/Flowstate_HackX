@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import { AlertTriangle, ChevronRight } from 'lucide-react'
 
 interface EscalationAlert {
@@ -7,13 +8,26 @@ interface EscalationAlert {
   timeStr: string
 }
 
-const MOCK_ALERTS: EscalationAlert[] = [
-  { id: '1', mc: 'PMC Pune', description: 'Water main burst on FC Road — 75 min overdue', timeStr: '10 mins ago' },
-  { id: '2', mc: 'NMC Nagpur', description: 'Resolution rate dropped to 48% today', timeStr: '1 hour ago' },
-  { id: '3', mc: 'TMC Thane', description: 'Multiple CRITICAL failures detected in Ward B', timeStr: '2 hours ago' },
-]
-
 export default function EscalationPanel() {
+  const [alerts, setAlerts] = useState<EscalationAlert[]>([])
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/guardian/alerts')
+      .then(res => res.json())
+      .then(data => {
+        if (data.alerts) {
+          const mapped = data.alerts.map((a: any) => ({
+            id: a.alert_id,
+            mc: a.location?.city || a.data?.mc_name || 'System',
+            description: a.description,
+            timeStr: new Date(a.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+          }))
+          setAlerts(mapped)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
   return (
     <div className="bg-surface rounded-2xl border border-agent-guardian/30 overflow-hidden flex flex-col h-full">
       <div className="bg-agent-guardian/10 px-4 py-3 border-b border-agent-guardian/20 flex items-center justify-between">
@@ -24,11 +38,12 @@ export default function EscalationPanel() {
           </span>
           GUARDIAN Alerts
         </h3>
-        <span className="bg-agent-guardian text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{MOCK_ALERTS.length} Active</span>
+        <span className="bg-agent-guardian text-white text-[10px] font-bold px-2 py-0.5 rounded-full">{alerts.length} Active</span>
       </div>
 
       <div className="flex-1 overflow-y-auto p-4 space-y-3">
-        {MOCK_ALERTS.map(alert => (
+        {alerts.length === 0 && <p className="text-sm text-text-muted text-center py-4">No active alerts.</p>}
+        {alerts.map(alert => (
           <div key={alert.id} className="p-3 rounded-xl bg-surface-elevated border border-border">
             <div className="flex justify-between items-start mb-1.5">
               <span className="text-[10px] font-bold text-text-primary px-1.5 py-0.5 rounded bg-surface border border-border uppercase">{alert.mc}</span>

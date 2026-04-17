@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react'
 import StateLayout from '../../components/state/StateLayout'
 import KPICard from '../../components/shared/KPICard'
 import StateMap from '../../components/state/StateMap'
@@ -12,14 +13,34 @@ const REGIONS = [
   { id: '5', name: 'NMC Nashik', lat: 20.0110, lng: 73.7903, performanceScore: 85 },
 ]
 
-const TABLE_DATA: MCPerformanceRow[] = [
-  { id: '1', name: 'BMC Mumbai', issuesReceived: 1420, issuesResolved: 1164, pending: 256, overdue: 4, resRate: 82, avgTime: 4.2, workers: 3400, utilization: 88, sla: 91, trend: 'up' },
-  { id: '2', name: 'PMC Pune', issuesReceived: 890, issuesResolved: 605, pending: 285, overdue: 12, resRate: 68, avgTime: 8.5, workers: 1200, utilization: 94, sla: 74, trend: 'down' },
-  { id: '3', name: 'NMC Nagpur', issuesReceived: 450, issuesResolved: 216, pending: 234, overdue: 45, resRate: 48, avgTime: 18.2, workers: 850, utilization: 62, sla: 45, trend: 'down' },
-  { id: '4', name: 'TMC Thane', issuesReceived: 620, issuesResolved: 465, pending: 155, overdue: 8, resRate: 75, avgTime: 6.1, workers: 900, utilization: 82, sla: 80, trend: 'stable' },
-]
-
 export default function OverviewPage() {
+  const [tableData, setTableData] = useState<MCPerformanceRow[]>([])
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/fleet/compare')
+      .then(res => res.json())
+      .then(data => {
+        if (data.mc_rankings) {
+          const mapped = data.mc_rankings.map((d: any, idx: number) => ({
+            id: String(idx),
+            name: d.city,
+            issuesReceived: d.total_issues,
+            issuesResolved: d.resolved_issues,
+            pending: d.total_issues - d.resolved_issues,
+            overdue: d.overdue_tasks,
+            resRate: d.resolution_rate_pct,
+            avgTime: d.avg_resolution_hours,
+            workers: 0,
+            utilization: 0,
+            sla: 0,
+            trend: 'stable'
+          }))
+          setTableData(mapped)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
   return (
     <StateLayout>
       <div className="p-6">
@@ -55,7 +76,7 @@ export default function OverviewPage() {
                Export Data (CSV)
              </button>
           </div>
-          <MCPerformanceTable data={TABLE_DATA} />
+          <MCPerformanceTable data={tableData} />
         </div>
       </div>
     </StateLayout>

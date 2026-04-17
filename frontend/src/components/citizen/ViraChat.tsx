@@ -39,26 +39,50 @@ export default function ViraChat({ className }: ViraChatProps) {
     setTimeout(() => scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: 'smooth' }), 100)
   }
 
-  const handleSend = () => {
+  const handleSend = async () => {
     if (!input.trim()) return
-    addMessage('user', input.trim())
+    const userText = input.trim()
+    addMessage('user', userText)
     setInput('')
 
-    // Simulate VIRA response
     setIsTyping(true)
-    setTimeout(() => {
+    try {
+      const res = await fetch('http://localhost:8000/api/vira/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: 'CITIZEN-MUM-01', message: userText })
+      })
+      const data = await res.json()
       setIsTyping(false)
-      addMessage('assistant', "Got it! I've noted your concern. Let me check on that for you. Is there anything specific about the location you'd like to add?")
-    }, 1500)
+      addMessage('assistant', data.response || "I didn't quite get that.")
+    } catch (err) {
+      setIsTyping(false)
+      addMessage('assistant', "Sorry, I'm having trouble connecting to the network right now.")
+    }
   }
 
   const toggleVoice = () => {
     setIsListening(!isListening)
     if (!isListening) {
       // Simulate voice recording
-      setTimeout(() => {
+      setTimeout(async () => {
         setIsListening(false)
-        setInput('There is a burst water pipe near Gate 2')
+        const voiceText = 'There is a burst water pipe near Powai Lake'
+        addMessage('user', '🎤 ' + voiceText)
+        setIsTyping(true)
+        try {
+          const res = await fetch('http://localhost:8000/api/vira/voice', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ user_id: 'CITIZEN-MUM-01', transcribed_text: voiceText })
+          })
+          const data = await res.json()
+          setIsTyping(false)
+          addMessage('assistant', data.response || "Voice processed.")
+        } catch (err) {
+          setIsTyping(false)
+          addMessage('assistant', "Error processing voice.")
+        }
       }, 3000)
     }
   }

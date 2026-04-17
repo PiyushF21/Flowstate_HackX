@@ -1,25 +1,8 @@
+import { useEffect, useState } from 'react'
 import StateLayout from '../../components/state/StateLayout'
 import ScorecardGrid, { type ScorecardData } from '../../components/state/ScorecardGrid'
 import LeagueTable, { type LeagueRow } from '../../components/state/LeagueTable'
 import { ChartLine } from '../../components/shared/Chart'
-
-const SCORES: ScorecardData[] = [
-  { id: '1', mcName: 'BMC Mumbai', grade: 'B', resRate: 82, avgTime: 4.2, overduePcnt: 4, satisfaction: 4.1, trend: 'up' },
-  { id: '2', mcName: 'TMC Thane', grade: 'B', resRate: 75, avgTime: 6.1, overduePcnt: 8, satisfaction: 3.8, trend: 'stable' },
-  { id: '3', mcName: 'NMC Nashik', grade: 'A', resRate: 85, avgTime: 3.5, overduePcnt: 2, satisfaction: 4.5, trend: 'up' },
-  { id: '4', mcName: 'PMC Pune', grade: 'C', resRate: 68, avgTime: 8.5, overduePcnt: 12, satisfaction: 3.1, trend: 'down' },
-  { id: '5', mcName: 'NMC Nagpur', grade: 'F', resRate: 48, avgTime: 18.2, overduePcnt: 25, satisfaction: 2.1, trend: 'down' },
-  { id: '6', mcName: 'KDMC Kalyan', grade: 'D', resRate: 55, avgTime: 12.0, overduePcnt: 18, satisfaction: 2.5, trend: 'up' },
-]
-
-const LEAGUE: LeagueRow[] = [
-  { rank: 1, mcName: 'NMC Nashik', compositeScore: 92 },
-  { rank: 2, mcName: 'BMC Mumbai', compositeScore: 84 },
-  { rank: 3, mcName: 'TMC Thane', compositeScore: 78 },
-  { rank: 4, mcName: 'PMC Pune', compositeScore: 65 },
-  { rank: 5, mcName: 'KDMC Kalyan', compositeScore: 52 },
-  { rank: 6, mcName: 'NMC Nagpur', compositeScore: 41 },
-]
 
 const STATE_TREND = [
   { name: 'Month 1', scoreAvg: 65 },
@@ -30,6 +13,36 @@ const STATE_TREND = [
 ]
 
 export default function AccountabilityPage() {
+  const [scores, setScores] = useState<ScorecardData[]>([])
+  const [league, setLeague] = useState<LeagueRow[]>([])
+
+  useEffect(() => {
+    fetch('http://localhost:8000/api/fleet/compare')
+      .then(res => res.json())
+      .then(data => {
+        if (data.mc_rankings) {
+          const mappedScores: ScorecardData[] = data.mc_rankings.map((d: any, idx: number) => ({
+            id: String(idx),
+            mcName: d.city,
+            grade: d.score >= 90 ? 'A' : d.score >= 75 ? 'B' : d.score >= 60 ? 'C' : d.score >= 50 ? 'D' : 'F',
+            resRate: d.resolution_rate_pct,
+            avgTime: d.avg_resolution_hours,
+            overduePcnt: d.total_issues ? Math.round((d.overdue_tasks / d.total_issues) * 100) : 0,
+            satisfaction: 4.0,
+            trend: 'stable'
+          }))
+          const mappedLeague: LeagueRow[] = data.mc_rankings.map((d: any) => ({
+            rank: d.rank,
+            mcName: d.city,
+            compositeScore: d.score
+          }))
+          setScores(mappedScores)
+          setLeague(mappedLeague)
+        }
+      })
+      .catch(console.error)
+  }, [])
+
   return (
     <StateLayout>
       <div className="p-6">
@@ -58,11 +71,11 @@ export default function AccountabilityPage() {
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">
           <div className="xl:col-span-3">
             <h2 className="text-lg font-semibold text-text-primary mb-4">Detailed MC Report Cards</h2>
-            <ScorecardGrid data={SCORES} />
+            <ScorecardGrid data={scores} />
           </div>
 
           <div className="xl:col-span-1">
-             <LeagueTable data={LEAGUE} />
+             <LeagueTable data={league} />
           </div>
         </div>
       </div>

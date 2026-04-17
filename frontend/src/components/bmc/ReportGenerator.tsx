@@ -6,13 +6,21 @@ export default function ReportGenerator() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [isReady, setIsReady] = useState(false)
 
-  const handleGenerate = () => {
+  const handleGenerate = async () => {
     setIsGenerating(true)
-    // Simulate PRESCIENT agent generation
-    setTimeout(() => {
+    try {
+      const res = await fetch('http://localhost:8000/api/prescient/daily/Mumbai')
+      if (res.ok) {
+        setIsGenerating(false)
+        setIsReady(true)
+      } else {
+        setIsGenerating(false)
+        console.error('Failed to generate report')
+      }
+    } catch (err) {
       setIsGenerating(false)
-      setIsReady(true)
-    }, 3000)
+      console.error('Network error', err)
+    }
   }
 
   if (isReady) {
