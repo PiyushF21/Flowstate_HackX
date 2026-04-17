@@ -81,48 +81,48 @@
 ## Phase 4: Citizen + Worker Dashboards — Mobile-First (Day 2 — PARALLEL with backend testing)
 
 ### Citizen Components
-- [ ] Create `CitizenLayout.tsx` — mobile phone frame + bottom tabs
-- [ ] Create `BottomTabNav.tsx` — 4 tabs (Map, Cars, Report, Profile)
-- [ ] Create `IssuePin.tsx` — map pin with status color
-- [ ] Create `CarCard.tsx` — horizontal scroll car card
-- [ ] Create `CategoryTile.tsx` — selectable category tile with icon
-- [ ] Create `ViraChat.tsx` — VIRA chat widget (text + voice)
+- [x] Create `CitizenLayout.tsx` — mobile phone frame + bottom tabs
+- [x] Create `BottomTabNav.tsx` — 4 tabs (Map, Cars, Report, Profile)
+- [x] Create `IssuePin.tsx` — map pin with status color
+- [x] Create `CarCard.tsx` — horizontal scroll car card
+- [x] Create `CategoryTile.tsx` — selectable category tile with icon
+- [x] Create `ViraChat.tsx` — VIRA chat widget (text + voice)
 
 ### Citizen Pages
-- [ ] Create `AreaMapPage.tsx` — header, search/filter, map (60%), pins, mini-card overlay, issues list, FAB
-- [ ] Verify: map renders with mock issue pins, filter pills work
-- [ ] Create `MyCarsPage.tsx` — car scroller, sub-tabs, sensor detections, 360 captures, "needs help" flow
-- [ ] Verify: car selector works, sub-tabs switch content
-- [ ] Create `ReportPage.tsx` — camera section, AI banner, category grid, location, description+voice, severity, submit
-- [ ] Verify: category selection works, form submits with success screen
-- [ ] Create `ProfilePage.tsx` — profile card, stats, complaints list, settings, logout
-- [ ] Verify: complaints list renders with filter tabs
+- [x] Create `AreaMapPage.tsx` — header, search/filter, map (60%), pins, mini-card overlay, issues list, FAB
+- [x] Verify: map renders with mock issue pins, filter pills work
+- [x] Create `MyCarsPage.tsx` — car scroller, sub-tabs, sensor detections, 360 captures, "needs help" flow
+- [x] Verify: car selector works, sub-tabs switch content
+- [x] Create `ReportPage.tsx` — camera section, AI banner, category grid, location, description+voice, severity, submit
+- [x] Verify: category selection works, form submits with success screen
+- [x] Create `ProfilePage.tsx` — profile card, stats, complaints list, settings, logout
+- [x] Verify: complaints list renders with filter tabs
 
 ### Worker Components
-- [ ] Create `WorkerLayout.tsx` — mobile frame + bottom tabs
-- [ ] Create `WorkerTabNav.tsx` — 4 tabs (Home, Tasks, AI, Profile)
-- [ ] Create `TaskCard.tsx` — task card with severity border + escalation banner
-- [ ] Create `TaskDetail.tsx` — full task detail view
-- [ ] Create `ProcedureAccordion.tsx` — checkable procedure steps
-- [ ] Create `ProofUpload.tsx` — camera + photo grid + notes
-- [ ] Create `CopilotChat.tsx` — FIELD_COPILOT chat interface
+- [x] Create `WorkerLayout.tsx` — mobile frame + bottom tabs
+- [x] Create `WorkerTabNav.tsx` — 4 tabs (Home, Tasks, AI, Profile)
+- [x] Create `TaskCard.tsx` — task card with severity border + escalation banner
+- [x] Create `TaskDetail.tsx` — full task detail view (integrated into TasksPage)
+- [x] Create `ProcedureAccordion.tsx` — checkable procedure steps
+- [x] Create `ProofUpload.tsx` — camera + photo grid + notes
+- [x] Create `CopilotChat.tsx` — FIELD_COPILOT chat interface
 
 ### Worker Pages
-- [ ] Create `DashboardPage.tsx` — greeting, stats, task map, next task card, recent completions
-- [ ] Verify: map shows task pins with route line, next task card renders
-- [ ] Create `TasksPage.tsx` — View A (task list), View B (task detail with procedure)
-- [ ] Verify: task list renders, clicking opens detail, procedure checkboxes work
-- [ ] Create `AssistantPage.tsx` — language toggle, chat bubbles, text+voice input, quick actions
-- [ ] Verify: chat input works, quick actions send messages, voice button has hold animation
-- [ ] Create `ProfilePage.tsx` — profile header, performance stats, completed tasks, certs
-- [ ] Verify: all data renders correctly
+- [x] Create `DashboardPage.tsx` — greeting, stats, task map, next task card, recent completions
+- [x] Verify: map shows task pins with route line, next task card renders
+- [x] Create `TasksPage.tsx` — View A (task list), View B (task detail with procedure)
+- [x] Verify: task list renders, clicking opens detail, procedure checkboxes work
+- [x] Create `AssistantPage.tsx` — language toggle, chat bubbles, text+voice input, quick actions
+- [x] Verify: chat input works, quick actions send messages, voice button has hold animation
+- [x] Create `ProfilePage.tsx` — profile header, performance stats, completed tasks, certs
+- [x] Verify: all data renders correctly
 
 ### Final Checks
-- [ ] All 8 pages render without errors
-- [ ] Bottom tab navigation works for both dashboards
-- [ ] Mobile-responsive layout looks correct in phone viewport
-- [ ] Maps render with correct markers
-- [ ] Commit: `feat(frontend): citizen dashboard (4 pages) + worker dashboard (4 pages)`
+- [x] All 8 pages render without errors
+- [x] Bottom tab navigation works for both dashboards
+- [x] Mobile-responsive layout looks correct in phone viewport
+- [x] Maps render with correct markers
+- [x] Commit: `feat(frontend): citizen dashboard (4 pages) + worker dashboard (4 pages)`
 
 ---
 

@@ -1,0 +1,207 @@
+import { useState } from 'react'
+import { Camera, Upload, Mic, CheckCircle2 } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
+import CitizenLayout from '../../components/citizen/CitizenLayout'
+import CategoryTile from '../../components/citizen/CategoryTile'
+import { cn } from '../../lib/utils'
+
+const CATEGORIES = [
+  { key: 'roads', label: 'Roads' },
+  { key: 'water_pipeline', label: 'Water' },
+  { key: 'electrical', label: 'Electrical' },
+  { key: 'sanitation', label: 'Sanitation' },
+  { key: 'environment', label: 'Environment' },
+  { key: 'structural', label: 'Structural' },
+  { key: 'traffic', label: 'Traffic' },
+]
+
+const SEVERITY_OPTIONS = [
+  { key: 'low', label: '🟡 Not urgent', color: 'var(--low)' },
+  { key: 'medium', label: '🟠 Needs attention', color: 'var(--high)' },
+  { key: 'high', label: '🔴 Emergency', color: 'var(--critical)' },
+]
+
+export default function ReportPage() {
+  const [photoTaken, setPhotoTaken] = useState(false)
+  const [aiAnalyzing, setAiAnalyzing] = useState(false)
+  const [aiResult, setAiResult] = useState<string | null>(null)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
+  const [description, setDescription] = useState('')
+  const [severity, setSeverity] = useState<string | null>(null)
+  const [submitted, setSubmitted] = useState(false)
+
+  const handleCapturePhoto = () => {
+    setPhotoTaken(true)
+    setAiAnalyzing(true)
+    setTimeout(() => {
+      setAiAnalyzing(false)
+      setAiResult('sanitation')
+      setSelectedCategory('sanitation')
+    }, 2000)
+  }
+
+  const handleSubmit = () => {
+    setSubmitted(true)
+  }
+
+  if (submitted) {
+    return (
+      <CitizenLayout>
+        <div className="flex flex-col items-center justify-center h-full px-6 text-center py-20">
+          <motion.div initial={{ scale: 0 }} animate={{ scale: 1 }} transition={{ type: 'spring', duration: 0.5 }}>
+            <CheckCircle2 size={64} className="text-green-400 mb-4 mx-auto" />
+          </motion.div>
+          <h2 className="text-xl font-bold text-text-primary font-display mb-2">Issue Reported!</h2>
+          <p className="text-sm text-text-secondary mb-1">Your complaint ID:</p>
+          <p className="text-primary font-mono font-bold text-sm mb-6">ISS-MUM-2026-04-17-0078</p>
+          <p className="text-xs text-text-muted mb-8">You'll be notified when a team is assigned.</p>
+          <div className="flex gap-3">
+            <button
+              onClick={() => setSubmitted(false)}
+              className="px-4 py-2.5 rounded-xl bg-surface-elevated border border-border text-sm text-text-primary hover:bg-surface-hover"
+            >
+              Report Another
+            </button>
+          </div>
+        </div>
+      </CitizenLayout>
+    )
+  }
+
+  return (
+    <CitizenLayout>
+      <div className="px-4 py-3 pb-6">
+        <h1 className="text-lg font-bold font-display text-text-primary mb-4">✍️ Report an Issue</h1>
+
+        {/* Camera section */}
+        <div className="rounded-2xl bg-surface-elevated border border-border overflow-hidden mb-4">
+          {!photoTaken ? (
+            <div className="h-44 flex flex-col items-center justify-center gap-3">
+              <Camera size={40} className="text-text-muted" />
+              <button
+                onClick={handleCapturePhoto}
+                className="px-4 py-2 rounded-xl bg-primary text-white text-sm font-medium"
+              >
+                📷 Take Photo
+              </button>
+              <button className="text-xs text-primary hover:underline flex items-center gap-1">
+                <Upload size={12} /> Upload from Gallery
+              </button>
+            </div>
+          ) : (
+            <div className="h-44 bg-gradient-to-br from-surface-hover to-surface flex items-center justify-center relative">
+              <span className="text-5xl">📸</span>
+              <button
+                onClick={() => { setPhotoTaken(false); setAiResult(null) }}
+                className="absolute bottom-2 right-2 text-xs text-primary bg-surface/80 backdrop-blur px-2 py-1 rounded-lg"
+              >
+                Retake
+              </button>
+            </div>
+          )}
+        </div>
+
+        {/* AI banner */}
+        <AnimatePresence>
+          {aiAnalyzing && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              exit={{ opacity: 0, height: 0 }}
+              className="rounded-xl bg-primary/10 border border-primary/20 p-3 mb-4"
+            >
+              <p className="text-sm text-primary flex items-center gap-2">
+                <span className="animate-spin">🔍</span> AI is analyzing your photo...
+              </p>
+            </motion.div>
+          )}
+          {aiResult && !aiAnalyzing && (
+            <motion.div
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: 'auto' }}
+              className="rounded-xl bg-green-500/10 border border-green-500/20 p-3 mb-4"
+            >
+              <p className="text-sm text-green-400">
+                ✅ AI detected: <strong>Garbage accumulation</strong> — Severity: MEDIUM
+              </p>
+              <p className="text-[10px] text-text-muted mt-1">You can override below.</p>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Categories */}
+        <div className="mb-4">
+          <p className="text-sm font-medium text-text-primary mb-2">Category</p>
+          <div className="grid grid-cols-4 gap-2">
+            {CATEGORIES.map((cat) => (
+              <CategoryTile
+                key={cat.key}
+                category={cat.key}
+                label={cat.label}
+                isSelected={selectedCategory === cat.key}
+                onClick={() => setSelectedCategory(cat.key)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Location */}
+        <div className="rounded-xl bg-surface-elevated border border-border p-3 mb-4">
+          <p className="text-sm font-medium text-text-primary mb-1">📍 Location</p>
+          <p className="text-xs text-text-secondary">Powai Lake Gate 2, Hiranandani Gardens</p>
+          <button className="text-[10px] text-primary mt-1 hover:underline">Edit location</button>
+        </div>
+
+        {/* Description */}
+        <div className="mb-4">
+          <p className="text-sm font-medium text-text-primary mb-2">Description</p>
+          <div className="relative">
+            <textarea
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              placeholder="Describe the issue in your own words..."
+              className="w-full bg-surface-elevated rounded-xl px-3.5 py-3 text-sm text-text-primary placeholder-text-muted border border-border focus:border-primary/50 outline-none resize-none h-20"
+              maxLength={500}
+            />
+            <div className="absolute bottom-2 right-2 flex items-center gap-2">
+              <span className="text-[10px] text-text-muted">{description.length}/500</span>
+              <button className="p-1 text-text-muted hover:text-primary">
+                <Mic size={14} />
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* Severity */}
+        <div className="mb-6">
+          <p className="text-sm font-medium text-text-primary mb-2">How urgent is this?</p>
+          <div className="flex gap-2">
+            {SEVERITY_OPTIONS.map((opt) => (
+              <button
+                key={opt.key}
+                onClick={() => setSeverity(opt.key)}
+                className={cn(
+                  'flex-1 py-2.5 rounded-xl text-xs font-medium border transition-all text-center',
+                  severity === opt.key
+                    ? 'border-primary/40 bg-primary/10 text-text-primary'
+                    : 'border-border bg-surface-elevated text-text-secondary hover:border-border-light'
+                )}
+              >
+                {opt.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Submit */}
+        <button
+          onClick={handleSubmit}
+          disabled={!selectedCategory}
+          className="w-full py-3 rounded-xl bg-primary text-white font-semibold text-sm disabled:opacity-40 transition-opacity hover:bg-primary-dark"
+        >
+          Report Issue
+        </button>
+      </div>
+    </CitizenLayout>
+  )
+}
