@@ -26,6 +26,10 @@ import WeeklyReportsPage from './pages/state/WeeklyReportsPage'
 import AllocationPage from './pages/state/AllocationPage'
 import AccountabilityPage from './pages/state/AccountabilityPage'
 
+import ConstellationPage from './pages/nexus/ConstellationPage'
+import EventStreamPage from './pages/nexus/EventStreamPage'
+import PipelinePage from './pages/nexus/PipelinePage'
+
 function App() {
   return (
     <BrowserRouter>
@@ -58,10 +62,10 @@ function App() {
           <Route path="/state/allocation" element={<ProtectedRoute allowedRoles={['state_official']}><AllocationPage /></ProtectedRoute>} />
           <Route path="/state/accountability" element={<ProtectedRoute allowedRoles={['state_official']}><AccountabilityPage /></ProtectedRoute>} />
 
-          {/* === NEXUS Agent Dashboard (3 pages — still placeholders) === */}
-          <Route path="/nexus/constellation" element={<ProtectedRoute allowedRoles={['nexus_admin']}><PlaceholderPage title="Agent Constellation" role="nexus_admin" icon="🌌" /></ProtectedRoute>} />
-          <Route path="/nexus/events" element={<ProtectedRoute allowedRoles={['nexus_admin']}><PlaceholderPage title="Event Stream" role="nexus_admin" icon="📡" /></ProtectedRoute>} />
-          <Route path="/nexus/pipeline" element={<ProtectedRoute allowedRoles={['nexus_admin']}><PlaceholderPage title="Pipeline View" role="nexus_admin" icon="🔗" /></ProtectedRoute>} />
+          {/* === NEXUS Agent Dashboard (3 pages) === */}
+          <Route path="/nexus/constellation" element={<ProtectedRoute allowedRoles={['nexus_admin']}><ConstellationPage /></ProtectedRoute>} />
+          <Route path="/nexus/events" element={<ProtectedRoute allowedRoles={['nexus_admin']}><EventStreamPage /></ProtectedRoute>} />
+          <Route path="/nexus/pipeline" element={<ProtectedRoute allowedRoles={['nexus_admin']}><PipelinePage /></ProtectedRoute>} />
 
           {/* Catch-all */}
           <Route path="*" element={<Navigate to="/login" replace />} />

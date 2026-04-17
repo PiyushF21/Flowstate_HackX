@@ -182,38 +182,38 @@
 ## Phase 6: NEXUS Agent Dashboard — THE WOW PAGE (Day 3 — PARALLEL with backend integration)
 
 ### NEXUS Components
-- [ ] Create `NexusLayout.tsx` — full-screen dark canvas (#08080D)
-- [ ] Create `NexusTopBar.tsx` — semi-transparent top bar, 3 tabs, health indicator, clock
-- [ ] Create `NexusCentralNode.tsx` — purple ring, rotating brain, pulse, particles
-- [ ] Create `AgentNode.tsx` — glassmorphic card with color border, icon, name, status dot
-- [ ] Create `ConnectionLine.tsx` — SVG line: dim default, bright+colored when active
-- [ ] Create `DataPacket.tsx` — animated dot traveling along line
-- [ ] Create `AgentDetailPanel.tsx` — slide-in: agent info, stats, recent 20 actions, JSON
-- [ ] Create `LiveTicker.tsx` — bottom horizontal scrolling ticker
-- [ ] Create `EventCard.tsx` — event entry with agent badge, action, issue link, timestamp
-- [ ] Create `PipelineNode.tsx` — pipeline step card (agent, action, I/O, duration, status)
-- [ ] Create `PipelineArrow.tsx` — connecting arrow between pipeline nodes
+- [x] Create `NexusLayout.tsx` — full-screen dark canvas (#08080D)
+- [x] Create `NexusTopBar.tsx` — semi-transparent top bar, 3 tabs, health indicator, clock
+- [x] Create `NexusCentralNode.tsx` — purple ring, rotating brain, pulse, particles
+- [x] Create `AgentNode.tsx` — glassmorphic card with color border, icon, name, status dot
+- [x] Create `ConnectionLine.tsx` — SVG line: dim default, bright+colored when active
+- [x] Create `DataPacket.tsx` — animated dot traveling along line (implemented directly in ConnectionLine)
+- [x] Create `AgentDetailPanel.tsx` — slide-in: agent info, stats, recent 20 actions, JSON
+- [x] Create `LiveTicker.tsx` — bottom horizontal scrolling ticker
+- [x] Create `EventCard.tsx` — event entry with agent badge, action, issue link, timestamp
+- [x] Create `PipelineNode.tsx` — pipeline step card (agent, action, I/O, duration, status)
+- [x] Create `PipelineArrow.tsx` — connecting arrow between pipeline nodes
 
 ### NEXUS Pages
-- [ ] Create `ConstellationPage.tsx` — NEXUS center + 10 orbital agents + connections
-- [ ] Position agents in orbital arrangement
-- [ ] Implement connection line animation triggers (WebSocket or mock timer)
-- [ ] Implement data packet animation along active lines
-- [ ] Implement click agent → detail panel slide-in
-- [ ] Implement live ticker strip at bottom
-- [ ] Verify: constellation renders, animations are smooth (60fps)
-- [ ] Create `EventStreamPage.tsx` — multi-filter bar, pause/resume, auto-scroll feed, stats sidebar
-- [ ] Verify: events color-coded by agent, filters work, pause stops scroll
-- [ ] Create `PipelinePage.tsx` — issue selector, horizontal pipeline diagram, timeline, context panel
-- [ ] Verify: pipeline shows L→R flow, nodes have correct status indicators
+- [x] Create `ConstellationPage.tsx` — NEXUS center + 10 orbital agents + connections
+- [x] Position agents in orbital arrangement
+- [x] Implement connection line animation triggers (WebSocket or mock timer)
+- [x] Implement data packet animation along active lines
+- [x] Implement click agent → detail panel slide-in
+- [x] Implement live ticker strip at bottom
+- [x] Verify: constellation renders, animations are smooth (60fps)
+- [x] Create `EventStreamPage.tsx` — multi-filter bar, pause/resume, auto-scroll feed, stats sidebar
+- [x] Verify: events color-coded by agent, filters work, pause stops scroll
+- [x] Create `PipelinePage.tsx` — issue selector, horizontal pipeline diagram, timeline, context panel
+- [x] Verify: pipeline shows L→R flow, nodes have correct status indicators
 
 ### Final Checks
-- [ ] All 3 pages render without errors
-- [ ] Constellation is visually stunning (dark theme, glowing connections)
-- [ ] Animations don't lag
-- [ ] Agent detail panel shows correct data
-- [ ] Top bar tabs switch between 3 views
-- [ ] Commit: `feat(frontend): NEXUS agent dashboard (3 pages) — constellation, events, pipeline`
+- [x] All 3 pages render without errors
+- [x] Constellation is visually stunning (dark theme, glowing connections)
+- [x] Animations don't lag
+- [x] Agent detail panel shows correct data
+- [x] Top bar tabs switch between 3 views
+- [x] Commit: `feat(frontend): NEXUS agent dashboard (3 pages) — constellation, events, pipeline`
 
 ---
 
