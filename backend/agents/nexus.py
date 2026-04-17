@@ -3,7 +3,7 @@ from typing import TypedDict, Optional, List
 from datetime import datetime, timezone
 from langgraph.graph import StateGraph, END
 
-from models import Issue, Location, AgentEvent
+from models import Issue, Location, AgentEvent, Reporter
 from data_store import data_store
 from ws_manager import ws_manager
 from agents.cognos import process_cognos
@@ -73,6 +73,13 @@ async def node_commander(state: AgentState):
     if state["status"] == "cancelled":
         return state
         
+    reporter = None
+    if state["source"] == "manual_complaint" and "user_id" in state["raw_data"]:
+        reporter = Reporter(
+            reporter_id=state["raw_data"]["user_id"],
+            reporter_name=state["raw_data"]["user_id"]
+        )
+
     issue = Issue(
         issue_id=state["issue_id"],
         source=state["source"],
@@ -81,6 +88,7 @@ async def node_commander(state: AgentState):
         severity=state["severity"],
         description=state["classification"].get("description", ""),
         location=Location(**state["location"]),
+        reporter=reporter,
         created_at=datetime.now(timezone.utc).isoformat(),
         updated_at=datetime.now(timezone.utc).isoformat()
     )

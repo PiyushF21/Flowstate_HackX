@@ -27,6 +27,7 @@ from models import (
 )
 from data_store import data_store
 from config import settings
+from agents.nexus import process_issue
 
 # =============================================================================
 # CONSTANTS
@@ -288,36 +289,29 @@ def extract_complaint_data_rule_based(message: str) -> dict:
 
 
 async def create_issue_from_chat(extracted_data: dict, user_id: str) -> dict:
-    """Create an Issue in data_store from extracted complaint data."""
+    """Pass extracted complaint data to NEXUS pipeline to create and assign the issue."""
     now = datetime.now(IST)
-    city = "Mumbai"  # Default; in production would geocode location_text
-    issue_id = data_store.generate_issue_id(city)
+    
+    raw_data = extracted_data.copy()
+    raw_data["user_id"] = user_id
+    
+    location_dict = {
+        "lat": 19.0760,
+        "lng": 72.8777,
+        "address": extracted_data.get("location_text", "Not specified"),
+        "city": "Mumbai",
+        "ward": "Unknown"
+    }
 
-    location = Location(
-        lat=19.0760, lng=72.8777,  # Default Mumbai coords
-        address=extracted_data.get("location_text", ""),
-        city=city, ward=""
-    )
-
-    issue = Issue(
-        issue_id=issue_id,
+    # Call NEXUS
+    result_state = await process_issue(
+        raw_data=raw_data,
         source="manual_complaint",
-        category=extracted_data["category"],
-        subcategory=extracted_data["subcategory"],
-        severity=extracted_data["severity"],
-        confidence=0.75,
-        status="reported",
-        location=location,
-        description=extracted_data["description"],
-        reporter=Reporter(
-            reporter_id=user_id,
-            reporter_name=user_id,
-        ),
-        created_at=now.isoformat(),
-        updated_at=now.isoformat(),
+        location=location_dict,
+        role="citizen"
     )
-
-    await data_store.create_issue(issue)
+    
+    issue_id = result_state["issue_id"]
 
     # Log agent event
     await data_store.add_agent_event(AgentEvent(
@@ -329,7 +323,10 @@ async def create_issue_from_chat(extracted_data: dict, user_id: str) -> dict:
         portal="citizen",
         timestamp=now.isoformat(),
     ))
-
+    
+    # Retrieve the final created issue from data_store to return
+    issue = await data_store.get_issue(issue_id)
+    
     return {"issue_id": issue_id, "issue": issue}
 
 

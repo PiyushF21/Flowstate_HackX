@@ -122,7 +122,7 @@ async def test_vira_full_chat():
     # Verify stored in data_store
     stored = await data_store.get_issue(r1["issue_id"])
     check("Report: stored in data_store", stored is not None)
-    check("Report: stored status=reported", stored.status == "reported" if stored else False)
+    check("Report: stored status=assigned (via NEXUS)", stored.status == "assigned" if stored else False)
 
     # Query flow - by user ID (search seed data reporter)
     r2 = await chat("CIT-MUM-042", "What's the status of my complaint?")
