@@ -2,13 +2,42 @@
 
 > **Role:** Backend Agent Developer
 > **Owns:** VIRA agent, GUARDIAN agent, PRESCIENT agent, FLEET agent + all their routers
-> **Prerequisite:** Must wait for Stavan to complete Phase 2 (backend core) before starting
+> **Start:** Day 1 Morning — **simultaneous with all team members**
 
 ---
 
-## Phase 5: Backend Agents Group B
+## Phase 1: Day 1 Morning — Start Immediately (NO dependencies)
 
-> ⚠️ **BEFORE STARTING:** Pull latest from `main` branch. You need `models.py`, `data_store.py`, `config.py`, and `ws_manager.py` from Stavan's Phase 2.
+> ⚡ You start coding from minute one. No waiting for anyone.
+
+**What to do while Stavan builds models.py (~first 1-2 hours):**
+
+1. **Draft VIRA agent logic (pure Python, no imports):**
+   - Write `detect_mode(message)` — keyword matching for report/query/general
+   - Write prompt template strings (REPORT_EXTRACTION_PROMPT, STATUS_RESPONSE_PROMPT)
+   - Write response formatting functions
+   - All functions take `str`/`dict` params and return `dict` — no Pydantic models yet
+
+2. **Draft GUARDIAN agent logic (pure Python, no imports):**
+   - Write `OVERDUE_THRESHOLDS` dict
+   - Write `check_overdue_tasks()` — the calculation logic (datetime math)
+   - Write `generate_alert()` — structured alert dict builder
+   - Write escalation logic skeleton
+
+3. **Once Stavan pushes `models.py` to main (~1-2 hours in):**
+   ```bash
+   git pull origin main
+   ```
+   → Add `from models import Issue, Worker, DailyReport, AuditEntry, AgentEvent` etc.
+   → Add `from data_store import data_store`
+   → Wrap your dict returns in Pydantic models
+   → Continue building with full type safety
+
+---
+
+## Phase 2+3: Complete All 4 Agents + Routers
+
+> By this point you have `models.py` and `data_store.py` available.
 
 ### What to Build
 
@@ -265,14 +294,25 @@ async def generate_insights() -> list[dict]
 
 ---
 
-## Phase 10: Integration (Piyush's Part)
+## Phase 4: Individual Agent Testing (Day 2 — PARALLEL with Yash's dashboards)
+
+### What to Do
+- Test VIRA with multiple complaint types (pothole, water leak, garbage)
+- Test VIRA mode detection accuracy with various Indian English phrasings
+- Test GUARDIAN with overdue seed data → alerts generated correctly
+- Test PRESCIENT daily report → correct aggregated metrics from seed data
+- Test FLEET MC comparison → ranked list matches seed data
+- Fix any bugs found in all 4 agents
+
+---
+
+## Phase 5: Integration Testing (Day 2–3 — PARALLEL with Yash)
 
 ### What to Do
 
 1. **Test VIRA end-to-end:**
    - Citizen sends chat message → VIRA extracts → issue created via NEXUS → appears on BMC
    - Citizen asks status → VIRA fetches from data_store → returns friendly response
-   - Test with various Indian English phrasings
 
 2. **Test GUARDIAN escalation cascade:**
    - Ensure overdue tasks generate alerts
@@ -289,7 +329,23 @@ async def generate_insights() -> list[dict]
    - MC comparison ranks correctly
    - Insights are actionable
 
-5. **Fix any bugs** in your 4 agents
+---
+
+## Phase 6: End-to-end with Frontend (Day 3 — PARALLEL with Yash)
+
+### What to Do
+- Verify VIRA chat works from frontend citizen chat widget
+- Verify GUARDIAN alerts show on State dashboard escalation panel
+- Verify PRESCIENT reports render in BMC reports page
+- Verify FLEET comparison data shows on State overview
+- Fix any bugs from frontend integration
+
+---
+
+## Phase 7: Final Polish (Day 3)
+
+- Final bug fixes
+- Verify all 4 agents work in demo happy-path
 
 ### Verification
 - All 4 agents work individually (unit)

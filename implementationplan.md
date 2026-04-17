@@ -1,7 +1,7 @@
 # InfraLens — Master Implementation Plan
 
 > **AI-Powered Civic Infrastructure Intelligence Platform**
-> 11 Agents · 5 Dashboards · 19 Pages · 4 Team Members · Phase-wise Development
+> 11 Agents · 5 Dashboards · 19 Pages · 4 Team Members · **Fully Simultaneous Development**
 
 ---
 
@@ -222,193 +222,322 @@ hackx2.0_flowstate/
 
 ---
 
-## Phase Overview
+## Phase Overview — FULLY SIMULTANEOUS
 
-| Phase | Description | Members | Duration |
-|---|---|---|---|
-| **Phase 1** | Project Scaffolding | Stavan + Yash | Day 1 Morning |
-| **Phase 2** | Backend Core (models, data store, middleware, WebSocket) | Stavan | Day 1 |
-| **Phase 3** | Frontend Core (design system, auth, routing, shared components) | Yash | Day 1 |
-| **Phase 4** | Backend Agents — Group A (NEXUS, COGNOS, SENTINEL, COMMANDER) | Stavan | Day 1–2 |
-| **Phase 5** | Backend Agents — Group B (VIRA, GUARDIAN, PRESCIENT, FLEET) | Piyush | Day 1–2 |
-| **Phase 6** | Backend Agents — Group C (LOOP, ORACLE, FIELD_COPILOT) + Seed Data | Amit | Day 1–2 |
-| **Phase 7** | Frontend Dashboards — Citizen + Worker (mobile) | Yash | Day 2 |
-| **Phase 8** | Frontend Dashboards — BMC + State (desktop) | Yash | Day 2–3 |
-| **Phase 9** | Frontend Dashboard — NEXUS Agent (immersive) | Yash | Day 3 |
-| **Phase 10** | Integration + WebSocket wiring + Voice + Polish + Demo prep | All | Day 3 |
+> 🔑 **ALL 4 members start coding from Day 1 Morning. Zero idle time.**
+
+| Phase | Description | Stavan | Yash | Piyush | Amit | Day |
+|---|---|---|---|---|---|---|
+| **Phase 1** | Scaffolding + Core Bootstrap | Backend scaffold + `models.py` + `data_store.py` + `config.py` | Frontend scaffold (Vite + React + TailwindCSS + mapcn) | Seed data creation (`seed_data/*.json`) — NO code dependencies | Agent logic drafts (pure Python, no imports) | Day 1 AM |
+| **Phase 2** | Core Completion + Agent Start | `ws_manager.py`, `sentinel_middleware.py`, `main.py`, `issues_router.py` | Design system, auth, routing, login page, hooks | Pull models → start VIRA + GUARDIAN agents | Pull models → start LOOP + ORACLE agents | Day 1 |
+| **Phase 3** | Agents (all 3 backend devs in parallel) | NEXUS + COGNOS + SENTINEL + COMMANDER agents + routers | Shared components (13 components) | PRESCIENT + FLEET agents + all 4 routers | FIELD_COPILOT agent + all 4 routers + notifications | Day 1–2 |
+| **Phase 4** | Frontend Dashboards (Yash) + Backend Testing | Test agents end-to-end, fix bugs | Citizen + Worker dashboards (8 pages) | Test own agents individually, fix bugs | Test own agents individually, fix bugs | Day 2 |
+| **Phase 5** | Frontend Dashboards (continued) | Wire all routers into `main.py`, merge PRs | BMC + State dashboards (8 pages) | Help with integration testing | Help with integration testing | Day 2–3 |
+| **Phase 6** | NEXUS Dashboard + Integration | Full pipeline integration testing | NEXUS Agent Dashboard (3 pages) — THE WOW PAGE | VIRA/GUARDIAN end-to-end with frontend | LOOP/FIELD_COPILOT end-to-end with frontend | Day 3 |
+| **Phase 7** | Final Integration + Polish | WebSocket broadcast verification, demo prep | API connection, WebSocket wiring, voice, polish | Final bug fixes | Final bug fixes | Day 3 |
 
 ---
 
-## Phase Dependencies
+## Simultaneous Work Diagram
 
 ```
-Phase 1 (Scaffolding) ──────────────────────────────────────────────────┐
-    │                                                                    │
-    ├── Phase 2 (Backend Core) [STAVAN]                                  ├── Phase 3 (Frontend Core) [YASH]
-    │       │                                                            │
-    │       ├── Phase 4 (Agents A) [STAVAN]                              ├── Phase 7 (Citizen + Worker) [YASH]
-    │       │                                                            │
-    │       ├── Phase 5 (Agents B) [PIYUSH] ←── waits for Phase 2       ├── Phase 8 (BMC + State) [YASH]
-    │       │                                                            │
-    │       ├── Phase 6 (Agents C + Data) [AMIT] ←── waits for Phase 2  ├── Phase 9 (NEXUS) [YASH]
-    │       │                                                            │
-    │       └───────────────── Phase 10 (Integration) [ALL] ─────────────┘
+DAY 1 MORNING — ALL START SIMULTANEOUSLY
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│  STAVAN                    YASH                  PIYUSH              AMIT    │
+│  ───────                   ────                  ──────              ────    │
+│  backend/ scaffold         frontend/ scaffold    seed_data/*.json    Agent   │
+│  models.py (FAST!)         Vite + React + TS     mcs.json            logic   │
+│  data_store.py             TailwindCSS v4        workers.json        drafts  │
+│  config.py                 mapcn.dev install     issues.json         (pure   │
+│                                                  reports.json         Python │
+│  ↓ PUSH models.py                                                    no     │
+│    to main (1-2 hrs)                                                 imports)│
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+DAY 1 AFTERNOON — FULL PARALLEL
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│  STAVAN                    YASH                  PIYUSH              AMIT    │
+│  ───────                   ────                  ──────              ────    │
+│  ws_manager.py             index.css (design)    git pull main       git     │
+│  sentinel_middleware.py    App.tsx (routing)      ↓ has models.py     pull   │
+│  main.py (full)            AuthContext.tsx        Add imports to      main   │
+│  issues_router.py          LoginPage.tsx          VIRA, GUARDIAN      ↓      │
+│  ↓                         hooks/                 agents              Add    │
+│  Start NEXUS agent         lib/utils.ts           Create routers      imports│
+│  Start COGNOS agent        Shared components      ↓                   to     │
+│                            (13 components)        Continue agents      LOOP,  │
+│                                                                       ORACLE │
+│                                                                       agents │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+DAY 2 — FULL PARALLEL
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│  STAVAN                    YASH                  PIYUSH              AMIT    │
+│  ───────                   ────                  ──────              ────    │
+│  SENTINEL agent            Citizen Dashboard     PRESCIENT agent     FIELD_  │
+│  COMMANDER agent           (4 pages)             FLEET agent         COPILOT │
+│  All 5 routers             Worker Dashboard      All 4 routers       agent   │
+│  Wire routers→main.py      (4 pages)             Test agents         All 4   │
+│  Test pipeline              ↓                     ↓                   routers │
+│  Merge PRs                 BMC Dashboard          ↓                   Test   │
+│                            (4 pages)             Fix bugs            agents  │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+DAY 3 — INTEGRATION + POLISH
+┌──────────────────────────────────────────────────────────────────────────────┐
+│                                                                              │
+│  STAVAN                    YASH                  PIYUSH              AMIT    │
+│  ───────                   ────                  ──────              ────    │
+│  Full pipeline test        State Dashboard       VIRA e2e test      LOOP    │
+│  Wire all 11 agents        (4 pages)             GUARDIAN e2e       e2e test│
+│  WebSocket verification    NEXUS Dashboard       Help integration   COPILOT │
+│  Demo preparation          (3 pages — THE WOW)   Bug fixes          e2e test│
+│                            API connection                            Bug     │
+│                            WebSocket wiring                          fixes   │
+│                            Voice integration                                 │
+│                            Final polish                                      │
+│                                                                              │
+└──────────────────────────────────────────────────────────────────────────────┘
 ```
 
-> **Key rule:** Piyush and Amit start their agent work AFTER Stavan completes Phase 2 (backend core) so they can import models, data_store, and config. Yash works independently on frontend from Phase 3 onward. Phase 10 brings everything together.
+---
+
+## How Piyush & Amit Start Day 1 WITHOUT Waiting
+
+### Amit — Day 1 Morning (ZERO dependencies):
+1. **Create ALL seed data** — `seed_data/issues.json`, `workers.json`, `mcs.json`, `reports.json`
+   - This is pure JSON. No Python imports needed. Takes ~2 hours.
+   - Push immediately so Stavan can test with real data.
+2. **Draft agent logic as pure Python** — write the core functions for LOOP, ORACLE, FIELD_COPILOT
+   - Write all business logic (scoring formulas, validation rules, response templates)
+   - Use placeholder type hints: `def submit_proof(issue_id: str, images: list, notes: str = "") -> dict:`
+   - Don't import models yet — just return dicts
+3. **Once Stavan pushes `models.py`** (1-2 hours in) → `git pull` → add real imports → connect to data_store
+
+### Piyush — Day 1 Morning (ZERO dependencies):
+1. **Draft agent logic as pure Python** — write core functions for VIRA, GUARDIAN, PRESCIENT, FLEET
+   - VIRA: write prompt templates, mode detection logic (keyword matching), response formatting
+   - GUARDIAN: write threshold constants, overdue calculation logic, alert generation
+   - PRESCIENT: write aggregation formulas, narrative prompts, report structure
+   - FLEET: write clustering logic (haversine distance), comparison formulas
+   - All functions return dicts, no model imports needed initially
+2. **Once Stavan pushes `models.py`** (1-2 hours in) → `git pull` → add Pydantic imports → wrap returns in models
+
+### Timeline for the Handoff:
+```
+T+0:00  — ALL start simultaneously
+T+1:00  — Stavan pushes models.py + data_store.py stubs to main (FAST delivery)
+T+1:15  — Piyush & Amit: git pull → add imports → continue with real types
+T+2:00  — Amit pushes seed data → Stavan/Piyush can test with real data
+T+3:00  — Stavan pushes full core (ws_manager, middleware, main.py)
+T+4:00+ — Everyone coding agents in parallel, no waiting
+```
+
+> ⚡ **Result: Maximum 1 hour of "draft mode" for Piyush/Amit. Then fully parallel.**
 
 ---
 
 ## Phase Details
 
-### Phase 1: Project Scaffolding (Stavan + Yash)
+### Phase 1: Scaffolding + Core Bootstrap (ALL 4 parallel)
 
-**Stavan does:**
-- Create project root structure
-- `backend/` directory with `requirements.txt`, `main.py` (hello world), `.env.example`, `config.py`
-- Initialize git repo, create `.gitignore`
+**Stavan (PRIORITY: push models.py FAST):**
+- Create `backend/` directory structure, `.gitignore`, `requirements.txt`
+- Create `models.py` with ALL Pydantic models — **PUSH THIS TO MAIN WITHIN 1 HOUR**
+- Create `data_store.py` with DataStore class (can be stubs initially)
+- Create `config.py` with env loader
 
-**Yash does:**
-- Scaffold `frontend/` with `npx -y create-vite@latest ./ --template react-ts`
-- Install dependencies: `react-router-dom`, `framer-motion`, `recharts`, `lucide-react`, `clsx`, `date-fns`
-- Install mapcn.dev components (MapLibre GL)
-- Install TailwindCSS v4 with `@tailwindcss/vite`
+**Yash (fully independent):**
+- Scaffold `frontend/` with Vite + React + TypeScript
+- Install all dependencies (react-router-dom, framer-motion, recharts, lucide-react, clsx, date-fns)
+- Install mapcn.dev + TailwindCSS v4
 - Verify `npm run dev` works
 
-**Commit:** `feat: project scaffolding — backend + frontend initialized`
+**Piyush (no dependencies — pure Python):**
+- Write VIRA prompt templates and mode detection logic
+- Write GUARDIAN threshold constants and overdue calculation
+- Write PRESCIENT aggregation formulas and narrative prompts
+- Write FLEET clustering logic and comparison formulas
+- All as standalone functions returning plain dicts
+
+**Amit (no dependencies — pure JSON + Python):**
+- Create `seed_data/mcs.json` (8 MCs)
+- Create `seed_data/workers.json` (20 workers with real GPS)
+- Create `seed_data/issues.json` (30 issues with realistic data)
+- Create `seed_data/reports.json` (5 reports)
+- Start drafting LOOP/ORACLE/FIELD_COPILOT logic as plain dicts
+
+**After Stavan pushes models.py:** Piyush & Amit `git pull` → add model imports
+
+**Commits:**
+- Stavan: `feat: backend scaffold + models + data store`
+- Yash: `feat: frontend scaffold — Vite + React + TS + TailwindCSS + mapcn`
+- Amit: `feat: seed data — issues, workers, MCs, reports`
+- Piyush: `feat: agent drafts — VIRA, GUARDIAN, PRESCIENT, FLEET logic`
 
 ---
 
-### Phase 2: Backend Core (Stavan only)
-
-- `models.py` — All Pydantic models (Issue, Worker, DailyReport, AuditEntry, AgentState, Location, etc.)
-- `data_store.py` — In-memory data store with JSON file persistence, CRUD methods
-- `ws_manager.py` — WebSocket connection manager (connect, disconnect, broadcast, send_to_role)
-- `middleware/sentinel_middleware.py` — RBAC middleware, role permissions, audit logging
-- `config.py` — env vars, API key loading
-- `main.py` — FastAPI app with CORS, SENTINEL middleware, WebSocket endpoint, health check
-- `routers/issues_router.py` — Generic issue CRUD (GET /api/issues, POST /api/issues, etc.)
-
-**Commit:** `feat(backend): core infrastructure — models, data store, WebSocket, SENTINEL middleware`
-
----
-
-### Phase 3: Frontend Core (Yash only)
-
-- `src/index.css` — Full design system (CSS tokens, glassmorphism, animations, dark theme, fonts)
-- `src/App.tsx` — React Router with all 19 routes + login
-- `src/context/AuthContext.tsx` — Role-based auth with login/logout
-- `src/pages/LoginPage.tsx` — 5-role selection page
-- `src/hooks/useWebSocket.ts`, `useApi.ts`, `useRealtime.ts`
-- `src/lib/utils.ts`
-- All `src/components/shared/` components (13 shared components)
-
-**Commit:** `feat(frontend): core setup — design system, auth, routing, shared components`
-
----
-
-### Phase 4: Backend Agents Group A (Stavan only)
-
-- `agents/nexus.py` — LangGraph StateGraph orchestrator
-- `agents/cognos.py` — Dual-brain classification (rule engine + LLM)
-- `agents/sentinel.py` — RBAC agent logic
-- `agents/commander.py` — Multi-factor scoring assignment + procedure generation
-- `routers/nexus_router.py`, `cognos_router.py`, `sentinel_router.py`, `commander_router.py`
-- Wire routers into `main.py`
-
-**Commit:** `feat(backend): agents NEXUS, COGNOS, SENTINEL, COMMANDER with routers`
-
----
-
-### Phase 5: Backend Agents Group B (Piyush only)
-
-> **Prerequisite:** Phase 2 must be complete (Piyush pulls latest from `main`)
-
-- `agents/vira.py` — Citizen chat/voice (mode detection, extraction, query)
-- `agents/guardian.py` — Deadline monitoring, escalation cascade, auto-escalation
-- `agents/prescient.py` — Daily/weekly report generation, forecasting
-- `agents/fleet.py` — Geographic clustering, trend detection, MC comparison
-- `routers/vira_router.py`, `guardian_router.py`, `prescient_router.py`, `fleet_router.py`
-
-**Commit:** `feat(backend): agents VIRA, GUARDIAN, PRESCIENT, FLEET with routers`
-
----
-
-### Phase 6: Backend Agents Group C + Seed Data (Amit only)
-
-> **Prerequisite:** Phase 2 must be complete (Amit pulls latest from `main`)
-
-- `agents/loop.py` — Proof validation, citizen notification, feedback, re-report detection
-- `agents/oracle.py` — Fund allocation, resource allocation, budget tracking
-- `agents/field_copilot.py` — Context-aware worker AI assistant
-- `routers/loop_router.py`, `oracle_router.py`, `field_copilot_router.py`, `notifications_router.py`
-- `seed_data/issues.json`, `workers.json`, `mcs.json`, `reports.json`
-
-**Commit:** `feat(backend): agents LOOP, ORACLE, FIELD_COPILOT + seed data`
-
----
-
-### Phase 7: Frontend — Citizen + Worker Dashboards (Yash only)
-
-- `components/citizen/` — All 6 citizen components
-- `pages/citizen/` — All 4 citizen pages (AreaMapPage, MyCarsPage, ReportPage, ProfilePage)
-- `components/worker/` — All 7 worker components
-- `pages/worker/` — All 4 worker pages (DashboardPage, TasksPage, AssistantPage, ProfilePage)
-
-**Commit:** `feat(frontend): citizen dashboard (4 pages) + worker dashboard (4 pages)`
-
----
-
-### Phase 8: Frontend — BMC + State Dashboards (Yash only)
-
-- `components/bmc/` — All 9 BMC components
-- `pages/bmc/` — All 4 BMC pages (IssuesDashboard, WorkersPage, CompletedPage, ReportsPage)
-- `components/state/` — All 9 state components
-- `pages/state/` — All 4 state pages (OverviewPage, WeeklyReports, AllocationPage, AccountabilityPage)
-
-**Commit:** `feat(frontend): BMC dashboard (4 pages) + state dashboard (4 pages)`
-
----
-
-### Phase 9: Frontend — NEXUS Agent Dashboard (Yash only)
-
-- `components/nexus/` — All 11 NEXUS components (constellation, connections, particles, pipeline)
-- `pages/nexus/` — All 3 NEXUS pages (ConstellationPage, EventStreamPage, PipelinePage)
-- Deep space dark theme, glassmorphism, neon glows, data packet animations
-
-**Commit:** `feat(frontend): NEXUS agent dashboard (3 pages) — constellation, events, pipeline`
-
----
-
-### Phase 10: Integration + Polish (ALL members)
+### Phase 2: Core Completion + Agent Start (ALL 4 parallel)
 
 **Stavan:**
-- Wire all agent routers into `main.py`
-- End-to-end pipeline test: sensor data → NEXUS → COGNOS → COMMANDER → assignment
-- WebSocket broadcast verification
-- Fix any backend bugs
+- Complete `ws_manager.py` (WebSocket connection manager)
+- Create `middleware/sentinel_middleware.py` (RBAC middleware)
+- Complete `main.py` (CORS, SENTINEL, WebSocket endpoint, startup)
+- Create `routers/issues_router.py` (issue CRUD)
 
 **Yash:**
-- Connect frontend to backend APIs (replace mock data with real API calls)
-- WebSocket integration for real-time updates (activity feed, alerts, NEXUS constellation)
-- Voice integration (Web Speech API STT)
-- Final UI polish, animations, responsiveness
-- Cross-browser testing
+- Create `src/index.css` (full design system)
+- Create `src/App.tsx` (React Router, all 20 routes)
+- Create `src/context/AuthContext.tsx` (role-based auth)
+- Create `src/pages/LoginPage.tsx` (5-role selection)
+- Create all hooks (useWebSocket, useApi, useRealtime)
+- Create `src/lib/utils.ts`
+
+**Piyush (now has models.py):**
+- Convert VIRA draft to full agent with model imports
+- Convert GUARDIAN draft to full agent with data_store imports
+- Start PRESCIENT and FLEET agents
+
+**Amit (now has models.py):**
+- Convert LOOP draft to full agent with model imports
+- Convert ORACLE draft to full agent with data_store imports
+- Start FIELD_COPILOT agent
+
+**Commits:**
+- Stavan: `feat(backend): core — WebSocket, SENTINEL middleware, main.py, issues router`
+- Yash: `feat(frontend): design system, auth, routing, login page, hooks`
+- Piyush: `feat(backend): VIRA + GUARDIAN agents with real models`
+- Amit: `feat(backend): LOOP + ORACLE agents with real models`
+
+---
+
+### Phase 3: Agents Complete (ALL 4 parallel)
+
+**Stavan:**
+- Create `agents/nexus.py` (LangGraph StateGraph orchestrator)
+- Create `agents/cognos.py` (dual-brain classification)
+- Create `agents/sentinel.py` (RBAC agent logic)
+- Create `agents/commander.py` (multi-factor assignment)
+- Create all 5 routers (nexus, cognos, sentinel, commander, issues)
+- Wire Group A routers into `main.py`
+
+**Yash:**
+- Build all 13 shared components (`src/components/shared/`)
+- Start Citizen dashboard components
 
 **Piyush:**
-- Test VIRA chat flow end-to-end
-- Test GUARDIAN escalation cascade
-- Test PRESCIENT report generation
-- Fix any agent bugs
+- Complete PRESCIENT agent
+- Complete FLEET agent
+- Create all 4 routers (vira, guardian, prescient, fleet)
 
 **Amit:**
-- Test LOOP verification + citizen notification flow
-- Test ORACLE fund recommendations
-- Test FIELD_COPILOT voice chat
-- Verify seed data loads correctly
-- Fix any agent bugs
+- Complete FIELD_COPILOT agent
+- Create all 4 routers (loop, oracle, field_copilot, notifications)
 
-**Commit:** `feat: full integration — frontend ↔ backend connected, WebSocket live, voice enabled`
+**Commits:**
+- Stavan: `feat(backend): agents NEXUS, COGNOS, SENTINEL, COMMANDER + routers`
+- Yash: `feat(frontend): 13 shared components`
+- Piyush: `feat(backend): agents VIRA, GUARDIAN, PRESCIENT, FLEET + routers`
+- Amit: `feat(backend): agents LOOP, ORACLE, FIELD_COPILOT + routers`
+
+---
+
+### Phase 4: Frontend Dashboards + Backend Testing (ALL 4 parallel)
+
+**Stavan:**
+- Merge Piyush's and Amit's PRs
+- Wire ALL routers into `main.py`
+- Test full NEXUS pipeline end-to-end
+- Fix integration bugs
+
+**Yash:**
+- Build Citizen Dashboard (4 pages + 6 components)
+- Build Worker Dashboard (4 pages + 7 components)
+
+**Piyush:**
+- Test VIRA, GUARDIAN, PRESCIENT, FLEET individually with seed data
+- Fix any bugs
+
+**Amit:**
+- Test LOOP, ORACLE, FIELD_COPILOT individually with seed data
+- Fix any bugs, update seed data if needed
+
+**Commits:**
+- Stavan: `feat(backend): all 11 agent routers wired, pipeline tested`
+- Yash: `feat(frontend): citizen + worker dashboards (8 pages)`
+- Piyush: `fix(backend): VIRA, GUARDIAN, PRESCIENT, FLEET tested + fixed`
+- Amit: `fix(backend): LOOP, ORACLE, FIELD_COPILOT tested + fixed`
+
+---
+
+### Phase 5: More Dashboards + Integration (ALL 4 parallel)
+
+**Stavan:**
+- Full end-to-end pipeline: sensor → NEXUS → COGNOS → COMMANDER → assignment
+- WebSocket broadcast verification
+
+**Yash:**
+- Build BMC Dashboard (4 pages + 9 components)
+- Build State Dashboard (4 pages + 9 components)
+
+**Piyush:**
+- VIRA end-to-end through NEXUS pipeline
+- GUARDIAN escalation cascade
+- PRESCIENT report generation
+
+**Amit:**
+- LOOP completion flow through pipeline
+- ORACLE fund recommendations
+- FIELD_COPILOT with task context
+
+**Commits:**
+- Stavan: `feat(backend): end-to-end pipeline verified, WebSocket live`
+- Yash: `feat(frontend): BMC + state dashboards (8 pages)`
+- Piyush: `fix(backend): agents B integration verified`
+- Amit: `fix(backend): agents C integration verified`
+
+---
+
+### Phase 6: NEXUS Dashboard + Frontend Integration (ALL 4 parallel)
+
+**Stavan:**
+- Final full-system demo test
+- Demo preparation, happy-path script
+
+**Yash:**
+- Build NEXUS Agent Dashboard (3 pages + 11 components) — THE WOW PAGE
+- Connect frontend to backend APIs (replace mock data)
+- WebSocket integration (activity feeds, alerts, constellation animations)
+- Voice integration (Web Speech API STT)
+
+**Piyush:**
+- Help test VIRA from frontend citizen chat
+- Help test GUARDIAN alerts on State dashboard
+
+**Amit:**
+- Help test LOOP verification from worker dashboard
+- Help test FIELD_COPILOT chat from worker assistant
+
+**Commits:**
+- Yash: `feat(frontend): NEXUS dashboard (3 pages) + API integration + voice`
+- ALL: `feat: full integration — 11 agents + 19 pages + WebSocket + voice`
+
+---
+
+### Phase 7: Final Polish (ALL members)
+
+**Stavan:** Final backend stability, demo happy-path verification
+**Yash:** Animations, responsive tweaks, cross-browser testing
+**Piyush:** Fix any remaining agent bugs
+**Amit:** Fix any remaining agent bugs, verify seed data
+
+**Final commit:** `release: InfraLens v1.0 — demo ready`
 
 ---
 
@@ -420,7 +549,7 @@ Phase 1 (Scaffolding) ───────────────────�
 4. **Yash** owns the ENTIRE `frontend/` directory — no one else touches it
 5. **Only Stavan** modifies `main.py` — Piyush and Amit provide router files, Stavan imports them
 6. **Only Stavan** modifies `models.py` and `data_store.py` — others request additions via message
-7. In Phase 10, Stavan is the integration gatekeeper for backend merges
+7. In Phase 4+, Stavan is the integration gatekeeper for backend merges
 
 ---
 

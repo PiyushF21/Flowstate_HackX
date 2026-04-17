@@ -1,11 +1,13 @@
 # InfraLens — Stavan's Implementation Plan
 
 > **Role:** Backend Lead
-> **Owns:** Project scaffolding, FastAPI core, data layer, WebSocket, SENTINEL middleware, NEXUS, COGNOS, SENTINEL agent, COMMANDER agent, Phase 10 integration
+> **Owns:** Project scaffolding, FastAPI core, data layer, WebSocket, SENTINEL middleware, NEXUS, COGNOS, SENTINEL agent, COMMANDER agent, integration gatekeeper
 
 ---
 
-## Phase 1: Project Scaffolding (Parallel with Yash)
+## Phase 1: Scaffolding + Core Bootstrap (Day 1 Morning — PARALLEL with all)
+
+> 🔴 PRIORITY: Push `models.py` + `data_store.py` to main within 1 hour so Piyush & Amit can start.
 
 ### What to Build
 
@@ -59,7 +61,7 @@
 
 ---
 
-## Phase 2: Backend Core Infrastructure
+## Phase 2: Core Completion (Day 1 — PARALLEL with Yash/Piyush/Amit)
 
 ### What to Build
 
@@ -177,7 +179,7 @@ class ConnectionManager:
 
 ---
 
-## Phase 4: Backend Agents Group A
+## Phase 3: Agents Group A — NEXUS, COGNOS, SENTINEL, COMMANDER (Day 1–2 — PARALLEL with all)
 
 ### What to Build
 
@@ -312,25 +314,44 @@ async def get_workload() -> dict
 
 ---
 
-## Phase 10: Integration (Stavan's Part)
+## Phase 4: Merge PRs + Wire All Routers (Day 2 — PARALLEL with Yash)
 
 ### What to Do
+1. Pull Piyush's branch, merge VIRA/GUARDIAN/PRESCIENT/FLEET routers
+2. Pull Amit's branch, merge LOOP/ORACLE/FIELD_COPILOT routers + seed data
+3. Import ALL 11 agent routers into `main.py`
+4. Resolve any model additions needed
+5. Test integration between agent groups
 
-1. **Import all routers into `main.py`:**
-   - Pull latest from Piyush's and Amit's branches
-   - Add their routers to `main.py` app includes
-   - Resolve any model additions they need
+---
 
-2. **End-to-end test:**
-   - POST sensor data → NEXUS → COGNOS → COMMANDER → assignment → WebSocket broadcast
-   - Verify all agents work together through NEXUS pipeline
+## Phase 5: Full Pipeline Integration (Day 2–3 — PARALLEL with Yash)
 
-3. **WebSocket verification:**
-   - Connect to `/ws/agent_events` → trigger issue → see events flow
-   - Connect to `/ws/issues` → see issue status update
-   - Connect to `/ws/tasks` → see worker receive task
+### What to Do
+1. End-to-end: sensor data → NEXUS → COGNOS → COMMANDER → assignment → WebSocket
+2. End-to-end: citizen complaint → VIRA → NEXUS → COGNOS → COMMANDER
+3. End-to-end: task completion → LOOP → verification → notification
+4. WebSocket: `/ws/agent_events` → trigger issue → see events flow
+5. WebSocket: `/ws/issues` → see issue status update
+6. WebSocket: `/ws/tasks` → see worker receive task
+7. Test GUARDIAN monitoring cycle with overdue seed data
 
-4. **Fix integration bugs** in backend
+---
+
+## Phase 6: Frontend Integration Support (Day 3 — PARALLEL with Yash)
+
+### What to Do
+- Ensure all APIs return correct data for Yash's frontend
+- Fix any backend bugs found during frontend connection
+- WebSocket broadcast verification with frontend connected
+
+---
+
+## Phase 7: Final Polish + Demo Prep (Day 3)
+
+- Full-system demo test (happy path)
+- Fix any remaining backend bugs
+- Demo preparation, happy-path script
 
 ### Verification
 - Full pipeline works end-to-end

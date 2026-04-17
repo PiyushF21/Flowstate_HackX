@@ -2,21 +2,16 @@
 
 > **Role:** Backend Agent Developer + Data
 > **Updated:** Phase-wise checklist — check off items as you complete them
-> ⚠️ **Wait for Stavan's Phase 2 before starting Phase 6**
+> ⚡ **Start Day 1 Morning — simultaneous with all teammates. Seed data has ZERO dependencies.**
 
 ---
 
-## Phase 6: Backend Agents Group C + Seed Data
+## Phase 1: Day 1 Morning — Seed Data + Agent Drafts (ZERO dependencies — PARALLEL with all)
 
-### Pre-requisites
-- [ ] Pull latest from `main` branch (Stavan's Phase 2 should be merged)
-- [ ] Verify: `models.py`, `data_store.py`, `config.py`, `ws_manager.py` exist
-- [ ] Verify: `pip install -r requirements.txt` succeeds
-- [ ] Verify: `uvicorn main:app --reload` runs
-- [ ] Create your feature branch: `git checkout -b feat/agents-group-c`
+> Seed data is pure JSON. Agent drafts are pure Python. No waiting for anyone.
 
-### Seed Data (DO THIS FIRST — others need it)
-- [ ] Create `seed_data/mcs.json` — 8 Municipal Corporations
+### Seed Data (DO FIRST — push ASAP, others need it)
+- [ ] Create `seed_data/mcs.json` — 8 Municipal Corporations (pure JSON)
 - [ ] — BMC Mumbai (85% resolution, 4.2h avg, 42 workers)
 - [ ] — PMC Pune (82% resolution, 4.8h avg, 35 workers)
 - [ ] — NMC Nagpur (55% resolution, 8.2h avg, 22 workers)
@@ -25,7 +20,7 @@
 - [ ] — RMC Ratnagiri (72% resolution, 5.8h avg, 12 workers)
 - [ ] — KMC Kolhapur (75% resolution, 5.5h avg, 15 workers)
 - [ ] — AMC Aurangabad (62% resolution, 7.2h avg, 20 workers)
-- [ ] Create `seed_data/workers.json` — 15-20 workers
+- [ ] Create `seed_data/workers.json` — 20 workers
 - [ ] — 5 Roads & Asphalt specialists (Mumbai)
 - [ ] — 3 Hydraulic & Plumbing specialists (Mumbai + Pune)
 - [ ] — 3 Electrical & Power specialists (Mumbai + Nagpur)
@@ -35,10 +30,10 @@
 - [ ] — Mix of statuses: 8 available, 8 on_task, 4 off_duty
 - [ ] — Include realistic GPS coords for Mumbai locations
 - [ ] — Varied performance: ratings 3.2–4.8, on-time 70%–98%
-- [ ] Create `seed_data/issues.json` — 25-30 issues
+- [ ] Create `seed_data/issues.json` — 30 issues
 - [ ] — 10 car_sensor source (potholes, jolt data, GPS)
 - [ ] — 8 360_capture source (dividers, debris, signals)
-- [ ] — 10 manual_complaint source (water, electrical, sanitation)
+- [ ] — 12 manual_complaint source (water, electrical, sanitation)
 - [ ] — Severity mix: 3 CRITICAL, 7 HIGH, 12 MEDIUM, 8 LOW
 - [ ] — Status mix: 5 reported, 6 assigned, 8 in_progress, 10 resolved, 1 escalated
 - [ ] — Real Mumbai/Pune/Nagpur GPS coordinates
@@ -52,10 +47,39 @@
 - [ ] — Full structure: summary, by_category, by_severity, worst_wards
 - [ ] Verify: all JSON files parse without errors
 - [ ] Verify: data relationships consistent (worker → issue → MC)
-- [ ] Push seed data so Stavan can test core with real data
+- [ ] Push seed data to main immediately
+- [ ] Commit: `feat: seed data — issues, workers, MCs, reports`
+
+### Agent Logic Drafts (pure Python, no imports)
+- [ ] Draft LOOP SLA calculation logic
+- [ ] Draft LOOP re-report GPS proximity check (haversine math)
+- [ ] Draft ORACLE `calculate_allocation_score()` formula
+- [ ] Draft FIELD_COPILOT `REPAIR_KNOWLEDGE` dict (all categories)
+- [ ] Draft FIELD_COPILOT `SAFETY_PROTOCOLS` dict
+- [ ] Draft COPILOT_PROMPT template string
+- [ ] Commit: `feat: agent drafts — LOOP, ORACLE, FIELD_COPILOT logic`
+
+---
+
+## Phase 2: Pull models.py → Add Real Types (Day 1 — PARALLEL with all)
+
+- [ ] `git pull origin main` (Stavan's models.py should be there)
+- [ ] Verify: `from models import Issue, Worker, DailyReport` works
+- [ ] Verify: `from data_store import data_store` works
+- [ ] Add imports to LOOP draft, wrap returns in models
+- [ ] Add imports to ORACLE draft, connect to data_store
+- [ ] Create your feature branch: `git checkout -b feat/agents-group-c`
+- [ ] Commit: `feat(backend): LOOP + ORACLE agents with real model imports`
+
+---
+
+## Phase 3: Complete All 3 Agents + Routers (Day 1–2 — PARALLEL with all)
+
+- [ ] Verify: `pip install -r requirements.txt` succeeds
+- [ ] Verify: `uvicorn main:app --reload` runs
 
 ### LOOP Agent (`agents/loop.py`)
-- [ ] Create `agents/loop.py` file
+- [ ] Complete `agents/loop.py` file with all imports
 - [ ] Implement `submit_proof(issue_id, images, notes)` — worker proof upload
 - [ ] Implement `verify_completion(issue_id, verifier_id, approved, rejection_reason)`
 - [ ] — If approved: status→resolved, calculate resolution_time, check SLA, trigger notify
@@ -84,7 +108,7 @@
 - [ ] Verify: all endpoints work correctly
 
 ### ORACLE Agent (`agents/oracle.py`)
-- [ ] Create `agents/oracle.py` file
+- [ ] Complete `agents/oracle.py` file with all imports
 - [ ] Implement `recommend_fund_allocation()` — AI-recommended budget per MC
 - [ ] — Factor: issue volume (weighted by severity)
 - [ ] — Factor: population density (base allocation)
@@ -113,7 +137,7 @@
 - [ ] Verify: all endpoints return correct data
 
 ### FIELD_COPILOT Agent (`agents/field_copilot.py`)
-- [ ] Create `agents/field_copilot.py` file
+- [ ] Complete `agents/field_copilot.py` file with all imports
 - [ ] Define REPAIR_KNOWLEDGE dict (roads, water, electrical, sanitation, structural)
 - [ ] Define SAFETY_PROTOCOLS dict (road_repair, electrical, confined_space, heights)
 - [ ] Create COPILOT_PROMPT template (context-aware, low temperature)
@@ -143,33 +167,59 @@
 - [ ] Implement `POST /api/notifications/read` — body: { notification_id }
 - [ ] Verify: returns notifications for a citizen
 
-### Final Phase 6 Checks
+### Final Phase 3 Checks
 - [ ] All seed data loads without errors via data_store
 - [ ] All 3 agents import and initialize without errors
 - [ ] All 4 routers have correct endpoints
 - [ ] Each agent tested individually with seed data
 - [ ] No imports from files you don't own
-- [ ] Commit: `feat(backend): agents LOOP, ORACLE, FIELD_COPILOT + seed data`
+- [ ] Commit: `feat(backend): agents LOOP, ORACLE, FIELD_COPILOT + routers`
 - [ ] Push branch and create PR for Stavan to merge
 
 ---
 
-## Phase 10: Integration (Amit's Part)
+## Phase 4: Individual Agent Testing (Day 2 — PARALLEL with Yash's dashboards)
 
-- [ ] Pull latest `main` (should have all agents merged)
-- [ ] Test LOOP end-to-end: worker proof → fleet leader verify → citizen notified
-- [ ] Test LOOP re-report detection (new issue near resolved GPS)
-- [ ] Test LOOP feedback → worker rating updated
+- [ ] Test LOOP verify flow: approved → resolved + citizen notified
+- [ ] Test LOOP verify flow: rejected → back to in_progress
+- [ ] Test LOOP feedback → worker rating rolling average updated
+- [ ] Test LOOP re-report detection with close GPS coordinates
 - [ ] Test ORACLE fund allocation → sensible amounts per MC
-- [ ] Test ORACLE approval flow → records decision
-- [ ] Test ORACLE budget tracker → correct utilization data
+- [ ] Test ORACLE approval with modifications → validates total
 - [ ] Test FIELD_COPILOT chat → precise technical responses
-- [ ] Test FIELD_COPILOT with task context → context-aware answers
-- [ ] Test FIELD_COPILOT Hindi (if supported) → Hindi response
 - [ ] Verify seed data consistency one final time
-- [ ] Verify notifications reach frontend via WebSocket
-- [ ] Fix any bugs in your 3 agents + seed data
-- [ ] Commit: `fix: integration fixes for LOOP, ORACLE, FIELD_COPILOT`
+- [ ] Fix any bugs found
+- [ ] Commit: `fix(backend): LOOP, ORACLE, FIELD_COPILOT tested + fixed`
+
+---
+
+## Phase 5: Integration Testing (Day 2–3 — PARALLEL with Yash)
+
+- [ ] Test LOOP completion flow through NEXUS pipeline
+- [ ] Test ORACLE fund recommendations with real seed data
+- [ ] Test FIELD_COPILOT with real task context from seed data
+- [ ] Test notifications reach WebSocket channel
+- [ ] Update seed data if needed for better demo
+- [ ] Commit: `fix(backend): agents C integration verified`
+
+---
+
+## Phase 6: End-to-end with Frontend (Day 3 — PARALLEL with Yash)
+
+- [ ] Verify: LOOP verification works from worker dashboard proof upload
+- [ ] Verify: FIELD_COPILOT chat responds from worker assistant page
+- [ ] Verify: ORACLE data renders on State allocation page
+- [ ] Verify: Notifications reach citizen app
+- [ ] Fix any bugs from frontend integration
+- [ ] Commit: `fix: agents C frontend integration fixes`
+
+---
+
+## Phase 7: Final Polish (Day 3)
+
+- [ ] Final bug fixes
+- [ ] Verify all 3 agents + seed data work in demo happy-path
+- [ ] Commit: `release: agents C + seed data demo ready`
 
 ---
 

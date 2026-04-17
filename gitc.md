@@ -25,67 +25,85 @@ main (protected)
 
 ## Merge Sequence (Follow This Exact Order)
 
-### Phase 1 — Project Scaffolding
+### Phase 1 — ALL 4 Members Start Simultaneously (Day 1 Morning)
 
-**Step 1: Stavan creates main + scaffolding**
+> ⚡ Everyone starts coding from minute one. Different directories = zero conflicts.
+
+**Step 1: Stavan creates main + backend scaffold + models.py (PRIORITY: push models FAST)**
 ```bash
-# Stavan (first person to commit)
-git init
-git add .gitignore
-git commit -m "chore: initialize git repo"
-git branch -M main
-
-# Create backend scaffolding
+# Stavan (first person to commit — repo already initialized)
 git checkout -b feat/scaffolding-backend
-# ... create backend/ structure ...
+
+# Create backend structure + models.py (PUSH WITHIN 1 HOUR)
 git add backend/
-git commit -m "feat: project scaffolding — backend directory initialized"
+git commit -m "feat: backend scaffold + models.py + data_store.py + config.py"
 git checkout main
 git merge feat/scaffolding-backend
 git push origin main
 ```
 
-**Step 2: Yash creates frontend (AFTER Stavan pushes main)**
+**Step 2: Yash scaffolds frontend (PARALLEL with Stavan)**
 ```bash
 # Yash
 git clone <repo-url>
 git checkout -b feat/scaffolding-frontend
 # ... scaffold frontend/ with Vite ...
 git add frontend/
-git commit -m "feat: project scaffolding — frontend initialized with Vite + React + TS"
-git checkout main
+git commit -m "feat: frontend scaffold — Vite + React + TS + TailwindCSS + mapcn"
+git checkout main && git pull
 git merge feat/scaffolding-frontend
 git push origin main
 ```
 
-> ✅ **No conflict:** Stavan touches `backend/`, Yash touches `frontend/`. Completely separate directories.
+**Step 3: Amit creates seed data (PARALLEL — pure JSON, zero dependencies)**
+```bash
+# Amit
+git clone <repo-url>
+git checkout -b feat/seed-data
+# ... create seed_data/ JSON files ...
+git add backend/seed_data/
+git commit -m "feat: seed data — issues, workers, MCs, reports"
+git checkout main && git pull
+git merge feat/seed-data
+git push origin main
+```
+
+**Step 4: Piyush drafts agent logic (PARALLEL — pure Python, no imports)**
+```bash
+# Piyush
+git clone <repo-url>
+git checkout -b feat/agent-drafts-b
+# ... draft vira.py, guardian.py as pure Python, no model imports ...
+git add backend/agents/vira.py backend/agents/guardian.py
+git commit -m "feat: agent drafts — VIRA + GUARDIAN logic (pure Python)"
+git checkout main && git pull
+git merge feat/agent-drafts-b
+git push origin main
+```
+
+> ✅ **No conflict:** Stavan→`backend/*.py`, Yash→`frontend/`, Amit→`seed_data/`, Piyush→`agents/vira.py + guardian.py`. All different files.
 
 ---
 
-### Phase 2 + 3 — Backend Core + Frontend Core (PARALLEL)
+### Phase 2 — Core Complete + Agents Start (ALL 4 in parallel)
 
-**Stavan (Phase 2):**
+**Stavan:**
 ```bash
 git checkout main && git pull
 git checkout -b feat/backend-core
 
-# Build models, data_store, ws_manager, sentinel middleware, main.py, issues_router
-git add backend/models.py backend/data_store.py backend/ws_manager.py
-git commit -m "feat(backend): data models + in-memory store + WebSocket manager"
-
-git add backend/middleware/ backend/config.py
-git commit -m "feat(backend): SENTINEL RBAC middleware + config"
+git add backend/ws_manager.py backend/middleware/ backend/config.py
+git commit -m "feat(backend): WebSocket manager + SENTINEL RBAC middleware"
 
 git add backend/main.py backend/routers/issues_router.py backend/routers/__init__.py
 git commit -m "feat(backend): FastAPI app with CORS, middleware, issue CRUD router"
 
-# Merge to main
 git checkout main && git pull
 git merge feat/backend-core
 git push origin main
 ```
 
-**Yash (Phase 3) — CAN RUN IN PARALLEL:**
+**Yash (PARALLEL):**
 ```bash
 git checkout main && git pull
 git checkout -b feat/frontend-core
@@ -102,13 +120,36 @@ git commit -m "feat(frontend): custom hooks — useWebSocket, useApi, useRealtim
 git add frontend/src/components/shared/
 git commit -m "feat(frontend): 13 shared components — badges, cards, charts, map, timeline"
 
-# Merge to main
 git checkout main && git pull
 git merge feat/frontend-core
 git push origin main
 ```
 
-> ✅ **No conflict:** Stavan only touches `backend/`, Yash only touches `frontend/`.
+**Piyush (PARALLEL — now has models.py from Phase 1):**
+```bash
+git checkout main && git pull  # Gets models.py from Stavan's Phase 1
+git checkout -b feat/agents-group-b
+
+# Add real imports to VIRA + GUARDIAN, continue building
+git add backend/agents/vira.py backend/agents/guardian.py
+git commit -m "feat(backend): VIRA + GUARDIAN agents with real model imports"
+
+# Start PRESCIENT + FLEET
+git add backend/agents/prescient.py backend/agents/fleet.py
+git commit -m "feat(backend): PRESCIENT + FLEET agents"
+```
+
+**Amit (PARALLEL — now has models.py from Phase 1):**
+```bash
+git checkout main && git pull  # Gets models.py from Stavan's Phase 1
+git checkout -b feat/agents-group-c
+
+# Start LOOP + ORACLE + FIELD_COPILOT with real imports
+git add backend/agents/loop.py backend/agents/oracle.py backend/agents/field_copilot.py
+git commit -m "feat(backend): LOOP + ORACLE + FIELD_COPILOT agents"
+```
+
+> ✅ **No conflict:** Stavan→core files, Yash→frontend/, Piyush→his agents, Amit→his agents.
 
 ---
 

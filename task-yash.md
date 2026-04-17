@@ -2,10 +2,11 @@
 
 > **Role:** Frontend Lead
 > **Updated:** Phase-wise checklist — check off items as you complete them
+> ⚡ **Start Day 1 Morning — fully independent, no backend dependencies**
 
 ---
 
-## Phase 1: Project Scaffolding
+## Phase 1: Scaffolding (Day 1 Morning — PARALLEL with all)
 
 - [ ] Scaffold Vite + React + TS: `npx -y create-vite@latest ./ --template react-ts`
 - [ ] Install dependencies: `react-router-dom`, `framer-motion`, `recharts`, `lucide-react`, `clsx`, `date-fns`
@@ -16,11 +17,11 @@
 - [ ] Verify: `npm run dev` runs on localhost:5173
 - [ ] Verify: TailwindCSS classes render
 - [ ] Verify: mapcn Map component renders
-- [ ] Commit: `feat: project scaffolding — frontend initialized`
+- [ ] Commit: `feat: frontend scaffold — Vite + React + TS + TailwindCSS + mapcn`
 
 ---
 
-## Phase 3: Frontend Core Setup
+## Phase 2: Frontend Core Setup (Day 1 — PARALLEL with all)
 
 ### Design System
 - [ ] Create `src/index.css` — import Google Fonts (Inter, Space Grotesk)
@@ -52,6 +53,12 @@
 ### Utility
 - [ ] Create `src/lib/utils.ts` — clsx helper, date formatters
 
+- [ ] Commit: `feat(frontend): design system, auth, routing, login page, hooks`
+
+---
+
+## Phase 3: Shared Components (Day 1–2 — PARALLEL with all)
+
 ### Shared Components (13)
 - [ ] Create `SeverityBadge.tsx` — colored badge (CRITICAL/HIGH/MEDIUM/LOW)
 - [ ] Create `StatusPill.tsx` — status indicator pill with color
@@ -67,11 +74,11 @@
 - [ ] Create `NotificationBell.tsx` — bell with badge count
 - [ ] Create `Timeline.tsx` — vertical status timeline
 - [ ] Verify: all 13 components render correctly in isolation
-- [ ] Commit: `feat(frontend): core setup — design system, auth, routing, shared components`
+- [ ] Commit: `feat(frontend): 13 shared components`
 
 ---
 
-## Phase 7: Citizen + Worker Dashboards (Mobile-First)
+## Phase 4: Citizen + Worker Dashboards — Mobile-First (Day 2 — PARALLEL with backend testing)
 
 ### Citizen Components
 - [ ] Create `CitizenLayout.tsx` — mobile phone frame + bottom tabs
@@ -110,7 +117,7 @@
 - [ ] Create `ProfilePage.tsx` — profile header, performance stats, completed tasks, certs
 - [ ] Verify: all data renders correctly
 
-### Final Phase 7 Checks
+### Final Checks
 - [ ] All 8 pages render without errors
 - [ ] Bottom tab navigation works for both dashboards
 - [ ] Mobile-responsive layout looks correct in phone viewport
@@ -119,7 +126,7 @@
 
 ---
 
-## Phase 8: BMC + State Dashboards (Desktop)
+## Phase 5: BMC + State Dashboards — Desktop (Day 2–3 — PARALLEL with backend integration)
 
 ### BMC Components
 - [ ] Create `BMCLayout.tsx` — desktop sidebar + content area
@@ -163,7 +170,7 @@
 - [ ] Create `AccountabilityPage.tsx` — scorecard grid, league table, trend charts
 - [ ] Verify: grade cards show correct colors, league table ranks correctly
 
-### Final Phase 8 Checks
+### Final Checks
 - [ ] All 8 pages render without errors
 - [ ] Sidebar navigation works for both dashboards
 - [ ] Desktop layout responsive (no overflow/scroll issues)
@@ -172,7 +179,7 @@
 
 ---
 
-## Phase 9: NEXUS Agent Dashboard (Immersive)
+## Phase 6: NEXUS Agent Dashboard — THE WOW PAGE (Day 3 — PARALLEL with backend integration)
 
 ### NEXUS Components
 - [ ] Create `NexusLayout.tsx` — full-screen dark canvas (#08080D)
@@ -200,7 +207,7 @@
 - [ ] Create `PipelinePage.tsx` — issue selector, horizontal pipeline diagram, timeline, context panel
 - [ ] Verify: pipeline shows L→R flow, nodes have correct status indicators
 
-### Final Phase 9 Checks
+### Final Checks
 - [ ] All 3 pages render without errors
 - [ ] Constellation is visually stunning (dark theme, glowing connections)
 - [ ] Animations don't lag
@@ -210,29 +217,41 @@
 
 ---
 
-## Phase 10: Frontend Integration
+## Phase 6 (continued): Frontend ↔ Backend Integration (Day 3)
 
+### API Connection
 - [ ] Replace mock data with real API calls (useApi hook)
 - [ ] Citizen pages: connect to `/api/issues`, `/api/vira/chat`
 - [ ] BMC pages: connect to `/api/issues`, `/api/commander/workers`, `/api/prescient/daily`
 - [ ] State pages: connect to `/api/fleet/compare`, `/api/oracle/recommend-funds`, `/api/prescient/weekly`
 - [ ] Worker pages: connect to `/api/tasks/mine`, `/api/field-copilot/chat`
 - [ ] NEXUS pages: connect to `/api/nexus/status`, WebSocket
+
+### WebSocket Wiring
 - [ ] Wire WebSocket: BMC Activity Feed ← `agent_events`
 - [ ] Wire WebSocket: State Escalation Panel ← `escalations`
 - [ ] Wire WebSocket: Worker Tasks ← `tasks`
 - [ ] Wire WebSocket: Citizen Notifications ← `notifications`
 - [ ] Wire WebSocket: NEXUS Constellation ← `agent_events` (drive animations)
+
+### Voice Integration
 - [ ] Add Web Speech API STT to VIRA chat (citizen)
 - [ ] Add Web Speech API STT to FIELD_COPILOT (worker)
 - [ ] Add TTS playback (Sarvam or speechSynthesis fallback)
+
+- [ ] Commit: `feat(frontend): API integration + WebSocket + voice`
+
+---
+
+## Phase 7: Final Polish (Day 3)
+
 - [ ] Add Framer Motion page transitions (AnimatePresence)
 - [ ] Add loading states to all data-fetching pages
 - [ ] Add error handling (toast notifications)
 - [ ] Responsive tweaks for mobile/desktop
 - [ ] Cross-browser test (Chrome, Safari minimum)
 - [ ] Final visual polish pass
-- [ ] Commit: `feat: full integration — frontend ↔ backend connected, WebSocket live, voice enabled`
+- [ ] Commit: `release: InfraLens v1.0 — demo ready`
 
 ---
 

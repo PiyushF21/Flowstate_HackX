@@ -5,7 +5,7 @@
 
 ---
 
-## Phase 1: Project Scaffolding (Parallel with Stavan)
+## Phase 1: Scaffolding (Day 1 Morning — PARALLEL with all)
 
 ### What to Build
 
@@ -39,7 +39,11 @@
 
 ---
 
-## Phase 3: Frontend Core Setup
+## Phase 2: Frontend Core Setup (Day 1 — PARALLEL with all)
+
+> Build design system, auth, routing, login page, hooks.
+
+### Phase 3: Shared Components (Day 1–2 — continues from Phase 2)
 
 ### What to Build
 
@@ -160,7 +164,7 @@
 
 ---
 
-## Phase 7: Citizen + Worker Dashboards (Mobile-First)
+## Phase 4: Citizen + Worker Dashboards — Mobile-First (Day 2 — PARALLEL with backend testing)
 
 ### What to Build
 
@@ -215,7 +219,7 @@
 
 ---
 
-## Phase 8: BMC + State Dashboards (Desktop)
+## Phase 5: BMC + State Dashboards — Desktop (Day 2–3 — PARALLEL with backend integration)
 
 ### What to Build
 
@@ -275,7 +279,7 @@
 
 ---
 
-## Phase 9: NEXUS Agent Dashboard (Immersive — THE WOW PAGE)
+## Phase 6: NEXUS Agent Dashboard — THE WOW PAGE (Day 3 — PARALLEL with backend integration)
 
 ### What to Build
 
@@ -333,36 +337,37 @@
 
 ---
 
-## Phase 10: Integration (Yash's Part)
+## Phase 6 (continued): Frontend ↔ Backend Integration (Day 3)
 
-### What to Do
-
-1. **Replace all mock data with real API calls:**
-   - Use `useApi` hook to fetch from backend
+### API Connection
+1. Replace all mock data with real API calls using `useApi` hook
    - Citizen pages → `/api/issues`, `/api/vira/chat`
    - BMC pages → `/api/issues`, `/api/commander/workers`, `/api/prescient/daily`
    - State pages → `/api/fleet/compare`, `/api/oracle/recommend-funds`, `/api/prescient/weekly`
    - Worker pages → `/api/tasks/mine`, `/api/field-copilot/chat`
    - NEXUS pages → `/api/nexus/status`, WebSocket `agent_events` channel
 
-2. **WebSocket integration:**
-   - BMC Activity Feed → subscribe to `agent_events` channel
-   - State Escalation Panel → subscribe to `escalations` channel
-   - Worker Tasks → subscribe to `tasks` channel
-   - Citizen Notifications → subscribe to `notifications` channel
-   - NEXUS Constellation → subscribe to `agent_events`, drive animations
+### WebSocket Wiring
+- BMC Activity Feed → subscribe to `agent_events` channel
+- State Escalation Panel → subscribe to `escalations` channel
+- Worker Tasks → subscribe to `tasks` channel
+- Citizen Notifications → subscribe to `notifications` channel
+- NEXUS Constellation → subscribe to `agent_events`, drive animations
 
-3. **Voice integration:**
-   - VIRA (Citizen ReportPage): Web Speech API for STT, send transcribed text to `/api/vira/chat`
-   - FIELD_COPILOT (Worker AssistantPage): Web Speech API STT, send to `/api/field-copilot/voice`
-   - TTS playback: Sarvam AI or browser `speechSynthesis` fallback
+### Voice Integration
+- VIRA (Citizen ReportPage): Web Speech API STT → `/api/vira/chat`
+- FIELD_COPILOT (Worker AssistantPage): Web Speech API STT → `/api/field-copilot/voice`
+- TTS playback: Sarvam AI or browser `speechSynthesis` fallback
 
-4. **Final polish:**
-   - Page transitions (Framer Motion `AnimatePresence`)
-   - Loading states for all data fetches
-   - Error handling (toast notifications)
-   - Responsive tweaks
-   - Cross-browser check (Chrome, Safari)
+---
+
+## Phase 7: Final Polish (Day 3)
+
+- Page transitions (Framer Motion `AnimatePresence`)
+- Loading states for all data fetches
+- Error handling (toast notifications)
+- Responsive tweaks
+- Cross-browser check (Chrome, Safari)
 
 ### Verification
 - Login → each role → data loads from backend

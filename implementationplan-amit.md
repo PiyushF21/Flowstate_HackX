@@ -2,13 +2,43 @@
 
 > **Role:** Backend Agent Developer + Data
 > **Owns:** LOOP agent, ORACLE agent, FIELD_COPILOT agent, all seed data, their routers + notifications router
-> **Prerequisite:** Must wait for Stavan to complete Phase 2 (backend core) before starting
+> **Start:** Day 1 Morning — **simultaneous with all team members**
 
 ---
 
-## Phase 6: Backend Agents Group C + Seed Data
+## Phase 1: Day 1 Morning — Start Immediately (ZERO dependencies)
 
-> ⚠️ **BEFORE STARTING:** Pull latest from `main` branch. You need `models.py`, `data_store.py`, `config.py`, and `ws_manager.py` from Stavan's Phase 2.
+> ⚡ You have the MOST independent Day 1 work. Seed data is pure JSON — no Python imports needed.
+
+**What to do (all independent, no waiting):**
+
+1. **Create ALL seed data (top priority — others need this):**
+   - `seed_data/mcs.json` — 8 Municipal Corporations (pure JSON)
+   - `seed_data/workers.json` — 20 workers with real GPS coords (pure JSON)
+   - `seed_data/issues.json` — 30 issues with realistic data (pure JSON)
+   - `seed_data/reports.json` — 5 daily reports (pure JSON)
+   - **Push to main ASAP** so Stavan can test with real data
+
+2. **Draft agent logic (pure Python, no imports):**
+   - Write LOOP verification logic (SLA calculation, re-report GPS proximity check)
+   - Write ORACLE scoring formula (`calculate_allocation_score`)
+   - Write FIELD_COPILOT knowledge dicts (REPAIR_KNOWLEDGE, SAFETY_PROTOCOLS)
+   - Write prompt templates (COPILOT_PROMPT)
+   - All functions take `str`/`dict` params and return `dict`
+
+3. **Once Stavan pushes `models.py` to main (~1-2 hours in):**
+   ```bash
+   git pull origin main
+   ```
+   → Add `from models import Issue, Worker, DailyReport` etc.
+   → Add `from data_store import data_store`
+   → Wrap your dict returns in Pydantic models
+
+---
+
+## Phase 2+3: Complete All 3 Agents + Routers + Seed Data
+
+> By this point you have `models.py` and `data_store.py` available.
 
 ### What to Build
 
@@ -256,7 +286,22 @@ Temperature: 0.1 (high precision, minimal creativity)
 
 ---
 
-## Phase 10: Integration (Amit's Part)
+## Phase 4: Individual Agent Testing (Day 2 — PARALLEL with Yash's dashboards)
+
+### What to Do
+- Test LOOP verify flow: approved → resolved + citizen notified
+- Test LOOP verify flow: rejected → back to in_progress
+- Test LOOP feedback → worker rating rolling average updated
+- Test LOOP re-report detection with close GPS coordinates
+- Test ORACLE fund allocation → sensible amounts per MC
+- Test ORACLE approval with modifications → validates total
+- Test FIELD_COPILOT chat → precise technical responses
+- Verify seed data consistency one final time
+- Fix any bugs found in all 3 agents
+
+---
+
+## Phase 5: Integration Testing (Day 2–3 — PARALLEL with Yash)
 
 ### What to Do
 
@@ -280,9 +325,25 @@ Temperature: 0.1 (high precision, minimal creativity)
    - All JSON files load without errors
    - Data relationships are consistent (worker assigned to issue → worker.current_task_id matches)
    - GPS coordinates are real Mumbai/Pune/Nagpur locations
-   - Dates/timestamps are realistic
 
-5. **Fix any bugs** in your 3 agents + seed data
+---
+
+## Phase 6: End-to-end with Frontend (Day 3 — PARALLEL with Yash)
+
+### What to Do
+- Verify LOOP verification works from worker dashboard proof upload
+- Verify FIELD_COPILOT chat responds from worker assistant page
+- Verify ORACLE data renders on State allocation page
+- Verify notifications reach citizen app via WebSocket
+- Update seed data if needed for better demo
+- Fix any bugs from frontend integration
+
+---
+
+## Phase 7: Final Polish (Day 3)
+
+- Final bug fixes
+- Verify all 3 agents + seed data work in demo happy-path
 
 ### Verification
 - All 3 agents work individually
