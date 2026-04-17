@@ -28,7 +28,7 @@ export default function LoginPage() {
 
   const handleRoleSelect = (role: UserRole) => {
     const meta = ROLE_META[role]
-    login(role, meta.demoUser)
+    login(role, meta.demoUser, meta.demoUserId)
     navigate(ROLE_HOME_ROUTES[role])
   }
 

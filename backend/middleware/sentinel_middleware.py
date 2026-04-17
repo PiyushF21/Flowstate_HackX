@@ -16,22 +16,22 @@ audit_logger.addHandler(handler)
 ROLES = {
     "citizen": {
         "scope": "own_complaints_only",
-        "can_access": ["/api/vira", "/api/issues", "/api/notifications", "/api/loop"],
-        "cannot_access": ["/api/fleet", "/api/commander", "/api/oracle"]
+        "can_access": ["/api/vira", "/api/issues", "/api/notifications", "/api/loop", "/api/nexus/process", "/api/cognos"],
+        "cannot_access": ["/api/fleet", "/api/commander", "/api/oracle", "/api/sentinel"]
     },
     "bmc_supervisor": {
         "scope": "own_mc_only",
-        "can_access": ["/api/issues", "/api/commander", "/api/workers", "/api/loop"],
-        "cannot_access": ["/api/oracle", "/api/fleet/compare"]
+        "can_access": ["/api/issues", "/api/commander", "/api/workers", "/api/loop", "/api/cognos", "/api/nexus", "/api/prescient", "/api/guardian", "/api/sentinel"],
+        "cannot_access": ["/api/oracle/approve"]
     },
     "field_worker": {
         "scope": "assigned_tasks_only",
-        "can_access": ["/api/tasks", "/api/field-copilot", "/api/loop"],
-        "cannot_access": ["/api/commander", "/api/fleet", "/api/oracle"]
+        "can_access": ["/api/issues", "/api/field-copilot", "/api/loop", "/api/nexus", "/api/notifications"],
+        "cannot_access": ["/api/commander/assign", "/api/fleet", "/api/oracle"]
     },
     "state_official": {
         "scope": "all_mcs_aggregated",
-        "can_access": ["/api/fleet", "/api/oracle", "/api/prescient", "/api/guardian", "/api/issues"],
+        "can_access": ["/api/fleet", "/api/oracle", "/api/prescient", "/api/guardian", "/api/issues", "/api/nexus", "/api/sentinel", "/api/commander/workers", "/api/commander/workload"],
         "cannot_access": ["/api/commander/assign"]
     },
     "nexus_admin": {

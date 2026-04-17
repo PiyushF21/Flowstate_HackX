@@ -7,10 +7,15 @@ import ProofUpload from '../../components/worker/ProofUpload'
 import SeverityBadge from '../../components/shared/SeverityBadge'
 import MapView from '../../components/shared/MapView'
 import { useApi } from '../../hooks/useApi'
+import { useAuth } from '../../context/AuthContext'
 import { cn } from '../../lib/utils'
+
+// Fallback worker ID for demo — in production this would come from auth token
+const DEMO_WORKER_ID = 'WRK-MUM-001'
 
 export default function TasksPage() {
   const { fetchApi } = useApi()
+  const { user } = useAuth()
   const [filterTab, setFilterTab] = useState<'all' | 'active' | 'completed'>('all')
   const [selectedTask, setSelectedTask] = useState<TaskData | null>(null)
   const [showProof, setShowProof] = useState(false)
@@ -19,21 +24,22 @@ export default function TasksPage() {
   useEffect(() => {
     const fetchTasks = async () => {
       try {
-        const data = await fetchApi<{ tasks: any[] }>('/api/tasks/mine')
-        if (data && data.tasks) {
-          setTasks(data.tasks.map(t => ({
-             id: t.id,
+        const workerId = user?.id || DEMO_WORKER_ID
+        const data = await fetchApi<any[]>(`/api/issues/assigned/${workerId}`)
+        if (Array.isArray(data)) {
+          setTasks(data.map(t => ({
+             id: t.issue_id,
              issue_id: t.issue_id,
-             title: t.title || 'Infrastructure Task',
+             title: t.description || `${t.category} Issue`,
              category: t.category,
              severity: t.severity as any,
              status: t.status as any,
-             location: t.location?.address || 'Mumbai',
-             distance: t.distance || '2.3 km',
+             location: t.location?.address || t.location?.city || 'Mumbai',
+             distance: '2.3 km',
              deadline: t.deadline,
              procedure: t.procedure || [],
-             materials: t.materials || [],
-             team: t.team || []
+             materials: t.materials_required || [],
+             team: t.assigned_to?.team || []
           })))
         }
       } catch (error) {

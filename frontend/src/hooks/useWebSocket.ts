@@ -5,6 +5,8 @@ const WS_BASE_URL = import.meta.env.VITE_WS_URL || 'ws://localhost:8000/ws'
 interface UseWebSocketOptions {
   /** WebSocket channel name (appended to base URL) */
   channel: string
+  /** User role for SENTINEL RBAC filtering */
+  role?: string
   /** Called when a message is received */
   onMessage?: (data: unknown) => void
   /** Called when connection opens */
@@ -32,6 +34,7 @@ interface UseWebSocketReturn {
 
 export function useWebSocket({
   channel,
+  role,
   onMessage,
   onOpen,
   onClose,
@@ -55,7 +58,8 @@ export function useWebSocket({
     if (wsRef.current?.readyState === WebSocket.OPEN) return
 
     try {
-      const url = `${WS_BASE_URL}/${channel}`
+      const params = role ? `?role=${encodeURIComponent(role)}` : ''
+      const url = `${WS_BASE_URL}/${channel}${params}`
       const ws = new WebSocket(url)
 
       ws.onopen = () => {
@@ -92,7 +96,7 @@ export function useWebSocket({
         reconnectTimerRef.current = setTimeout(connect, reconnectInterval)
       }
     }
-  }, [channel, autoReconnect, reconnectInterval, enabled])
+  }, [channel, role, autoReconnect, reconnectInterval, enabled])
 
   const disconnect = useCallback(() => {
     clearTimeout(reconnectTimerRef.current)

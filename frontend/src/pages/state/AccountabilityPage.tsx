@@ -22,19 +22,19 @@ export default function AccountabilityPage() {
   useEffect(() => {
     const fetchCompare = async () => {
       try {
-        const data = await fetchApi<{ mc_rankings: any[] }>('/api/fleet/compare')
-        if (data && data.mc_rankings) {
-          const mappedScores: ScorecardData[] = data.mc_rankings.map((d: any, idx: number) => ({
+        const data = await fetchApi<{ rankings: any[] }>('/api/fleet/compare')
+        if (data && data.rankings) {
+          const mappedScores: ScorecardData[] = data.rankings.map((d: any, idx: number) => ({
             id: String(idx),
             mcName: d.city,
             grade: d.score >= 90 ? 'A' : d.score >= 75 ? 'B' : d.score >= 60 ? 'C' : d.score >= 50 ? 'D' : 'F',
             resRate: d.resolution_rate_pct,
             avgTime: d.avg_resolution_hours,
-            overduePcnt: d.total_issues ? Math.round((d.overdue_tasks / d.total_issues) * 100) : 0,
+            overduePcnt: d.total_issues ? Math.round((d.active_critical / d.total_issues) * 100) : 0,
             satisfaction: 4.0,
             trend: 'stable'
           }))
-          const mappedLeague: LeagueRow[] = data.mc_rankings.map((d: any) => ({
+          const mappedLeague: LeagueRow[] = data.rankings.map((d: any) => ({
             rank: d.rank,
             mcName: d.city,
             compositeScore: d.score

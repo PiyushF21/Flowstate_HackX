@@ -1,12 +1,13 @@
 """PRESCIENT Router -- Reporting & forecasting endpoints."""
 from fastapi import APIRouter, Query
+from typing import Optional
 from agents import prescient
 
 router = APIRouter(prefix="/api/prescient", tags=["PRESCIENT"])
 
 
 @router.get("/daily/{mc_name}")
-async def daily_report(mc_name: str, date: str = None):
+async def daily_report(mc_name: str, date: Optional[str] = None):
     """Get or generate daily report for a specific MC."""
     return await prescient.generate_daily_report(mc_name, date)
 

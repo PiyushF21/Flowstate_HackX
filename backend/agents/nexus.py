@@ -74,11 +74,10 @@ async def node_commander(state: AgentState):
         return state
         
     reporter = None
-    if state["source"] == "manual_complaint" and "user_id" in state["raw_data"]:
-        reporter = Reporter(
-            reporter_id=state["raw_data"]["user_id"],
-            reporter_name=state["raw_data"]["user_id"]
-        )
+    if state["source"] == "manual_complaint":
+        rid = state["raw_data"].get("user_id") or state["raw_data"].get("reporter_id") or "anon"
+        rname = state["raw_data"].get("reporter_name", rid)
+        reporter = Reporter(reporter_id=rid, reporter_name=rname)
 
     issue = Issue(
         issue_id=state["issue_id"],

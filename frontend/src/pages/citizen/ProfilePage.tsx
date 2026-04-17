@@ -1,26 +1,34 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { LogOut, Bell, Car, Globe, Mail } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
 import CitizenLayout from '../../components/citizen/CitizenLayout'
 import StatusPill from '../../components/shared/StatusPill'
 import CategoryIcon from '../../components/shared/CategoryIcon'
 import { useAuth } from '../../context/AuthContext'
+import { useApi } from '../../hooks/useApi'
 import { cn, formatSmartDate } from '../../lib/utils'
-
-const MOCK_COMPLAINTS = [
-  { id: 'ISS-0078', title: 'Burst water pipe', category: 'water_pipeline', date: '2026-04-17T14:01:00', status: 'assigned' as const },
-  { id: 'ISS-0045', title: 'Pothole on SV Road', category: 'roads', date: '2026-04-15T09:20:00', status: 'resolved' as const },
-  { id: 'ISS-0032', title: 'Street light broken', category: 'electrical', date: '2026-04-13T18:30:00', status: 'resolved' as const },
-  { id: 'ISS-0019', title: 'Garbage pile-up', category: 'sanitation', date: '2026-04-10T07:00:00', status: 'resolved' as const },
-  { id: 'ISS-0067', title: 'Cracks on bridge overpass', category: 'structural', date: '2026-04-16T11:00:00', status: 'in_progress' as const },
-]
 
 export default function ProfilePage() {
   const { user, logout } = useAuth()
+  const { fetchApi } = useApi()
   const navigate = useNavigate()
   const [filterTab, setFilterTab] = useState<'all' | 'active' | 'resolved'>('all')
+  const [complaints, setComplaints] = useState<any[]>([])
 
-  const filtered = MOCK_COMPLAINTS.filter((c) => {
+  useEffect(() => {
+    const fetchComplaints = async () => {
+      if (!user) return
+      try {
+        const issues = await fetchApi<any[]>(`/api/issues?reporter_id=${user.id}`)
+        setComplaints(issues)
+      } catch (err) {
+        console.error("Failed to fetch complaints", err)
+      }
+    }
+    fetchComplaints()
+  }, [user, fetchApi])
+
+  const filtered = complaints.filter((c) => {
     if (filterTab === 'active') return c.status !== 'resolved'
     if (filterTab === 'resolved') return c.status === 'resolved'
     return true
@@ -76,11 +84,11 @@ export default function ProfilePage() {
           </div>
           <div className="space-y-2">
             {filtered.map((c) => (
-              <div key={c.id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-elevated border border-border">
+              <div key={c.issue_id} className="flex items-center gap-3 p-3 rounded-xl bg-surface-elevated border border-border">
                 <CategoryIcon category={c.category} size="sm" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm text-text-primary truncate">{c.title}</p>
-                  <p className="text-[10px] text-text-muted">{formatSmartDate(c.date)}</p>
+                  <p className="text-sm text-text-primary truncate">{c.description || `${c.category} issue reported`}</p>
+                  <p className="text-[10px] text-text-muted">{formatSmartDate(c.created_at)}</p>
                 </div>
                 <StatusPill status={c.status} />
               </div>

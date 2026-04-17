@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useCallback, type ReactNode } from
 export type UserRole = 'citizen' | 'bmc_supervisor' | 'field_worker' | 'state_official' | 'nexus_admin'
 
 interface AuthUser {
+  id?: string
   role: UserRole
   userName: string
 }
@@ -10,7 +11,7 @@ interface AuthUser {
 interface AuthContextType {
   user: AuthUser | null
   isAuthenticated: boolean
-  login: (role: UserRole, userName: string) => void
+  login: (role: UserRole, userName: string, id?: string) => void
   logout: () => void
 }
 
@@ -26,12 +27,13 @@ export const ROLE_HOME_ROUTES: Record<UserRole, string> = {
 }
 
 /** Role display metadata */
-export const ROLE_META: Record<UserRole, { label: string; description: string; icon: string; demoUser: string; color: string }> = {
+export const ROLE_META: Record<UserRole, { label: string; description: string; icon: string; demoUser: string; demoUserId: string; color: string }> = {
   citizen: {
     label: 'Citizen',
     description: 'Report issues, track complaints, view area map',
     icon: '👤',
     demoUser: 'Aarav Mehta',
+    demoUserId: 'citizen_aarav',
     color: '#3B82F6',
   },
   bmc_supervisor: {
@@ -39,6 +41,7 @@ export const ROLE_META: Record<UserRole, { label: string; description: string; i
     description: 'Manage issues, monitor workers, view analytics',
     icon: '🏢',
     demoUser: 'Rajesh Kadam',
+    demoUserId: 'bmc_rajesh',
     color: '#F97316',
   },
   field_worker: {
@@ -46,6 +49,7 @@ export const ROLE_META: Record<UserRole, { label: string; description: string; i
     description: 'View tasks, follow procedures, AI assistant',
     icon: '👷',
     demoUser: 'Ganesh Patil',
+    demoUserId: 'WRK-MUM-015',
     color: '#10B981',
   },
   state_official: {
@@ -53,6 +57,7 @@ export const ROLE_META: Record<UserRole, { label: string; description: string; i
     description: 'Oversee all MCs, fund allocation, accountability',
     icon: '🏛️',
     demoUser: 'Sunita Verma',
+    demoUserId: 'state_sunita',
     color: '#8B5CF6',
   },
   nexus_admin: {
@@ -60,6 +65,7 @@ export const ROLE_META: Record<UserRole, { label: string; description: string; i
     description: 'Agent constellation, event stream, pipeline view',
     icon: '🧠',
     demoUser: 'System Admin',
+    demoUserId: 'admin_sys',
     color: '#A855F7',
   },
 }
@@ -70,8 +76,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return saved ? JSON.parse(saved) : null
   })
 
-  const login = useCallback((role: UserRole, userName: string) => {
-    const newUser: AuthUser = { role, userName }
+  const login = useCallback((role: UserRole, userName: string, id?: string) => {
+    const newUser: AuthUser = { role, userName, id }
     setUser(newUser)
     sessionStorage.setItem('infralens_user', JSON.stringify(newUser))
   }, [])

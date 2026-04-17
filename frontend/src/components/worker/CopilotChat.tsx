@@ -59,9 +59,9 @@ export default function CopilotChat({ className }: { className?: string }) {
     
     setIsTyping(true)
     try {
-      const data = await fetchApi<{ response: string }>('/api/field-copilot/voice', {
+      const data = await fetchApi<{ response: string }>('/api/field-copilot/chat', {
         method: 'POST',
-        body: { user_id: 'WRK-MUM-015', message: msg, issue_id: 'ISS-MUM-2026-04-17-0042' }
+        body: { worker_id: 'WRK-MUM-015', message: msg, issue_id: 'ISS-MUM-2026-04-17-0042' }
       })
       setIsTyping(false)
       addMessage('assistant', data.response || "Task updated.")
@@ -99,9 +99,9 @@ export default function CopilotChat({ className }: { className?: string }) {
       
       setIsTyping(true)
       try {
-        const data = await fetchApi<{ response: string }>('/api/field-copilot/voice', {
+        const data = await fetchApi<{ response: string }>('/api/field-copilot/chat', {
           method: 'POST',
-          body: { user_id: 'WRK-MUM-015', message: voiceText, issue_id: 'ISS-MUM-2026-04-17-0042' }
+          body: { worker_id: 'WRK-MUM-015', message: voiceText, issue_id: 'ISS-MUM-2026-04-17-0042' }
         })
         setIsTyping(false)
         addMessage('assistant', data.response || "Voice processed.")

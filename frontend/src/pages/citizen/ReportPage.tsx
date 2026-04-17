@@ -18,9 +18,9 @@ const CATEGORIES = [
 ]
 
 const SEVERITY_OPTIONS = [
-  { key: 'low', label: '🟡 Not urgent', color: 'var(--low)' },
-  { key: 'medium', label: '🟠 Needs attention', color: 'var(--high)' },
-  { key: 'high', label: '🔴 Emergency', color: 'var(--critical)' },
+  { key: 'LOW', label: '🟡 Not urgent', color: 'var(--low)' },
+  { key: 'MEDIUM', label: '🟠 Needs attention', color: 'var(--high)' },
+  { key: 'HIGH', label: '🔴 Emergency', color: 'var(--critical)' },
 ]
 
 export default function ReportPage() {
@@ -77,17 +77,21 @@ export default function ReportPage() {
     if (!selectedCategory) return
     setIsSubmitting(true)
     try {
-      const resp = await fetchApi<{ id: string }>('/api/issues', {
+      const resp = await fetchApi<{ data: { issue_id: string } }>('/api/nexus/process', {
         method: 'POST',
         body: {
-          category: selectedCategory,
-          description: description,
-          severity: severity || 'low',
-          location: { lat: 19.1196, lng: 72.8467, address: 'Powai Lake Gate 2', ward: 'S-Ward' },
-          reporter_id: user?.userName || 'citizen_anon'
+          source: 'manual_complaint',
+          raw_data: {
+            category: selectedCategory,
+            description: description,
+            severity_self_assessed: severity || 'LOW',
+            user_id: user?.id || 'citizen_anon',
+            reporter_name: user?.userName || 'Anonymous'
+          },
+          location: { lat: 19.1196, lng: 72.8467, address: 'Powai Lake Gate 2', ward: 'S-Ward' }
         }
       })
-      setIssueId(resp.id)
+      setIssueId(resp.data.issue_id)
       setSubmitted(true)
     } catch (err) {
       console.error(err)

@@ -14,17 +14,19 @@ export default function IssuesDashboard() {
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const data = await fetchApi<{ issues: any[] }>('/api/issues?mc=BMC%20Mumbai')
-        setIssues(data.issues.map(i => ({
-          id: i.issue_id,
-          source: i.source as any,
-          category: i.category,
-          severity: i.severity as any,
-          confidence: 90,
-          status: i.status as any,
-          assignedTo: i.assignment?.worker_id,
-          reportedAt: i.created_at
-        })))
+        const data = await fetchApi<any[]>('/api/issues?mc=BMC%20Mumbai')
+        if (Array.isArray(data)) {
+          setIssues(data.map(i => ({
+            id: i.issue_id,
+            source: i.source as any,
+            category: i.category,
+            severity: i.severity as any,
+            confidence: i.confidence || 90,
+            status: i.status as any,
+            assignedTo: i.assigned_to?.worker_name || i.assigned_to?.worker_id,
+            reportedAt: i.created_at
+          })))
+        }
       } catch (err) {
         console.error("Failed to fetch dashboard issues", err)
       }

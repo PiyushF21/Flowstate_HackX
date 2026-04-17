@@ -12,16 +12,16 @@ export default function WorkersPage() {
   useEffect(() => {
     const fetchWorkers = async () => {
       try {
-        const data = await fetchApi<{ workers: any[] }>('/api/commander/workers')
-        if(data && data.workers) {
-          setWorkers(data.workers.map(w => ({
-            id: w.id,
+        const data = await fetchApi<any[]>('/api/commander/workers')
+        if (Array.isArray(data)) {
+          setWorkers(data.map(w => ({
+            id: w.worker_id,
             name: w.name,
-            specialization: w.specialization,
+            specialization: (w.specializations || []).join(', ') || 'General',
             status: w.status as 'on_task' | 'available' | 'off_duty',
-            currentTask: w.current_task,
-            distance: w.distance || '1.2 km',
-            performanceScore: w.performance_score || 85
+            currentTask: w.current_task_id || '',
+            distance: '1.2 km',
+            performanceScore: w.performance?.rating ? Math.round(w.performance.rating * 20) : 85
           })))
         }
       } catch (err) {

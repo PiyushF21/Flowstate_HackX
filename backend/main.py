@@ -31,6 +31,7 @@ from routers.vira_router import router as vira_router
 from routers.guardian_router import router as guardian_router
 from routers.prescient_router import router as prescient_router
 from routers.fleet_router import router as fleet_router
+from routers.notifications_router import router as notifications_router
 from middleware.sentinel_middleware import SentinelMiddleware
 
 # ---------------------------------------------------------------------------
@@ -89,6 +90,7 @@ app.include_router(vira_router)
 app.include_router(guardian_router)
 app.include_router(prescient_router)
 app.include_router(fleet_router)
+app.include_router(notifications_router)
 
 # ---------------------------------------------------------------------------
 # WebSockets

@@ -22,21 +22,21 @@ export default function OverviewPage() {
   useEffect(() => {
     const fetchMatrix = async () => {
       try {
-        const data = await fetchApi<{ mc_rankings: any[] }>('/api/fleet/compare')
-        if (data && data.mc_rankings) {
-          const mapped = data.mc_rankings.map((d: any, idx: number) => ({
+        const data = await fetchApi<{ rankings: any[] }>('/api/fleet/compare')
+        if (data && data.rankings) {
+          const mapped = data.rankings.map((d: any, idx: number) => ({
             id: String(idx),
             name: d.city,
             issuesReceived: d.total_issues,
-            issuesResolved: d.resolved_issues,
-            pending: d.total_issues - d.resolved_issues,
-            overdue: d.overdue_tasks,
+            issuesResolved: d.resolved,
+            pending: d.total_issues - d.resolved,
+            overdue: d.active_critical || 0,
             resRate: d.resolution_rate_pct,
             avgTime: d.avg_resolution_hours,
             workers: 0,
             utilization: 0,
             trend: 'stable' as 'up' | 'down' | 'stable',
-            sla: 0
+            sla: d.sla_compliance_pct || 0
           }))
           setTableData(mapped)
         }

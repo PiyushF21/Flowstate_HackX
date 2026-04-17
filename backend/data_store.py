@@ -166,6 +166,8 @@ class DataStore:
             ]
         if filters.get("source"):
             issues = [i for i in issues if i.source == filters["source"]]
+        if filters.get("reporter_id"):
+            issues = [i for i in issues if i.reporter and i.reporter.reporter_id == filters["reporter_id"]]
 
         limit = filters.get("limit")
         if limit:

@@ -83,7 +83,7 @@ async def get_advice(worker_id: str, issue_id: str, user_message: str) -> Copilo
             safety_warning=f"MOCK WARNING: {safety}"
         )
         
-    llm = ChatXAI(xai_api_key=settings.XAI_API_KEY, model="grok-2-latest", temperature=0.1)
+    llm = ChatXAI(xai_api_key=settings.XAI_API_KEY, model="grok-4-1-fast-reasoning", temperature=0.1)
     llm_with_struct = llm.with_structured_output(CopilotResponse)
     
     prompt = PromptTemplate.from_template(COPILOT_PROMPT)

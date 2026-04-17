@@ -13,7 +13,7 @@ export default function ReportsPage() {
   useEffect(() => {
     const fetchPrescient = async () => {
       try {
-        const data = await fetchApi<{ weekly_vol: any[], resolution_time: any[], category_dist: any[] }>('/api/prescient/daily?mc=BMC%20Mumbai')
+        const data = await fetchApi<{ weekly_vol: any[], resolution_time: any[], category_dist: any[] }>('/api/prescient/daily/BMC%20Mumbai')
         setWeeklyVol(data.weekly_vol || [
           { name: 'Mon', issues: 120 }, { name: 'Tue', issues: 132 }, { name: 'Wed', issues: 101 },
           { name: 'Thu', issues: 145 }, { name: 'Fri', issues: 156 }, { name: 'Sat', issues: 89 }, { name: 'Sun', issues: 65 }
