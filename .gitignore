@@ -1,0 +1,41 @@
+# ===========================
+# InfraLens — .gitignore
+# ===========================
+
+# ----- Python -----
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+dist/
+build/
+*.egg
+venv/
+.venv/
+env/
+*.so
+
+# ----- Environment -----
+.env
+*.env.local
+
+# ----- Node / Frontend -----
+node_modules/
+dist/
+.cache/
+*.tsbuildinfo
+
+# ----- IDE -----
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ----- OS -----
+.DS_Store
+Thumbs.db
+
+# ----- Misc -----
+*.log
+*.bak

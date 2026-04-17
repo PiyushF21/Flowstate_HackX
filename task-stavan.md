@@ -6,52 +6,52 @@
 
 ---
 
-## Phase 1: Scaffolding + Core Bootstrap (Day 1 Morning — PARALLEL with all)
+## Phase 1: Scaffolding + Core Bootstrap (Day 1 Morning — PARALLEL with all) ✅
 
 > 🔴 PRIORITY: Push `models.py` to main within 1 hour so Piyush & Amit can start using real types.
 
 ### Backend Scaffold
-- [ ] Create `backend/` directory structure
-- [ ] Create `backend/requirements.txt` with all Python dependencies
-- [ ] Create `backend/config.py` (env var loader)
-- [ ] Create `backend/.env.example`
-- [ ] Create `backend/.env` (local, gitignored)
-- [ ] Create `backend/agents/__init__.py`
-- [ ] Create `backend/routers/__init__.py`
-- [ ] Create `backend/middleware/` directory
-- [ ] Create `backend/seed_data/` directory
-- [ ] Create `.gitignore` (Python + Node + .env)
+- [x] Create `backend/` directory structure
+- [x] Create `backend/requirements.txt` with all Python dependencies
+- [x] Create `backend/config.py` (env var loader)
+- [x] Create `backend/.env.example`
+- [x] Create `backend/.env` (local, gitignored)
+- [x] Create `backend/agents/__init__.py`
+- [x] Create `backend/routers/__init__.py`
+- [x] Create `backend/middleware/` directory
+- [x] Create `backend/seed_data/` directory
+- [x] Create `.gitignore` (Python + Node + .env)
 
 ### Models (RUSH — others are waiting)
-- [ ] Create `backend/models.py` — Location model
-- [ ] Create `backend/models.py` — SensorData model
-- [ ] Create `backend/models.py` — ImageCapture model
-- [ ] Create `backend/models.py` — ManualComplaint model
-- [ ] Create `backend/models.py` — Issue model (full schema)
-- [ ] Create `backend/models.py` — Worker model (full schema)
-- [ ] Create `backend/models.py` — DailyReport model
-- [ ] Create `backend/models.py` — MC model
-- [ ] Create `backend/models.py` — AuditEntry model
-- [ ] Create `backend/models.py` — AgentEvent model
-- [ ] Create `backend/models.py` — All supporting models (AIClassification, Reporter, Assignment, Completion, Performance, Shift)
-- [ ] Verify: all models import without errors
+- [x] Create `backend/models.py` — Location model
+- [x] Create `backend/models.py` — SensorData model
+- [x] Create `backend/models.py` — ImageCapture model
+- [x] Create `backend/models.py` — ManualComplaint model
+- [x] Create `backend/models.py` — Issue model (full schema)
+- [x] Create `backend/models.py` — Worker model (full schema)
+- [x] Create `backend/models.py` — DailyReport model
+- [x] Create `backend/models.py` — MC model
+- [x] Create `backend/models.py` — AuditEntry model
+- [x] Create `backend/models.py` — AgentEvent model
+- [x] Create `backend/models.py` — All supporting models (AIClassification, Reporter, Assignment, Completion, Performance, Shift)
+- [x] Verify: all models import without errors
 
-### Data Store (can be stubs initially)
-- [ ] Create `backend/data_store.py` — DataStore class with asyncio.Lock
-- [ ] Implement Issue CRUD methods (create, get, update, list, list_by_mc, list_near)
-- [ ] Implement Worker CRUD methods (get, list, update)
-- [ ] Implement Report methods (create, list)
-- [ ] Implement MC methods (get_mc, list_mcs)
-- [ ] Implement Audit log methods (add, get)
-- [ ] Implement Agent event methods (add, get)
-- [ ] Implement issue_id generator (ISS-{city}-{date}-{seq})
-- [ ] Implement seed data auto-loading on startup
-- [ ] Verify: DataStore initializes correctly
+### Data Store
+- [x] Create `backend/data_store.py` — DataStore class with asyncio.Lock
+- [x] Implement Issue CRUD methods (create, get, update, list, list_by_mc, list_near)
+- [x] Implement Worker CRUD methods (get, list, update)
+- [x] Implement Report methods (create, list)
+- [x] Implement MC methods (get_mc, list_mcs)
+- [x] Implement Audit log methods (add, get)
+- [x] Implement Agent event methods (add, get)
+- [x] Implement issue_id generator (ISS-{city}-{date}-{seq})
+- [x] Implement seed data auto-loading on startup
+- [x] Verify: DataStore initializes correctly
 
 ### Minimal main.py
-- [ ] Create `backend/main.py` (minimal FastAPI health check + CORS)
-- [ ] Verify: `pip install -r requirements.txt` succeeds
-- [ ] Verify: `uvicorn main:app --reload` runs, health check returns 200
+- [x] Create `backend/main.py` (minimal FastAPI health check + CORS)
+- [x] Verify: `pip install -r requirements.txt` succeeds
+- [x] Verify: `uvicorn main:app --reload` runs, health check returns 200
 
 ### PUSH TO MAIN
 - [ ] Commit: `feat: backend scaffold + models.py + data_store.py + config.py`
