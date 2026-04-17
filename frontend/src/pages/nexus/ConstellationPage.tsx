@@ -30,11 +30,43 @@ function getPercentFromTailwind(twClass: string): { top: string, left: string } 
   }
 }
 
+import { useApi } from '../../hooks/useApi'
+
+// ... Keep existing up to here ...
 export default function ConstellationPage() {
   const [selectedAgentId, setSelectedAgentId] = useState<string | null>(null)
   const [activeConnections, setActiveConnections] = useState<string[]>([])
   const [processingNodes, setProcessingNodes] = useState<string[]>([])
+  const { fetchApi } = useApi()
+  const [isSimulating, setIsSimulating] = useState(false)
   
+  const triggerCarSensorMock = async () => {
+    setIsSimulating(true)
+    try {
+      await fetchApi('/api/nexus/process', {
+        method: 'POST',
+        body: {
+          source: 'car_sensor',
+          raw_data: {
+            vehicle_id: 'MH-01-AB-1234',
+            timestamp: new Date().toISOString(),
+            gps: { lat: 19.1196, lng: 72.8467, address: 'Andheri West', city: 'Mumbai', ward: 'K-West' },
+            speed_kmh: 45.2,
+            accelerometer: { x: 0.1, y: 4.8, z: 0.5 },
+            suspension_event: true,
+            road_segment: 'WEH-KM-14',
+            city: 'Mumbai',
+            ward: 'K-West'
+          },
+          location: { lat: 19.1196, lng: 72.8467, address: 'Andheri West', city: 'Mumbai', ward: 'K-West' }
+        }
+      })
+    } catch(e) {
+      console.error(e)
+    }
+    setTimeout(() => setIsSimulating(false), 2000)
+  }
+
   useWebSocket({
     channel: 'agent_events?role=nexus_admin',
     onMessage: (data: any) => {
@@ -59,6 +91,17 @@ export default function ConstellationPage() {
   return (
     <NexusLayout>
       <div className="absolute inset-0 pb-16"> {/* push up to avoid ticker */}
+        
+        {/* Helper Action Buttons Overlay */}
+        <div className="absolute top-4 right-4 z-50">
+          <button 
+            onClick={triggerCarSensorMock}
+            disabled={isSimulating}
+            className="flex items-center gap-2 bg-gradient-to-r from-nexus-glow to-primary px-4 py-2 rounded-xl text-white font-bold text-sm shadow-lg shadow-nexus-glow/20 transition-all hover:scale-105"
+          >
+            {isSimulating ? 'Sending Signal...' : '🚗 Simulate Car Sensor'}
+          </button>
+        </div>
         
         {/* SVG Drawing Canvas for connections */}
         <div className="absolute inset-0 pointer-events-none z-10 w-full h-full">

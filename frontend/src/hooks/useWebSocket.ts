@@ -100,8 +100,15 @@ export function useWebSocket({
 
   const disconnect = useCallback(() => {
     clearTimeout(reconnectTimerRef.current)
-    wsRef.current?.close()
-    wsRef.current = null
+    if (wsRef.current) {
+      // If it's CONNECTING, closing it triggers a browser warning. Just let it close quietly.
+      if (wsRef.current.readyState === WebSocket.CONNECTING) {
+         wsRef.current.onclose = null
+         wsRef.current.onerror = null
+      }
+      wsRef.current.close()
+      wsRef.current = null
+    }
     setIsConnected(false)
   }, [])
 

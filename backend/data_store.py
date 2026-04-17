@@ -124,12 +124,25 @@ class DataStore:
         return f"ISS-{city_code}-{today}-{seq:04d}"
 
     # ------------------------------------------------------------------
+    # Persistence Helper
+    # ------------------------------------------------------------------
+    def _save_issues_to_disk(self):
+        try:
+            issues_path = os.path.join(os.path.dirname(__file__), "seed_data", "issues.json")
+            if os.path.isdir(os.path.dirname(issues_path)):
+                with open(issues_path, "w") as f:
+                    json.dump([i.model_dump() for i in self._issues.values()], f, indent=2)
+        except Exception as e:
+            print(f"[DataStore] Failed to save issues to disk: {e}")
+
+    # ------------------------------------------------------------------
     # Issue CRUD
     # ------------------------------------------------------------------
 
     async def create_issue(self, issue: Issue) -> Issue:
         async with self._lock:
             self._issues[issue.issue_id] = issue
+            self._save_issues_to_disk()
             return issue
 
     async def get_issue(self, issue_id: str) -> Optional[Issue]:
@@ -145,6 +158,7 @@ class DataStore:
             issue_dict["updated_at"] = datetime.now(timezone.utc).isoformat()
             updated = Issue(**issue_dict)
             self._issues[issue_id] = updated
+            self._save_issues_to_disk()
             return updated
 
     async def list_issues(self, filters: Optional[dict] = None) -> list[Issue]:

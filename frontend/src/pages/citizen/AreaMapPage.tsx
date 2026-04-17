@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react'
 import { useApi } from '../../hooks/useApi'
 import { Search, Plus, Camera, PenSquare } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
-import MapView from '../../components/shared/MapView'
+import MapView, { type MapMarker } from '../../components/shared/MapView'
 import SeverityBadge from '../../components/shared/SeverityBadge'
 import StatusPill from '../../components/shared/StatusPill'
 import CategoryIcon from '../../components/shared/CategoryIcon'
@@ -30,30 +30,41 @@ export default function AreaMapPage() {
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const data = await fetchApi<{ issues: IssueData[] }>('/api/issues')
-        setIssues(data.issues || [])
+        const data = await fetchApi<any>('/api/issues/')
+        const arr = Array.isArray(data) ? data : (data?.issues || [])
+        setIssues(arr)
       } catch (err) {
         console.error("Failed to fetch issues", err)
       }
     }
     fetchIssues()
+    const interval = setInterval(fetchIssues, 5000)
+    return () => clearInterval(interval)
   }, [fetchApi])
 
   const filtered = activeFilter === 'all'
     ? issues
     : issues.filter((i) => i.category === activeFilter)
 
-  const mapMarkers = issues.map((issue) => ({
-    id: issue.issue_id,
-    lat: issue.location.lat,
-    lng: issue.location.lng,
-    color:
-      issue.status === 'reported' ? '#EF4444'
-      : issue.status === 'assigned' ? '#F97316'
-      : issue.status === 'in_progress' ? '#EAB308'
-      : '#22C55E',
-    label: issue.description,
-  }))
+  // Build markers from filtered issues with real lat/lng and click handlers
+  const mapMarkers: MapMarker[] = filtered
+    .filter(issue => issue.location?.lat && issue.location?.lng)
+    .map((issue) => ({
+      id: issue.issue_id,
+      lat: issue.location.lat,
+      lng: issue.location.lng,
+      severity: issue.severity,
+      status: issue.status,
+      category: issue.category,
+      address: issue.location.address || '',
+      label: issue.description,
+      color:
+        issue.severity === 'CRITICAL' ? '#EF4444'
+          : issue.severity === 'HIGH' ? '#F97316'
+            : issue.severity === 'MEDIUM' ? '#EAB308'
+              : '#22C55E',
+      onClick: () => setSelectedIssue(issue),
+    }))
 
   return (
     <CitizenLayout>
@@ -94,19 +105,21 @@ export default function AreaMapPage() {
           </div>
         </div>
 
-        {/* Map */}
+        {/* Map — light mode with clickable popups */}
         <div className="px-4">
           <MapView
             center={[19.076, 72.8777]}
             zoom={11.5}
             markers={mapMarkers}
-            height="240px"
+            height="260px"
             className="shadow-lg"
+            theme="light"
+            showPopups={true}
           />
         </div>
 
         {/* Issues list */}
-        <div className="flex-1 px-4 pt-4 pb-2">
+        <div className="flex-1 px-4 pt-4 pb-2 overflow-y-auto">
           <div className="flex items-center justify-between mb-3">
             <h2 className="text-sm font-semibold text-text-primary">
               Issues Near You <span className="text-text-muted font-normal">({filtered.length})</span>
@@ -122,11 +135,11 @@ export default function AreaMapPage() {
                 <CategoryIcon category={issue.category} size="md" />
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-medium text-text-primary truncate">
-                    {issue.description.split('.')[0]}
+                    {issue.description?.split('.')[0] || `${issue.category} issue`}
                   </p>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-[10px] text-text-muted">
-                      {issue.location.address}
+                      {issue.location?.address || 'Mumbai'}
                     </span>
                     <span className="text-[10px] text-text-muted">•</span>
                     <span className="text-[10px] text-text-muted">

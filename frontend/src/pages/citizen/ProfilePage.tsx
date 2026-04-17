@@ -19,13 +19,20 @@ export default function ProfilePage() {
     const fetchComplaints = async () => {
       if (!user) return
       try {
-        const issues = await fetchApi<any[]>(`/api/issues?reporter_id=${user.id}`)
-        setComplaints(issues)
+        // If user.id is set, filter by reporter. Otherwise fetch all and show manual_complaint source.
+        const endpoint = user.id && user.id !== 'undefined'
+          ? `/api/issues/?reporter_id=${user.id}`
+          : `/api/issues/?source=manual_complaint`
+        const data = await fetchApi<any>(endpoint)
+        const arr = Array.isArray(data) ? data : (data?.issues || [])
+        setComplaints(arr)
       } catch (err) {
         console.error("Failed to fetch complaints", err)
       }
     }
     fetchComplaints()
+    const interval = setInterval(fetchComplaints, 5000)
+    return () => clearInterval(interval)
   }, [user, fetchApi])
 
   const filtered = complaints.filter((c) => {

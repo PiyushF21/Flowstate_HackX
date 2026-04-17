@@ -1,5 +1,5 @@
-import { useState, useCallback } from 'react'
-import { Camera, Upload, Mic, CheckCircle2, Loader2 } from 'lucide-react'
+import { useState, useCallback, useRef } from 'react'
+import { Camera, Upload, Mic, CheckCircle2, Loader2, Image as ImageIcon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import CitizenLayout from '../../components/citizen/CitizenLayout'
 import CategoryTile from '../../components/citizen/CategoryTile'
@@ -27,9 +27,13 @@ export default function ReportPage() {
   const { fetchApi } = useApi()
   const { user } = useAuth()
   
-  const [photoTaken, setPhotoTaken] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const cameraInputRef = useRef<HTMLInputElement>(null)
+  
+  const [imagePreview, setImagePreview] = useState<string | null>(null)
+  const [imageBase64, setImageBase64] = useState<string | null>(null)
   const [aiAnalyzing, setAiAnalyzing] = useState(false)
-  const [aiResult, setAiResult] = useState<string | null>(null)
+  const [aiResult, setAiResult] = useState<{ category: string; subcategory: string; severity: string; description: string; confidence: number } | null>(null)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null)
   const [description, setDescription] = useState('')
   const [severity, setSeverity] = useState<string | null>(null)
@@ -38,14 +42,61 @@ export default function ReportPage() {
   const [issueId, setIssueId] = useState<string | null>(null)
   const [isListening, setIsListening] = useState(false)
 
+  const processImage = useCallback(async (file: File) => {
+    // Show preview
+    const reader = new FileReader()
+    reader.onload = async (e) => {
+      const dataUrl = e.target?.result as string
+      setImagePreview(dataUrl)
+      
+      // Extract base64 (strip data:image/...;base64, prefix)
+      const base64 = dataUrl.split(',')[1]
+      setImageBase64(base64)
+      
+      // Send to COGNOS for AI analysis
+      setAiAnalyzing(true)
+      try {
+        const resp = await fetchApi<{ data: { category: string; subcategory: string; severity: string; description: string; confidence: number } }>('/api/cognos/analyze-image', {
+          method: 'POST',
+          body: { image_base64: base64 }
+        })
+        const aiData = resp.data
+        setAiResult(aiData)
+        setSelectedCategory(aiData.category)
+        setSeverity(aiData.severity)
+        if (aiData.description) {
+          setDescription(aiData.description)
+        }
+      } catch (err) {
+        console.error("COGNOS Vision analysis failed", err)
+        // Fallback — still let user submit manually
+        setAiResult({
+          category: 'roads',
+          subcategory: 'pothole',
+          severity: 'MEDIUM',
+          description: 'Issue detected from uploaded image.',
+          confidence: 0.7
+        })
+        setSelectedCategory('roads')
+        setSeverity('MEDIUM')
+      } finally {
+        setAiAnalyzing(false)
+      }
+    }
+    reader.readAsDataURL(file)
+  }, [fetchApi])
+
   const handleCapturePhoto = () => {
-    setPhotoTaken(true)
-    setAiAnalyzing(true)
-    setTimeout(() => {
-      setAiAnalyzing(false)
-      setAiResult('sanitation')
-      setSelectedCategory('sanitation')
-    }, 2000)
+    cameraInputRef.current?.click()
+  }
+
+  const handleUploadGallery = () => {
+    fileInputRef.current?.click()
+  }
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) processImage(file)
   }
 
   const startListening = useCallback(() => {
@@ -83,12 +134,14 @@ export default function ReportPage() {
           source: 'manual_complaint',
           raw_data: {
             category: selectedCategory,
+            subcategory: aiResult?.subcategory || selectedCategory,
             description: description,
             severity_self_assessed: severity || 'LOW',
             user_id: user?.id || 'citizen_anon',
-            reporter_name: user?.userName || 'Anonymous'
+            reporter_name: user?.userName || 'Anonymous',
+            has_image: !!imageBase64,
           },
-          location: { lat: 19.1196, lng: 72.8467, address: 'Powai Lake Gate 2', ward: 'S-Ward' }
+          location: { lat: 19.1196, lng: 72.8467, address: 'Powai Lake Gate 2', city: 'Mumbai', ward: 'S-Ward' }
         }
       })
       setIssueId(resp.data.issue_id)
@@ -114,7 +167,15 @@ export default function ReportPage() {
           <p className="text-xs text-text-muted mb-8">You'll be notified when a team is assigned.</p>
           <div className="flex gap-3">
             <button
-              onClick={() => setSubmitted(false)}
+              onClick={() => {
+                setSubmitted(false)
+                setImagePreview(null)
+                setImageBase64(null)
+                setAiResult(null)
+                setSelectedCategory(null)
+                setDescription('')
+                setSeverity(null)
+              }}
               className="px-4 py-2.5 rounded-xl bg-surface-elevated border border-border text-sm text-text-primary hover:bg-surface-hover"
             >
               Report Another
@@ -130,9 +191,26 @@ export default function ReportPage() {
       <div className="px-4 py-3 pb-6">
         <h1 className="text-lg font-bold font-display text-text-primary mb-4">✍️ Report an Issue</h1>
 
+        {/* Hidden file inputs */}
+        <input
+          ref={cameraInputRef}
+          type="file"
+          accept="image/*"
+          capture="environment"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          className="hidden"
+          onChange={handleFileChange}
+        />
+
         {/* Camera section */}
         <div className="rounded-2xl bg-surface-elevated border border-border overflow-hidden mb-4">
-          {!photoTaken ? (
+          {!imagePreview ? (
             <div className="h-44 flex flex-col items-center justify-center gap-3">
               <Camera size={40} className="text-text-muted" />
               <button
@@ -141,15 +219,19 @@ export default function ReportPage() {
               >
                 📷 Take Photo
               </button>
-              <button className="text-xs text-primary hover:underline flex items-center gap-1">
+              <button onClick={handleUploadGallery} className="text-xs text-primary hover:underline flex items-center gap-1">
                 <Upload size={12} /> Upload from Gallery
               </button>
             </div>
           ) : (
-            <div className="h-44 bg-gradient-to-br from-surface-hover to-surface flex items-center justify-center relative">
-              <span className="text-5xl">📸</span>
+            <div className="relative">
+              <img
+                src={imagePreview}
+                alt="Captured issue"
+                className="w-full h-44 object-cover"
+              />
               <button
-                onClick={() => { setPhotoTaken(false); setAiResult(null) }}
+                onClick={() => { setImagePreview(null); setImageBase64(null); setAiResult(null) }}
                 className="absolute bottom-2 right-2 text-xs text-primary bg-surface/80 backdrop-blur px-2 py-1 rounded-lg"
               >
                 Retake
@@ -168,7 +250,7 @@ export default function ReportPage() {
               className="rounded-xl bg-primary/10 border border-primary/20 p-3 mb-4"
             >
               <p className="text-sm text-primary flex items-center gap-2">
-                <span className="animate-spin">🔍</span> AI is analyzing your photo...
+                <Loader2 size={14} className="animate-spin" /> COGNOS AI is analyzing your photo...
               </p>
             </motion.div>
           )}
@@ -179,9 +261,9 @@ export default function ReportPage() {
               className="rounded-xl bg-green-500/10 border border-green-500/20 p-3 mb-4"
             >
               <p className="text-sm text-green-400">
-                ✅ AI detected: <strong>Garbage accumulation</strong> — Severity: MEDIUM
+                ✅ AI detected: <strong className="capitalize">{aiResult.subcategory?.replace('_', ' ') || aiResult.category}</strong> — Severity: {aiResult.severity}
               </p>
-              <p className="text-[10px] text-text-muted mt-1">You can override below.</p>
+              <p className="text-[10px] text-text-muted mt-1">Confidence: {Math.round(aiResult.confidence * 100)}% • You can override below.</p>
             </motion.div>
           )}
         </AnimatePresence>

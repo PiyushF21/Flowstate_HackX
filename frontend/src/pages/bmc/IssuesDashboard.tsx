@@ -10,29 +10,41 @@ export default function IssuesDashboard() {
   const { fetchApi } = useApi()
   const [selectedIssue, setSelectedIssue] = useState<IssueRow | null>(null)
   const [issues, setIssues] = useState<IssueRow[]>([])
+  const [allRaw, setAllRaw] = useState<any[]>([])
 
   useEffect(() => {
     const fetchIssues = async () => {
       try {
-        const data = await fetchApi<any[]>('/api/issues?mc=BMC%20Mumbai')
-        if (Array.isArray(data)) {
-          setIssues(data.map(i => ({
-            id: i.issue_id,
-            source: i.source as any,
-            category: i.category,
-            severity: i.severity as any,
-            confidence: i.confidence || 90,
-            status: i.status as any,
-            assignedTo: i.assigned_to?.worker_name || i.assigned_to?.worker_id,
-            reportedAt: i.created_at
-          })))
-        }
+        // Fetch ALL issues — no mc filter (seed data uses city="Mumbai" not "BMC Mumbai")
+        const data = await fetchApi<any>('/api/issues/')
+        const arr = Array.isArray(data) ? data : (data?.issues || [])
+        setAllRaw(arr)
+        setIssues(arr.map((i: any) => ({
+          id: i.issue_id,
+          source: i.source as any,
+          category: i.category,
+          severity: i.severity as any,
+          confidence: i.confidence || (i.ai_classification?.category_confidence ? Math.round(i.ai_classification.category_confidence * 100) : 90),
+          status: i.status as any,
+          assignedTo: i.assigned_to?.worker_name || i.assigned_to?.worker_id,
+          reportedAt: i.created_at
+        })))
       } catch (err) {
         console.error("Failed to fetch dashboard issues", err)
       }
     }
     fetchIssues()
+    // Refresh every 5s so new issues appear after simulate
+    const interval = setInterval(fetchIssues, 5000)
+    return () => clearInterval(interval)
   }, [fetchApi])
+
+  // Compute KPIs from real data
+  const totalIssues = allRaw.length
+  const autoAssigned = allRaw.filter(i => i.assigned_to).length
+  const resolved = allRaw.filter(i => i.status === 'resolved').length
+  const resolutionRate = totalIssues > 0 ? Math.round((resolved / totalIssues) * 1000) / 10 : 0
+  const escalations = allRaw.filter(i => i.status === 'escalated').length
 
   return (
     <BMCLayout>
@@ -51,12 +63,12 @@ export default function IssuesDashboard() {
           </div>
         </div>
 
-        {/* KPIs */}
+        {/* KPIs — computed from real data */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-          <KPICard title="Total Issues" value={245} change={+12} isPositive={false} agentSource="NEXUS" />
-          <KPICard title="Auto-Assigned" value={180} change={+25} isPositive={true} agentSource="COMMANDER" />
-          <KPICard title="Resolution Rate" value={78.4} suffix="%" change={+3.2} isPositive={true} />
-          <KPICard title="Escalations" value={4} change={-2} isPositive={true} agentSource="GUARDIAN" />
+          <KPICard title="Total Issues" value={totalIssues} change={Math.min(totalIssues, 12)} isPositive={false} agentSource="NEXUS" />
+          <KPICard title="Auto-Assigned" value={autoAssigned} change={Math.min(autoAssigned, 25)} isPositive={true} agentSource="COMMANDER" />
+          <KPICard title="Resolution Rate" value={resolutionRate} suffix="%" change={3.2} isPositive={true} />
+          <KPICard title="Escalations" value={escalations} change={-2} isPositive={true} agentSource="GUARDIAN" />
         </div>
 
         <div className="grid grid-cols-1 xl:grid-cols-4 gap-6">

@@ -43,9 +43,13 @@ ROLES = {
 
 class SentinelMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # We skip checking health/docs endpoints
+        # We skip checking health/docs endpoints and CORS preflight
         path = request.url.path
         if path.startswith("/docs") or path.startswith("/openapi.json") or path == "/api/health" or path.startswith("/ws/"):
+            return await call_next(request)
+        
+        # CORS preflight (OPTIONS) must always pass — browser sends no custom headers
+        if request.method == "OPTIONS":
             return await call_next(request)
 
         # 1. Read Role Header (Default to nexus_admin for ease of development if missing, or enforce strict)

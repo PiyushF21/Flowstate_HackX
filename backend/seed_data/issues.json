@@ -1,75 +1,192 @@
 [
   {
     "issue_id": "ISS-MUM-2026-04-17-0001",
-    "source": "car_sensor",
+    "source": "manual_complaint",
     "category": "roads",
     "subcategory": "pothole",
     "severity": "HIGH",
-    "confidence": 0.92,
-    "status": "in_progress",
-    "location": { "lat": 19.1196, "lng": 72.8467, "address": "Western Express Highway, KM 14.2", "city": "Mumbai", "ward": "K-West" },
-    "description": "Confirmed pothole on Western Express Highway near Andheri. Severity HIGH based on 3 vehicle sensor reports within 2 hours. Jolt magnitude 3.2g at 45 km/h.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.94, "severity_confidence": 0.90, "cross_validation_count": 3 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
+    "confidence": 0.0,
+    "status": "assigned",
+    "location": {
+      "lat": 19.1196,
+      "lng": 72.8467,
+      "address": "Powai Lake Gate 2",
+      "city": "Mumbai",
+      "ward": "S-Ward",
+      "pincode": null
+    },
+    "description": "Pothole detected on road surface via AI Vision analysis fallback classification.",
+    "ai_classification": null,
+    "reporter": {
+      "reporter_id": "citizen_aarav",
+      "reporter_name": "Aarav Mehta",
+      "contact": null
+    },
     "images": [],
-    "assigned_to": { "worker_id": "WRK-MUM-001", "worker_name": "Ganesh Patil", "team": [{"id": "WRK-MUM-001", "name": "Ganesh Patil", "role": "fleet_leader"}, {"id": "WRK-MUM-002", "name": "Ravi Shinde", "role": "field_worker"}], "assigned_at": "2026-04-17T10:35:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Assess pothole dimensions (length, width, depth)", "2. Clear loose debris and standing water", "3. Cut edges to create clean vertical walls", "4. Apply tack coat to edges and base", "5. Fill with cold-mix asphalt in 5cm layers", "6. Compact each layer with vibrating plate compactor", "7. Final surface flush with surrounding road", "8. Upload before/after photos as proof"],
-    "deadline": "2026-04-17T22:35:00+05:30",
-    "materials_required": ["Cold-mix asphalt (50kg bags × 2)", "Tack coat spray (1 can)", "Vibrating plate compactor", "Safety cones (4)", "High-visibility vest"],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-003",
+      "worker_name": "Manoj Yadav",
+      "team": [],
+      "assigned_at": "2026-04-17T19:42:16.933849+00:00",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Establish a safe work zone by placing traffic cones, barricades, and warning signs at least 50 feet in all directions from the pothole. Use flaggers if on a high-traffic road.",
+      "2. Assess the pothole dimensions and depth to determine material quantities. Mark a square around the pothole extending 6-12 inches beyond edges for clean repair boundaries.",
+      "3. Clean the pothole thoroughly: remove all water, debris, and loose material using a broom, compressed air blower, or vacuum. Ensure the hole is dry.",
+      "4. Cut vertical edges around the pothole using a concrete saw or pavement cutter to create a square or rectangular shape with clean, square edges at least 2-3 inches deep.",
+      "5. Apply a tack coat (emulsified asphalt) to the vertical edges and bottom of the hole to ensure good bonding. Allow it to set briefly.",
+      "6. Fill the pothole with hot mix asphalt (HMA) in 2-3 inch lifts, starting from the bottom. Overfill slightly to account for compaction.",
+      "7. Compact each lift thoroughly using a vibrating plate compactor or roller until no further settlement occurs. Achieve at least 95% density.",
+      "8. Apply a final thin layer of HMA if needed and compact to match the surrounding road surface level and texture.",
+      "9. Seal the repair edges with crack sealant if necessary to prevent water infiltration.",
+      "10. Clean the work area, remove all traffic control devices, and inspect the repair for smoothness and safety."
+    ],
+    "deadline": "2026-04-18T07:42:16.933849+00:00",
+    "materials_required": [
+      "Traffic cones and barricades",
+      "Warning signs and flaggers (if needed)",
+      "Broom, compressed air blower, or vacuum",
+      "Pavement saw or concrete cutter",
+      "Tack coat (emulsified asphalt)",
+      "Hot mix asphalt (HMA), quantity based on pothole volume (e.g., 1-2 tons for large HIGH severity pothole)",
+      "Vibrating plate compactor or roller",
+      "Crack sealant (optional for edges)",
+      "Personal Protective Equipment (PPE: gloves, safety vests, hard hats, eye protection)",
+      "Cleaning supplies (rags, absorbent material for spills)"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
     "citizen_notified": false,
-    "created_at": "2026-04-17T10:31:00+05:30",
-    "updated_at": "2026-04-17T10:35:00+05:30"
+    "created_at": "2026-04-17T19:42:04.418395+00:00",
+    "updated_at": "2026-04-17T19:42:04.418395+00:00"
   },
   {
     "issue_id": "ISS-MUM-2026-04-17-0002",
-    "source": "car_sensor",
-    "category": "roads",
-    "subcategory": "pothole",
-    "severity": "CRITICAL",
-    "confidence": 0.96,
+    "source": "manual_complaint",
+    "category": "sanitation",
+    "subcategory": "garbage accumulation",
+    "severity": "MEDIUM",
+    "confidence": 0.0,
     "status": "assigned",
-    "location": { "lat": 19.0760, "lng": 72.8777, "address": "LBS Marg, Kurla", "city": "Mumbai", "ward": "L" },
-    "description": "Deep pothole detected on LBS Marg near Kurla station. Jolt magnitude 4.5g at 50 km/h. Multiple sensor reports confirm — road cave-in risk.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.97, "severity_confidence": 0.95, "cross_validation_count": 5 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
+    "location": {
+      "lat": 19.1196,
+      "lng": 72.8467,
+      "address": "Powai Lake Gate 2",
+      "city": "Mumbai",
+      "ward": "S-Ward",
+      "pincode": null
+    },
+    "description": "Too much garbage",
+    "ai_classification": null,
+    "reporter": {
+      "reporter_id": "citizen_aarav",
+      "reporter_name": "Aarav Mehta",
+      "contact": null
+    },
     "images": [],
-    "assigned_to": { "worker_id": "WRK-MUM-005", "worker_name": "Vikram Jadhav", "team": [{"id": "WRK-MUM-005", "name": "Vikram Jadhav", "role": "field_worker"}], "assigned_at": "2026-04-17T11:05:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Set up safety barriers — 50m radius", "2. Assess cave-in depth and subsurface condition", "3. If depth > 30cm, request structural team backup", "4. Clear all debris and water", "5. Fill with compacted aggregate base", "6. Apply cold-mix asphalt overlay", "7. Mark for permanent hot-mix repair within 48h"],
-    "deadline": "2026-04-17T15:05:00+05:30",
-    "materials_required": ["Safety barriers (8)", "Aggregate base (100kg)", "Cold-mix asphalt (50kg bags × 4)", "Vibrating plate compactor", "Flashlights", "High-visibility vest"],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-012",
+      "worker_name": "Yogesh Bhosale",
+      "team": [],
+      "assigned_at": "2026-04-17T19:21:50.773766+00:00",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Don personal protective equipment (PPE) including gloves, safety vest, and boots to ensure personal safety.",
+      "2. Assess the accumulation site to determine the volume, type of waste (e.g., organic, recyclable, hazardous), and any immediate hazards.",
+      "3. Segregate waste if possible: separate recyclables, organics, and general waste.",
+      "4. Use appropriate tools to collect garbage into heavy-duty trash bags or bins, starting from the edges and working inward.",
+      "5. Securely tie bags and load them onto a cart, wheelbarrow, or vehicle for transport.",
+      "6. Transport collected waste to the designated municipal waste collection point, dumpster, or landfill in compliance with local regulations.",
+      "7. Return to the site and clean the area using brooms, hoses, or pressure washers with mild detergent to remove residues.",
+      "8. Disinfect surfaces if necessary, especially in high-traffic sanitation areas.",
+      "9. Inspect the area for completeness of cleanup and take photos for records.",
+      "10. Report the completion via maintenance log or app, noting any recurring issues for preventive measures."
+    ],
+    "deadline": "2026-04-19T19:21:50.773766+00:00",
+    "materials_required": [
+      "Disposable gloves (nitrile or heavy-duty latex)",
+      "Safety vest and boots",
+      "Heavy-duty trash bags (55-gallon capacity)",
+      "Broom and dustpan or shovel",
+      "Wheelbarrow or utility cart",
+      "Mild detergent or disinfectant",
+      "Pressure washer or hose (if available)",
+      "Garbage ties or tape",
+      "Cleaning rags or mops",
+      "First-aid kit (for minor injuries)",
+      "Documentation notepad or camera"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
     "citizen_notified": false,
-    "created_at": "2026-04-17T11:00:00+05:30",
-    "updated_at": "2026-04-17T11:05:00+05:30"
+    "created_at": "2026-04-17T19:21:35.989837+00:00",
+    "updated_at": "2026-04-17T19:21:35.989837+00:00"
   },
   {
     "issue_id": "ISS-MUM-2026-04-17-0003",
-    "source": "car_sensor",
-    "category": "roads",
-    "subcategory": "pothole",
-    "severity": "MEDIUM",
-    "confidence": 0.78,
-    "status": "reported",
-    "location": { "lat": 19.0330, "lng": 72.8498, "address": "Senapati Bapat Marg, Lower Parel", "city": "Mumbai", "ward": "G-South" },
-    "description": "Minor pothole detected. Jolt magnitude 2.3g at 35 km/h. Single sensor report — needs confirmation.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.80, "severity_confidence": 0.72, "cross_validation_count": 1 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
+    "source": "manual_complaint",
+    "category": "sanitation",
+    "subcategory": "garbage",
+    "severity": "HIGH",
+    "confidence": 0.0,
+    "status": "assigned",
+    "location": {
+      "lat": 19.1196,
+      "lng": 72.8467,
+      "address": "Powai Lake Gate 2",
+      "city": "Mumbai",
+      "ward": "S-Ward",
+      "pincode": null
+    },
+    "description": "Persistent garbage near Powai Lake",
+    "ai_classification": null,
+    "reporter": {
+      "reporter_id": "citizen_aarav",
+      "reporter_name": "Aarav Mehta",
+      "contact": null
+    },
     "images": [],
-    "assigned_to": null,
-    "procedure": [],
-    "deadline": null,
-    "materials_required": [],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-014",
+      "worker_name": "Nitin Sawant",
+      "team": [],
+      "assigned_at": "2026-04-17T19:23:37.261417+00:00",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Conduct site assessment: Survey the garbage accumulation near Powai Lake, estimate volume and types of waste (e.g., plastic, organic, hazardous), identify hazards like sharp objects or contaminated water, and mark the perimeter with safety cones or tape.",
+      "2. Assemble and brief team: Gather trained cleanup crew (minimum 10-15 personnel for high severity), provide PPE briefing, assign roles (collectors, sorters, transporters), and ensure compliance with local regulations (e.g., BMC guidelines for Mumbai).",
+      "3. Segregate waste: Categorize garbage into recyclables, biodegradables, non-recyclables, and hazardous materials using designated bins or areas to facilitate proper disposal.",
+      "4. Collect and bag waste: Use gloves and tools to pick up small debris into heavy-duty bags; employ rakes and shovels for bulk waste; use nets or poles for lake-edge or floating garbage.",
+      "5. Load and transport: Transfer bagged and bulk waste to wheelbarrows or carts, then load onto trucks for transport to authorized municipal landfill or recycling center (coordinate with local waste management authority).",
+      "6. Clean and disinfect site: Sweep remaining debris, apply eco-friendly disinfectants if needed, and rinse accessible areas with water (avoid lake contamination).",
+      "7. Verify and report: Inspect site for completeness, take before/after photos, document waste quantities, and submit report to relevant authorities (e.g., BMC, lake conservation committee). Schedule follow-up monitoring to prevent recurrence."
+    ],
+    "deadline": "2026-04-18T07:23:37.261417+00:00",
+    "materials_required": [
+      "Heavy-duty trash bags (1000+ capacity)",
+      "Nitrile gloves (multiple sizes, 200 pairs)",
+      "N95 masks or respirators (100 units)",
+      "Safety boots and high-visibility vests (for team)",
+      "Shovels, rakes, and litter grabbers (20 sets)",
+      "Wheelbarrows or carts (10 units)",
+      "Dump trucks or vans (2-3 units)",
+      "Safety cones, caution tape, and signage",
+      "Eco-friendly disinfectants and spray bottles",
+      "Nets and poles for water-edge cleanup",
+      "First-aid kit",
+      "Portable toilets (if multi-day operation)"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
     "citizen_notified": false,
-    "created_at": "2026-04-17T09:15:00+05:30",
-    "updated_at": "2026-04-17T09:15:00+05:30"
+    "created_at": "2026-04-17T19:23:18.105935+00:00",
+    "updated_at": "2026-04-17T19:23:18.105935+00:00"
   },
   {
     "issue_id": "ISS-MUM-2026-04-17-0004",
@@ -79,16 +196,59 @@
     "severity": "HIGH",
     "confidence": 0.88,
     "status": "resolved",
-    "location": { "lat": 19.1382, "lng": 72.8370, "address": "New Link Road, Jogeshwari", "city": "Mumbai", "ward": "K-West" },
-    "description": "Pothole cluster on New Link Road. 2 sensor confirmations — severity HIGH.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.90, "severity_confidence": 0.86, "cross_validation_count": 2 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
-    "images": ["proof_004_before.jpg", "proof_004_after.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-003", "worker_name": "Manoj Yadav", "team": [], "assigned_at": "2026-04-16T14:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Assess pothole dimensions", "2. Clear debris", "3. Apply tack coat", "4. Fill with cold-mix asphalt", "5. Compact", "6. Upload proof photos"],
+    "location": {
+      "lat": 19.1382,
+      "lng": 72.837,
+      "address": "New Link Road, Jogeshwari",
+      "city": "Mumbai",
+      "ward": "K-West",
+      "pincode": null
+    },
+    "description": "Pothole cluster on New Link Road. 2 sensor confirmations \u00e2\u20ac\u201d severity HIGH.",
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.9,
+      "severity_confidence": 0.86,
+      "cross_validation_count": 2
+    },
+    "reporter": {
+      "reporter_id": "SENSOR-AUTO",
+      "reporter_name": "Sensor Network",
+      "contact": null
+    },
+    "images": [
+      "proof_004_before.jpg",
+      "proof_004_after.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-003",
+      "worker_name": "Manoj Yadav",
+      "team": [],
+      "assigned_at": "2026-04-16T14:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Assess pothole dimensions",
+      "2. Clear debris",
+      "3. Apply tack coat",
+      "4. Fill with cold-mix asphalt",
+      "5. Compact",
+      "6. Upload proof photos"
+    ],
     "deadline": "2026-04-17T02:00:00+05:30",
-    "materials_required": ["Cold-mix asphalt (50kg bags × 1)", "Tack coat spray"],
-    "completion": { "completed_at": "2026-04-16T17:30:00+05:30", "proof_images": ["proof_004_before.jpg", "proof_004_after.jpg"], "verified_by": "WRK-MUM-001", "verified_at": "2026-04-16T18:00:00+05:30" },
+    "materials_required": [
+      "Cold-mix asphalt (50kg bags \u00c3\u2014 1)",
+      "Tack coat spray"
+    ],
+    "completion": {
+      "completed_at": "2026-04-16T17:30:00+05:30",
+      "proof_images": [
+        "proof_004_before.jpg",
+        "proof_004_after.jpg"
+      ],
+      "verified_by": "WRK-MUM-001",
+      "verified_at": "2026-04-16T18:00:00+05:30"
+    },
     "resolution_time_hours": 3.5,
     "sla_met": true,
     "citizen_notified": true,
@@ -103,15 +263,62 @@
     "severity": "CRITICAL",
     "confidence": 0.95,
     "status": "in_progress",
-    "location": { "lat": 19.0178, "lng": 72.8562, "address": "SV Road, Goregaon", "city": "Mumbai", "ward": "P-South" },
-    "description": "Subsurface collapse detected — road cave-in. 4 vehicle reports within 1 hour. Immediate attention required.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.96, "severity_confidence": 0.94, "cross_validation_count": 4 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
+    "location": {
+      "lat": 19.0178,
+      "lng": 72.8562,
+      "address": "SV Road, Goregaon",
+      "city": "Mumbai",
+      "ward": "P-South",
+      "pincode": null
+    },
+    "description": "Subsurface collapse detected \u00e2\u20ac\u201d road cave-in. 4 vehicle reports within 1 hour. Immediate attention required.",
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.96,
+      "severity_confidence": 0.94,
+      "cross_validation_count": 4
+    },
+    "reporter": {
+      "reporter_id": "SENSOR-AUTO",
+      "reporter_name": "Sensor Network",
+      "contact": null
+    },
     "images": [],
-    "assigned_to": { "worker_id": "WRK-MUM-004", "worker_name": "Suresh Naik", "team": [{"id": "WRK-MUM-004", "name": "Suresh Naik", "role": "fleet_leader"}, {"id": "WRK-MUM-015", "name": "Kiran Thakur", "role": "field_worker"}], "assigned_at": "2026-04-17T08:20:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Cordon off area — 100m radius", "2. Assess subsurface with probing rod", "3. Request structural engineer assessment", "4. Divert traffic through alternate routes", "5. Excavate collapsed section", "6. Rebuild subgrade with compacted gravel", "7. Apply hot-mix asphalt base + surface course"],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-004",
+      "worker_name": "Suresh Naik",
+      "team": [
+        {
+          "id": "WRK-MUM-004",
+          "name": "Suresh Naik",
+          "role": "fleet_leader"
+        },
+        {
+          "id": "WRK-MUM-015",
+          "name": "Kiran Thakur",
+          "role": "field_worker"
+        }
+      ],
+      "assigned_at": "2026-04-17T08:20:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Cordon off area \u00e2\u20ac\u201d 100m radius",
+      "2. Assess subsurface with probing rod",
+      "3. Request structural engineer assessment",
+      "4. Divert traffic through alternate routes",
+      "5. Excavate collapsed section",
+      "6. Rebuild subgrade with compacted gravel",
+      "7. Apply hot-mix asphalt base + surface course"
+    ],
     "deadline": "2026-04-17T12:20:00+05:30",
-    "materials_required": ["Safety barriers (12)", "Probing rods", "Excavator (request)", "Compacted gravel (500kg)", "Hot-mix asphalt (request)"],
+    "materials_required": [
+      "Safety barriers (12)",
+      "Probing rods",
+      "Excavator (request)",
+      "Compacted gravel (500kg)",
+      "Hot-mix asphalt (request)"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -127,10 +334,26 @@
     "severity": "LOW",
     "confidence": 0.65,
     "status": "reported",
-    "location": { "lat": 19.2183, "lng": 72.8548, "address": "Kandivali Link Road", "city": "Mumbai", "ward": "R-South" },
-    "description": "Minor road roughness detected. Jolt 2.1g at 25 km/h. Low confidence — may be speed bump.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.68, "severity_confidence": 0.60, "cross_validation_count": 1 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
+    "location": {
+      "lat": 19.2183,
+      "lng": 72.8548,
+      "address": "Kandivali Link Road",
+      "city": "Mumbai",
+      "ward": "R-South",
+      "pincode": null
+    },
+    "description": "Minor road roughness detected. Jolt 2.1g at 25 km/h. Low confidence \u00e2\u20ac\u201d may be speed bump.",
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.68,
+      "severity_confidence": 0.6,
+      "cross_validation_count": 1
+    },
+    "reporter": {
+      "reporter_id": "SENSOR-AUTO",
+      "reporter_name": "Sensor Network",
+      "contact": null
+    },
     "images": [],
     "assigned_to": null,
     "procedure": [],
@@ -151,16 +374,55 @@
     "severity": "MEDIUM",
     "confidence": 0.82,
     "status": "resolved",
-    "location": { "lat": 19.0596, "lng": 72.8295, "address": "Hill Road, Bandra West", "city": "Mumbai", "ward": "H-West" },
-    "description": "Pothole on Hill Road — 2.6g jolt at 30 km/h. Moderate severity.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.84, "severity_confidence": 0.80, "cross_validation_count": 2 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
-    "images": ["proof_007_before.jpg", "proof_007_after.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-003", "worker_name": "Manoj Yadav", "team": [], "assigned_at": "2026-04-15T11:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Assess dimensions", "2. Clear debris", "3. Fill and compact"],
+    "location": {
+      "lat": 19.0596,
+      "lng": 72.8295,
+      "address": "Hill Road, Bandra West",
+      "city": "Mumbai",
+      "ward": "H-West",
+      "pincode": null
+    },
+    "description": "Pothole on Hill Road \u00e2\u20ac\u201d 2.6g jolt at 30 km/h. Moderate severity.",
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.84,
+      "severity_confidence": 0.8,
+      "cross_validation_count": 2
+    },
+    "reporter": {
+      "reporter_id": "SENSOR-AUTO",
+      "reporter_name": "Sensor Network",
+      "contact": null
+    },
+    "images": [
+      "proof_007_before.jpg",
+      "proof_007_after.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-003",
+      "worker_name": "Manoj Yadav",
+      "team": [],
+      "assigned_at": "2026-04-15T11:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Assess dimensions",
+      "2. Clear debris",
+      "3. Fill and compact"
+    ],
     "deadline": "2026-04-17T11:00:00+05:30",
-    "materials_required": ["Cold-mix asphalt (50kg × 1)"],
-    "completion": { "completed_at": "2026-04-15T14:20:00+05:30", "proof_images": ["proof_007_before.jpg", "proof_007_after.jpg"], "verified_by": "WRK-MUM-001", "verified_at": "2026-04-15T15:00:00+05:30" },
+    "materials_required": [
+      "Cold-mix asphalt (50kg \u00c3\u2014 1)"
+    ],
+    "completion": {
+      "completed_at": "2026-04-15T14:20:00+05:30",
+      "proof_images": [
+        "proof_007_before.jpg",
+        "proof_007_after.jpg"
+      ],
+      "verified_by": "WRK-MUM-001",
+      "verified_at": "2026-04-15T15:00:00+05:30"
+    },
     "resolution_time_hours": 3.3,
     "sla_met": true,
     "citizen_notified": true,
@@ -175,15 +437,45 @@
     "severity": "HIGH",
     "confidence": 0.87,
     "status": "in_progress",
-    "location": { "lat": 19.0454, "lng": 72.8887, "address": "Eastern Express Highway, Mulund", "city": "Mumbai", "ward": "T" },
+    "location": {
+      "lat": 19.0454,
+      "lng": 72.8887,
+      "address": "Eastern Express Highway, Mulund",
+      "city": "Mumbai",
+      "ward": "T",
+      "pincode": null
+    },
     "description": "Multiple potholes detected on Eastern Express Highway stretch. 3 sensor confirmations.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.89, "severity_confidence": 0.85, "cross_validation_count": 3 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.89,
+      "severity_confidence": 0.85,
+      "cross_validation_count": 3
+    },
+    "reporter": {
+      "reporter_id": "SENSOR-AUTO",
+      "reporter_name": "Sensor Network",
+      "contact": null
+    },
     "images": [],
-    "assigned_to": { "worker_id": "WRK-MUM-006", "worker_name": "Dinesh Kamble", "team": [], "assigned_at": "2026-04-17T09:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Survey full stretch for all potholes", "2. Mark each with spray paint", "3. Repair sequentially"],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-006",
+      "worker_name": "Dinesh Kamble",
+      "team": [],
+      "assigned_at": "2026-04-17T09:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Survey full stretch for all potholes",
+      "2. Mark each with spray paint",
+      "3. Repair sequentially"
+    ],
     "deadline": "2026-04-17T21:00:00+05:30",
-    "materials_required": ["Cold-mix asphalt (50kg × 3)", "Spray paint", "Compactor"],
+    "materials_required": [
+      "Cold-mix asphalt (50kg \u00c3\u2014 3)",
+      "Spray paint",
+      "Compactor"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -197,18 +489,53 @@
     "category": "roads",
     "subcategory": "pothole",
     "severity": "LOW",
-    "confidence": 0.60,
+    "confidence": 0.6,
     "status": "resolved",
-    "location": { "lat": 19.1764, "lng": 72.9486, "address": "Hiranandani Gardens, Powai", "city": "Mumbai", "ward": "L" },
+    "location": {
+      "lat": 19.1764,
+      "lng": 72.9486,
+      "address": "Hiranandani Gardens, Powai",
+      "city": "Mumbai",
+      "ward": "L",
+      "pincode": null
+    },
     "description": "Minor road surface irregularity near Powai Lake. Low severity.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.62, "severity_confidence": 0.58, "cross_validation_count": 1 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
-    "images": ["proof_009_after.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-005", "worker_name": "Vikram Jadhav", "team": [], "assigned_at": "2026-04-14T10:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Patch minor surface crack"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.62,
+      "severity_confidence": 0.58,
+      "cross_validation_count": 1
+    },
+    "reporter": {
+      "reporter_id": "SENSOR-AUTO",
+      "reporter_name": "Sensor Network",
+      "contact": null
+    },
+    "images": [
+      "proof_009_after.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-005",
+      "worker_name": "Vikram Jadhav",
+      "team": [],
+      "assigned_at": "2026-04-14T10:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Patch minor surface crack"
+    ],
     "deadline": "2026-04-21T10:00:00+05:30",
-    "materials_required": ["Cold-mix asphalt patch kit"],
-    "completion": { "completed_at": "2026-04-14T12:00:00+05:30", "proof_images": ["proof_009_after.jpg"], "verified_by": "WRK-MUM-004", "verified_at": "2026-04-14T13:00:00+05:30" },
+    "materials_required": [
+      "Cold-mix asphalt patch kit"
+    ],
+    "completion": {
+      "completed_at": "2026-04-14T12:00:00+05:30",
+      "proof_images": [
+        "proof_009_after.jpg"
+      ],
+      "verified_by": "WRK-MUM-004",
+      "verified_at": "2026-04-14T13:00:00+05:30"
+    },
     "resolution_time_hours": 2.0,
     "sla_met": true,
     "citizen_notified": false,
@@ -221,17 +548,47 @@
     "category": "roads",
     "subcategory": "pothole",
     "severity": "MEDIUM",
-    "confidence": 0.80,
+    "confidence": 0.8,
     "status": "assigned",
-    "location": { "lat": 19.1070, "lng": 72.8717, "address": "MIDC Road, Andheri East", "city": "Mumbai", "ward": "K-East" },
+    "location": {
+      "lat": 19.107,
+      "lng": 72.8717,
+      "address": "MIDC Road, Andheri East",
+      "city": "Mumbai",
+      "ward": "K-East",
+      "pincode": null
+    },
     "description": "Moderate pothole in MIDC industrial area. 2 sensor reports.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.82, "severity_confidence": 0.78, "cross_validation_count": 2 },
-    "reporter": { "reporter_id": "SENSOR-AUTO", "reporter_name": "Sensor Network", "contact": null },
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.82,
+      "severity_confidence": 0.78,
+      "cross_validation_count": 2
+    },
+    "reporter": {
+      "reporter_id": "SENSOR-AUTO",
+      "reporter_name": "Sensor Network",
+      "contact": null
+    },
     "images": [],
-    "assigned_to": { "worker_id": "WRK-MUM-007", "worker_name": "Ajay Pawar", "team": [], "assigned_at": "2026-04-17T12:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Assess", "2. Clear", "3. Fill", "4. Compact", "5. Upload proof"],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-007",
+      "worker_name": "Ajay Pawar",
+      "team": [],
+      "assigned_at": "2026-04-17T12:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Assess",
+      "2. Clear",
+      "3. Fill",
+      "4. Compact",
+      "5. Upload proof"
+    ],
     "deadline": "2026-04-19T12:00:00+05:30",
-    "materials_required": ["Cold-mix asphalt (50kg × 1)"],
+    "materials_required": [
+      "Cold-mix asphalt (50kg \u00c3\u2014 1)"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -247,15 +604,62 @@
     "severity": "CRITICAL",
     "confidence": 0.94,
     "status": "in_progress",
-    "location": { "lat": 19.0544, "lng": 72.8402, "address": "SV Road, Bandra Station", "city": "Mumbai", "ward": "H-West" },
+    "location": {
+      "lat": 19.0544,
+      "lng": 72.8402,
+      "address": "SV Road, Bandra Station",
+      "city": "Mumbai",
+      "ward": "H-West",
+      "pincode": null
+    },
     "description": "Concrete road divider collapsed across two lanes near Bandra Station. 60% lane blockage with scattered debris. Immediate traffic hazard.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.96, "severity_confidence": 0.92, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-042", "reporter_name": "Arjun Mehta", "contact": "+91-98765-43210" },
-    "images": ["360_011_capture1.jpg", "360_011_capture2.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-004", "worker_name": "Suresh Naik", "team": [{"id": "WRK-MUM-004", "name": "Suresh Naik", "role": "fleet_leader"}, {"id": "WRK-MUM-015", "name": "Kiran Thakur", "role": "field_worker"}], "assigned_at": "2026-04-17T11:20:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Set up traffic diversion", "2. Clear scattered debris from lanes", "3. Remove broken divider sections", "4. Install temporary barriers", "5. Schedule permanent divider replacement"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.96,
+      "severity_confidence": 0.92,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-042",
+      "reporter_name": "Arjun Mehta",
+      "contact": "+91-98765-43210"
+    },
+    "images": [
+      "360_011_capture1.jpg",
+      "360_011_capture2.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-004",
+      "worker_name": "Suresh Naik",
+      "team": [
+        {
+          "id": "WRK-MUM-004",
+          "name": "Suresh Naik",
+          "role": "fleet_leader"
+        },
+        {
+          "id": "WRK-MUM-015",
+          "name": "Kiran Thakur",
+          "role": "field_worker"
+        }
+      ],
+      "assigned_at": "2026-04-17T11:20:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Set up traffic diversion",
+      "2. Clear scattered debris from lanes",
+      "3. Remove broken divider sections",
+      "4. Install temporary barriers",
+      "5. Schedule permanent divider replacement"
+    ],
     "deadline": "2026-04-17T15:20:00+05:30",
-    "materials_required": ["Temporary barriers (6)", "Crane (request)", "Broom and shovel", "Traffic cones (8)"],
+    "materials_required": [
+      "Temporary barriers (6)",
+      "Crane (request)",
+      "Broom and shovel",
+      "Traffic cones (8)"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -271,15 +675,49 @@
     "severity": "MEDIUM",
     "confidence": 0.85,
     "status": "in_progress",
-    "location": { "lat": 19.0425, "lng": 72.8547, "address": "TJ Road, Dadar East", "city": "Mumbai", "ward": "E" },
+    "location": {
+      "lat": 19.0425,
+      "lng": 72.8547,
+      "address": "TJ Road, Dadar East",
+      "city": "Mumbai",
+      "ward": "E",
+      "pincode": null
+    },
     "description": "4 consecutive street lights non-functional on TJ Road stretch. Dark zone creating safety hazard at night.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.87, "severity_confidence": 0.83, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-089", "reporter_name": "Meera Sharma", "contact": "+91-98765-43211" },
-    "images": ["360_012_capture1.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-009", "worker_name": "Sanjay More", "team": [], "assigned_at": "2026-04-17T07:30:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Check electrical panel for street light cluster", "2. Replace faulty bulbs/LEDs", "3. Check wiring continuity", "4. Test each light individually"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.87,
+      "severity_confidence": 0.83,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-089",
+      "reporter_name": "Meera Sharma",
+      "contact": "+91-98765-43211"
+    },
+    "images": [
+      "360_012_capture1.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-009",
+      "worker_name": "Sanjay More",
+      "team": [],
+      "assigned_at": "2026-04-17T07:30:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Check electrical panel for street light cluster",
+      "2. Replace faulty bulbs/LEDs",
+      "3. Check wiring continuity",
+      "4. Test each light individually"
+    ],
     "deadline": "2026-04-19T07:30:00+05:30",
-    "materials_required": ["LED bulbs (4)", "Wire tester", "Ladder", "Insulated gloves"],
+    "materials_required": [
+      "LED bulbs (4)",
+      "Wire tester",
+      "Ladder",
+      "Insulated gloves"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -293,18 +731,59 @@
     "category": "roads",
     "subcategory": "debris_on_road",
     "severity": "HIGH",
-    "confidence": 0.90,
+    "confidence": 0.9,
     "status": "resolved",
-    "location": { "lat": 19.1643, "lng": 72.8483, "address": "Link Road, Malad West", "city": "Mumbai", "ward": "M-West" },
+    "location": {
+      "lat": 19.1643,
+      "lng": 72.8483,
+      "address": "Link Road, Malad West",
+      "city": "Mumbai",
+      "ward": "M-West",
+      "pincode": null
+    },
     "description": "Construction debris dumped on road near Malad station. Two-wheeler lane completely blocked.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.92, "severity_confidence": 0.88, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-115", "reporter_name": "Rohit Patel", "contact": "+91-98765-43212" },
-    "images": ["360_013_before.jpg", "360_013_after.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-013", "worker_name": "Ashok Salvi", "team": [], "assigned_at": "2026-04-16T09:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Clear debris with JCB", "2. Sweep road surface", "3. Log illegal dumping complaint"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.92,
+      "severity_confidence": 0.88,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-115",
+      "reporter_name": "Rohit Patel",
+      "contact": "+91-98765-43212"
+    },
+    "images": [
+      "360_013_before.jpg",
+      "360_013_after.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-013",
+      "worker_name": "Ashok Salvi",
+      "team": [],
+      "assigned_at": "2026-04-16T09:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Clear debris with JCB",
+      "2. Sweep road surface",
+      "3. Log illegal dumping complaint"
+    ],
     "deadline": "2026-04-16T21:00:00+05:30",
-    "materials_required": ["JCB (request)", "Brooms", "Dustpans"],
-    "completion": { "completed_at": "2026-04-16T12:00:00+05:30", "proof_images": ["360_013_before.jpg", "360_013_after.jpg"], "verified_by": "WRK-MUM-001", "verified_at": "2026-04-16T13:00:00+05:30" },
+    "materials_required": [
+      "JCB (request)",
+      "Brooms",
+      "Dustpans"
+    ],
+    "completion": {
+      "completed_at": "2026-04-16T12:00:00+05:30",
+      "proof_images": [
+        "360_013_before.jpg",
+        "360_013_after.jpg"
+      ],
+      "verified_by": "WRK-MUM-001",
+      "verified_at": "2026-04-16T13:00:00+05:30"
+    },
     "resolution_time_hours": 3.0,
     "sla_met": true,
     "citizen_notified": true,
@@ -319,16 +798,58 @@
     "severity": "HIGH",
     "confidence": 0.91,
     "status": "resolved",
-    "location": { "lat": 19.0620, "lng": 72.8376, "address": "Shivaji Park Road, Dadar", "city": "Mumbai", "ward": "G-North" },
+    "location": {
+      "lat": 19.062,
+      "lng": 72.8376,
+      "address": "Shivaji Park Road, Dadar",
+      "city": "Mumbai",
+      "ward": "G-North",
+      "pincode": null
+    },
     "description": "Large tree branch fallen across road near Shivaji Park. Partial road blockage.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.93, "severity_confidence": 0.89, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-067", "reporter_name": "Priya Desai", "contact": "+91-98765-43213" },
-    "images": ["360_014_before.jpg", "360_014_after.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-012", "worker_name": "Yogesh Bhosale", "team": [], "assigned_at": "2026-04-15T16:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Cordon off area", "2. Cut branches with chainsaw", "3. Remove debris", "4. Clear road fully"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.93,
+      "severity_confidence": 0.89,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-067",
+      "reporter_name": "Priya Desai",
+      "contact": "+91-98765-43213"
+    },
+    "images": [
+      "360_014_before.jpg",
+      "360_014_after.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-012",
+      "worker_name": "Yogesh Bhosale",
+      "team": [],
+      "assigned_at": "2026-04-15T16:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Cordon off area",
+      "2. Cut branches with chainsaw",
+      "3. Remove debris",
+      "4. Clear road fully"
+    ],
     "deadline": "2026-04-16T04:00:00+05:30",
-    "materials_required": ["Chainsaw", "Rope", "Truck for debris removal"],
-    "completion": { "completed_at": "2026-04-15T18:30:00+05:30", "proof_images": ["360_014_before.jpg", "360_014_after.jpg"], "verified_by": "WRK-MUM-004", "verified_at": "2026-04-15T19:00:00+05:30" },
+    "materials_required": [
+      "Chainsaw",
+      "Rope",
+      "Truck for debris removal"
+    ],
+    "completion": {
+      "completed_at": "2026-04-15T18:30:00+05:30",
+      "proof_images": [
+        "360_014_before.jpg",
+        "360_014_after.jpg"
+      ],
+      "verified_by": "WRK-MUM-004",
+      "verified_at": "2026-04-15T19:00:00+05:30"
+    },
     "resolution_time_hours": 2.5,
     "sla_met": true,
     "citizen_notified": true,
@@ -343,15 +864,49 @@
     "severity": "HIGH",
     "confidence": 0.88,
     "status": "assigned",
-    "location": { "lat": 18.9548, "lng": 72.8322, "address": "Nana Chowk, Grant Road", "city": "Mumbai", "ward": "D" },
-    "description": "Traffic signal completely non-functional at Nana Chowk junction. Heavy traffic area — accident risk.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.90, "severity_confidence": 0.86, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-034", "reporter_name": "Vikrant Shah", "contact": "+91-98765-43214" },
-    "images": ["360_015_capture1.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-017", "worker_name": "Deepak Mane", "team": [], "assigned_at": "2026-04-17T14:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Check power supply to signal unit", "2. Replace controller board if faulty", "3. Test all signal phases", "4. Verify pedestrian signals working"],
+    "location": {
+      "lat": 18.9548,
+      "lng": 72.8322,
+      "address": "Nana Chowk, Grant Road",
+      "city": "Mumbai",
+      "ward": "D",
+      "pincode": null
+    },
+    "description": "Traffic signal completely non-functional at Nana Chowk junction. Heavy traffic area \u00e2\u20ac\u201d accident risk.",
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.9,
+      "severity_confidence": 0.86,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-034",
+      "reporter_name": "Vikrant Shah",
+      "contact": "+91-98765-43214"
+    },
+    "images": [
+      "360_015_capture1.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-017",
+      "worker_name": "Deepak Mane",
+      "team": [],
+      "assigned_at": "2026-04-17T14:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Check power supply to signal unit",
+      "2. Replace controller board if faulty",
+      "3. Test all signal phases",
+      "4. Verify pedestrian signals working"
+    ],
     "deadline": "2026-04-18T02:00:00+05:30",
-    "materials_required": ["Signal controller board (spare)", "Multimeter", "Insulated tools", "Ladder"],
+    "materials_required": [
+      "Signal controller board (spare)",
+      "Multimeter",
+      "Insulated tools",
+      "Ladder"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -367,16 +922,58 @@
     "severity": "CRITICAL",
     "confidence": 0.97,
     "status": "resolved",
-    "location": { "lat": 18.9664, "lng": 72.8311, "address": "Elphinstone Road, Parel", "city": "Mumbai", "ward": "F-South" },
-    "description": "Manhole cover missing on Elphinstone Road. Open manhole — extreme pedestrian danger.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.98, "severity_confidence": 0.96, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-201", "reporter_name": "Anita Kulkarni", "contact": "+91-98765-43215" },
-    "images": ["360_016_before.jpg", "360_016_after.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-010", "worker_name": "Prashant Gaikwad", "team": [], "assigned_at": "2026-04-16T06:30:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Place temporary barriers around manhole immediately", "2. Source replacement cover (standard 600mm)", "3. Install new cover and secure with bolts", "4. Test stability"],
+    "location": {
+      "lat": 18.9664,
+      "lng": 72.8311,
+      "address": "Elphinstone Road, Parel",
+      "city": "Mumbai",
+      "ward": "F-South",
+      "pincode": null
+    },
+    "description": "Manhole cover missing on Elphinstone Road. Open manhole \u00e2\u20ac\u201d extreme pedestrian danger.",
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.98,
+      "severity_confidence": 0.96,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-201",
+      "reporter_name": "Anita Kulkarni",
+      "contact": "+91-98765-43215"
+    },
+    "images": [
+      "360_016_before.jpg",
+      "360_016_after.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-010",
+      "worker_name": "Prashant Gaikwad",
+      "team": [],
+      "assigned_at": "2026-04-16T06:30:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Place temporary barriers around manhole immediately",
+      "2. Source replacement cover (standard 600mm)",
+      "3. Install new cover and secure with bolts",
+      "4. Test stability"
+    ],
     "deadline": "2026-04-16T10:30:00+05:30",
-    "materials_required": ["Temporary barriers (4)", "Replacement manhole cover (600mm)", "Bolts and wrench"],
-    "completion": { "completed_at": "2026-04-16T08:00:00+05:30", "proof_images": ["360_016_before.jpg", "360_016_after.jpg"], "verified_by": "WRK-MUM-004", "verified_at": "2026-04-16T08:30:00+05:30" },
+    "materials_required": [
+      "Temporary barriers (4)",
+      "Replacement manhole cover (600mm)",
+      "Bolts and wrench"
+    ],
+    "completion": {
+      "completed_at": "2026-04-16T08:00:00+05:30",
+      "proof_images": [
+        "360_016_before.jpg",
+        "360_016_after.jpg"
+      ],
+      "verified_by": "WRK-MUM-004",
+      "verified_at": "2026-04-16T08:30:00+05:30"
+    },
     "resolution_time_hours": 1.5,
     "sla_met": true,
     "citizen_notified": true,
@@ -391,11 +988,29 @@
     "severity": "MEDIUM",
     "confidence": 0.79,
     "status": "reported",
-    "location": { "lat": 19.0760, "lng": 72.8777, "address": "CST Road, Kurla East", "city": "Mumbai", "ward": "L" },
+    "location": {
+      "lat": 19.076,
+      "lng": 72.8777,
+      "address": "CST Road, Kurla East",
+      "city": "Mumbai",
+      "ward": "L",
+      "pincode": null
+    },
     "description": "Footpath broken and uneven near Kurla bus depot. Trip hazard for pedestrians.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.81, "severity_confidence": 0.77, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-156", "reporter_name": "Kavita Nair", "contact": "+91-98765-43216" },
-    "images": ["360_017_capture1.jpg"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.81,
+      "severity_confidence": 0.77,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-156",
+      "reporter_name": "Kavita Nair",
+      "contact": "+91-98765-43216"
+    },
+    "images": [
+      "360_017_capture1.jpg"
+    ],
     "assigned_to": null,
     "procedure": [],
     "deadline": null,
@@ -415,15 +1030,48 @@
     "severity": "MEDIUM",
     "confidence": 0.83,
     "status": "in_progress",
-    "location": { "lat": 19.1643, "lng": 72.8510, "address": "Station Road, Malad West", "city": "Mumbai", "ward": "M-West" },
+    "location": {
+      "lat": 19.1643,
+      "lng": 72.851,
+      "address": "Station Road, Malad West",
+      "city": "Mumbai",
+      "ward": "M-West",
+      "pincode": null
+    },
     "description": "Large garbage pile near Malad station exit. Overflowing bins and scattered waste on footpath.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.85, "severity_confidence": 0.81, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-178", "reporter_name": "Nikhil Joshi", "contact": "+91-98765-43217" },
-    "images": ["360_018_capture1.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-013", "worker_name": "Ashok Salvi", "team": [], "assigned_at": "2026-04-17T06:30:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Clear all garbage with truck", "2. Clean footpath area", "3. Empty overflowing bins", "4. Report to sanitation dept for regular pickup schedule"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.85,
+      "severity_confidence": 0.81,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-178",
+      "reporter_name": "Nikhil Joshi",
+      "contact": "+91-98765-43217"
+    },
+    "images": [
+      "360_018_capture1.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-013",
+      "worker_name": "Ashok Salvi",
+      "team": [],
+      "assigned_at": "2026-04-17T06:30:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Clear all garbage with truck",
+      "2. Clean footpath area",
+      "3. Empty overflowing bins",
+      "4. Report to sanitation dept for regular pickup schedule"
+    ],
     "deadline": "2026-04-19T06:30:00+05:30",
-    "materials_required": ["Garbage truck", "Brooms", "Extra bins"],
+    "materials_required": [
+      "Garbage truck",
+      "Brooms",
+      "Extra bins"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -439,15 +1087,51 @@
     "severity": "HIGH",
     "confidence": 0.85,
     "status": "in_progress",
-    "location": { "lat": 19.1764, "lng": 72.9486, "address": "Powai Lake Gate 2", "city": "Mumbai", "ward": "L" },
+    "location": {
+      "lat": 19.1764,
+      "lng": 72.9486,
+      "address": "Powai Lake Gate 2",
+      "city": "Mumbai",
+      "ward": "L",
+      "pincode": null
+    },
     "description": "There's a burst water pipe near Powai Lake Gate 2. Water gushing onto road and flooding the sidewalk. Almost broke my ankle slipping on the wet road.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.88, "severity_confidence": 0.82, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-045", "reporter_name": "Rahul Verma", "contact": "+91-98765-43218" },
-    "images": ["complaint_019_photo1.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-007", "worker_name": "Ajay Pawar", "team": [], "assigned_at": "2026-04-17T14:05:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Locate burst point", "2. Shut off upstream valve", "3. Excavate around pipe", "4. Replace damaged section", "5. Pressure test", "6. Restore road surface"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.88,
+      "severity_confidence": 0.82,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-045",
+      "reporter_name": "Rahul Verma",
+      "contact": "+91-98765-43218"
+    },
+    "images": [
+      "complaint_019_photo1.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-007",
+      "worker_name": "Ajay Pawar",
+      "team": [],
+      "assigned_at": "2026-04-17T14:05:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Locate burst point",
+      "2. Shut off upstream valve",
+      "3. Excavate around pipe",
+      "4. Replace damaged section",
+      "5. Pressure test",
+      "6. Restore road surface"
+    ],
     "deadline": "2026-04-18T02:05:00+05:30",
-    "materials_required": ["Pipe wrench set", "Replacement pipe section (6 inch)", "Pipe sealant", "Shovel"],
+    "materials_required": [
+      "Pipe wrench set",
+      "Replacement pipe section (6 inch)",
+      "Pipe sealant",
+      "Shovel"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -461,12 +1145,28 @@
     "category": "water_pipeline",
     "subcategory": "low_water_pressure",
     "severity": "LOW",
-    "confidence": 0.70,
+    "confidence": 0.7,
     "status": "reported",
-    "location": { "lat": 19.2403, "lng": 72.8558, "address": "IC Colony, Borivali West", "city": "Mumbai", "ward": "R-North" },
+    "location": {
+      "lat": 19.2403,
+      "lng": 72.8558,
+      "address": "IC Colony, Borivali West",
+      "city": "Mumbai",
+      "ward": "R-North",
+      "pincode": null
+    },
     "description": "Very low water pressure in our building since 3 days. Barely a trickle from taps on 4th floor and above. Rest of the colony also affected.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.72, "severity_confidence": 0.68, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-223", "reporter_name": "Sunita Iyer", "contact": "+91-98765-43219" },
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.72,
+      "severity_confidence": 0.68,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-223",
+      "reporter_name": "Sunita Iyer",
+      "contact": "+91-98765-43219"
+    },
     "images": [],
     "assigned_to": null,
     "procedure": [],
@@ -487,15 +1187,51 @@
     "severity": "HIGH",
     "confidence": 0.88,
     "status": "assigned",
-    "location": { "lat": 19.0330, "lng": 72.8498, "address": "Tulsi Pipe Road, Lower Parel", "city": "Mumbai", "ward": "G-South" },
-    "description": "Exposed electrical wiring hanging from a street light pole near the bus stop. Sparking during rain. Very dangerous — children walk here.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.90, "severity_confidence": 0.86, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-098", "reporter_name": "Deepa Menon", "contact": "+91-98765-43220" },
-    "images": ["complaint_021_photo1.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-010", "worker_name": "Prashant Gaikwad", "team": [], "assigned_at": "2026-04-17T10:30:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. SAFETY FIRST — ensure power is disconnected at source", "2. Secure dangling wires", "3. Replace damaged insulation", "4. Reconnect securely to pole terminal", "5. Test with multimeter"],
+    "location": {
+      "lat": 19.033,
+      "lng": 72.8498,
+      "address": "Tulsi Pipe Road, Lower Parel",
+      "city": "Mumbai",
+      "ward": "G-South",
+      "pincode": null
+    },
+    "description": "Exposed electrical wiring hanging from a street light pole near the bus stop. Sparking during rain. Very dangerous \u00e2\u20ac\u201d children walk here.",
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.9,
+      "severity_confidence": 0.86,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-098",
+      "reporter_name": "Deepa Menon",
+      "contact": "+91-98765-43220"
+    },
+    "images": [
+      "complaint_021_photo1.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-010",
+      "worker_name": "Prashant Gaikwad",
+      "team": [],
+      "assigned_at": "2026-04-17T10:30:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. SAFETY FIRST \u00e2\u20ac\u201d ensure power is disconnected at source",
+      "2. Secure dangling wires",
+      "3. Replace damaged insulation",
+      "4. Reconnect securely to pole terminal",
+      "5. Test with multimeter"
+    ],
     "deadline": "2026-04-17T22:30:00+05:30",
-    "materials_required": ["Insulation tape (heavy duty)", "Wire connectors", "Multimeter", "Insulated gloves", "Ladder"],
+    "materials_required": [
+      "Insulation tape (heavy duty)",
+      "Wire connectors",
+      "Multimeter",
+      "Insulated gloves",
+      "Ladder"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -511,15 +1247,50 @@
     "severity": "MEDIUM",
     "confidence": 0.82,
     "status": "in_progress",
-    "location": { "lat": 19.1382, "lng": 72.8370, "address": "Jogeshwari Caves Road", "city": "Mumbai", "ward": "K-West" },
+    "location": {
+      "lat": 19.1382,
+      "lng": 72.837,
+      "address": "Jogeshwari Caves Road",
+      "city": "Mumbai",
+      "ward": "K-West",
+      "pincode": null
+    },
     "description": "Main drain blocked near Jogeshwari caves. Dirty water overflowing onto road. Terrible smell. Been like this for 2 days.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.84, "severity_confidence": 0.80, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-167", "reporter_name": "Anil Deshpande", "contact": "+91-98765-43221" },
-    "images": ["complaint_022_photo1.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-014", "worker_name": "Nitin Sawant", "team": [], "assigned_at": "2026-04-17T08:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Locate blockage point", "2. Use drain cleaning machine", "3. Clear all debris from drain", "4. Flush with water to confirm flow", "5. Disinfect area around overflow"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.84,
+      "severity_confidence": 0.8,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-167",
+      "reporter_name": "Anil Deshpande",
+      "contact": "+91-98765-43221"
+    },
+    "images": [
+      "complaint_022_photo1.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-014",
+      "worker_name": "Nitin Sawant",
+      "team": [],
+      "assigned_at": "2026-04-17T08:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Locate blockage point",
+      "2. Use drain cleaning machine",
+      "3. Clear all debris from drain",
+      "4. Flush with water to confirm flow",
+      "5. Disinfect area around overflow"
+    ],
     "deadline": "2026-04-19T08:00:00+05:30",
-    "materials_required": ["Drain cleaning machine", "Protective gloves", "Disinfectant spray", "Face mask"],
+    "materials_required": [
+      "Drain cleaning machine",
+      "Protective gloves",
+      "Disinfectant spray",
+      "Face mask"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -535,16 +1306,70 @@
     "severity": "HIGH",
     "confidence": 0.86,
     "status": "resolved",
-    "location": { "lat": 19.0596, "lng": 72.8295, "address": "Chapel Road, Bandra West", "city": "Mumbai", "ward": "H-West" },
+    "location": {
+      "lat": 19.0596,
+      "lng": 72.8295,
+      "address": "Chapel Road, Bandra West",
+      "city": "Mumbai",
+      "ward": "H-West",
+      "pincode": null
+    },
     "description": "Sewage overflowing from manhole in residential area. Sewage water entering ground floor shops. Health hazard.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.88, "severity_confidence": 0.84, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-134", "reporter_name": "Fatima Sheikh", "contact": "+91-98765-43222" },
-    "images": ["complaint_023_before.jpg", "complaint_023_after.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-012", "worker_name": "Yogesh Bhosale", "team": [{"id": "WRK-MUM-012", "name": "Yogesh Bhosale", "role": "field_worker"}, {"id": "WRK-MUM-014", "name": "Nitin Sawant", "role": "field_worker"}], "assigned_at": "2026-04-15T09:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Pump out overflow", "2. Clear sewer line blockage", "3. Flush entire section", "4. Disinfect affected area"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.88,
+      "severity_confidence": 0.84,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-134",
+      "reporter_name": "Fatima Sheikh",
+      "contact": "+91-98765-43222"
+    },
+    "images": [
+      "complaint_023_before.jpg",
+      "complaint_023_after.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-012",
+      "worker_name": "Yogesh Bhosale",
+      "team": [
+        {
+          "id": "WRK-MUM-012",
+          "name": "Yogesh Bhosale",
+          "role": "field_worker"
+        },
+        {
+          "id": "WRK-MUM-014",
+          "name": "Nitin Sawant",
+          "role": "field_worker"
+        }
+      ],
+      "assigned_at": "2026-04-15T09:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Pump out overflow",
+      "2. Clear sewer line blockage",
+      "3. Flush entire section",
+      "4. Disinfect affected area"
+    ],
     "deadline": "2026-04-15T21:00:00+05:30",
-    "materials_required": ["Sewage pump", "Drain cleaning machine", "Disinfectant", "PPE kit"],
-    "completion": { "completed_at": "2026-04-15T13:00:00+05:30", "proof_images": ["complaint_023_before.jpg", "complaint_023_after.jpg"], "verified_by": "WRK-MUM-001", "verified_at": "2026-04-15T14:00:00+05:30" },
+    "materials_required": [
+      "Sewage pump",
+      "Drain cleaning machine",
+      "Disinfectant",
+      "PPE kit"
+    ],
+    "completion": {
+      "completed_at": "2026-04-15T13:00:00+05:30",
+      "proof_images": [
+        "complaint_023_before.jpg",
+        "complaint_023_after.jpg"
+      ],
+      "verified_by": "WRK-MUM-001",
+      "verified_at": "2026-04-15T14:00:00+05:30"
+    },
     "resolution_time_hours": 4.0,
     "sla_met": true,
     "citizen_notified": true,
@@ -559,15 +1384,50 @@
     "severity": "HIGH",
     "confidence": 0.84,
     "status": "in_progress",
-    "location": { "lat": 18.5074, "lng": 73.8077, "address": "Paud Road, Kothrud", "city": "Pune", "ward": "Kothrud" },
+    "location": {
+      "lat": 18.5074,
+      "lng": 73.8077,
+      "address": "Paud Road, Kothrud",
+      "city": "Pune",
+      "ward": "Kothrud",
+      "pincode": null
+    },
     "description": "Water pipeline burst on Paud Road creating a large puddle. Traffic affected and water supply to nearby buildings cut off.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.86, "severity_confidence": 0.82, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-PUN-012", "reporter_name": "Suresh Jog", "contact": "+91-98765-43223" },
-    "images": ["complaint_024_photo1.jpg"],
-    "assigned_to": { "worker_id": "WRK-PUN-008", "worker_name": "Rahul Deshmukh", "team": [], "assigned_at": "2026-04-17T09:30:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Shut upstream valve", "2. Excavate to find burst", "3. Repair or replace section", "4. Pressure test", "5. Restore"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.86,
+      "severity_confidence": 0.82,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-PUN-012",
+      "reporter_name": "Suresh Jog",
+      "contact": "+91-98765-43223"
+    },
+    "images": [
+      "complaint_024_photo1.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-PUN-008",
+      "worker_name": "Rahul Deshmukh",
+      "team": [],
+      "assigned_at": "2026-04-17T09:30:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Shut upstream valve",
+      "2. Excavate to find burst",
+      "3. Repair or replace section",
+      "4. Pressure test",
+      "5. Restore"
+    ],
     "deadline": "2026-04-17T21:30:00+05:30",
-    "materials_required": ["Pipe wrench set", "Replacement pipe", "Sealant", "Shovel"],
+    "materials_required": [
+      "Pipe wrench set",
+      "Replacement pipe",
+      "Sealant",
+      "Shovel"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -583,11 +1443,29 @@
     "severity": "MEDIUM",
     "confidence": 0.78,
     "status": "reported",
-    "location": { "lat": 18.5314, "lng": 73.8446, "address": "FC Road, Shivajinagar", "city": "Pune", "ward": "Shivajinagar" },
+    "location": {
+      "lat": 18.5314,
+      "lng": 73.8446,
+      "address": "FC Road, Shivajinagar",
+      "city": "Pune",
+      "ward": "Shivajinagar",
+      "pincode": null
+    },
     "description": "Transformer making loud humming noise and occasional sparks. Residents worried about fire risk.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.80, "severity_confidence": 0.76, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-PUN-045", "reporter_name": "Gauri Patwardhan", "contact": "+91-98765-43224" },
-    "images": ["complaint_025_photo1.jpg"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.8,
+      "severity_confidence": 0.76,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-PUN-045",
+      "reporter_name": "Gauri Patwardhan",
+      "contact": "+91-98765-43224"
+    },
+    "images": [
+      "complaint_025_photo1.jpg"
+    ],
     "assigned_to": null,
     "procedure": [],
     "deadline": null,
@@ -607,15 +1485,49 @@
     "severity": "HIGH",
     "confidence": 0.87,
     "status": "in_progress",
-    "location": { "lat": 18.5204, "lng": 73.8567, "address": "Sinhagad Road, Pune", "city": "Pune", "ward": "Sinhagad Road" },
+    "location": {
+      "lat": 18.5204,
+      "lng": 73.8567,
+      "address": "Sinhagad Road, Pune",
+      "city": "Pune",
+      "ward": "Sinhagad Road",
+      "pincode": null
+    },
     "description": "Retaining wall along Sinhagad Road showing major cracks. Part of the wall has already crumbled during last rain.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.89, "severity_confidence": 0.85, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-PUN-078", "reporter_name": "Amit Gokhale", "contact": "+91-98765-43225" },
-    "images": ["complaint_026_photo1.jpg", "complaint_026_photo2.jpg"],
-    "assigned_to": { "worker_id": "WRK-PUN-016", "worker_name": "Vishal Kulkarni", "team": [], "assigned_at": "2026-04-17T11:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Structural assessment of entire wall section", "2. Shore up unstable sections", "3. Mark danger zone", "4. Plan reconstruction"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.89,
+      "severity_confidence": 0.85,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-PUN-078",
+      "reporter_name": "Amit Gokhale",
+      "contact": "+91-98765-43225"
+    },
+    "images": [
+      "complaint_026_photo1.jpg",
+      "complaint_026_photo2.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-PUN-016",
+      "worker_name": "Vishal Kulkarni",
+      "team": [],
+      "assigned_at": "2026-04-17T11:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Structural assessment of entire wall section",
+      "2. Shore up unstable sections",
+      "3. Mark danger zone",
+      "4. Plan reconstruction"
+    ],
     "deadline": "2026-04-17T23:00:00+05:30",
-    "materials_required": ["Shoring props", "Danger tape", "Assessment tools"],
+    "materials_required": [
+      "Shoring props",
+      "Danger tape",
+      "Assessment tools"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -631,15 +1543,47 @@
     "severity": "MEDIUM",
     "confidence": 0.76,
     "status": "in_progress",
-    "location": { "lat": 21.1458, "lng": 79.0882, "address": "Wardha Road, Dharampeth", "city": "Nagpur", "ward": "Dharampeth" },
+    "location": {
+      "lat": 21.1458,
+      "lng": 79.0882,
+      "address": "Wardha Road, Dharampeth",
+      "city": "Nagpur",
+      "ward": "Dharampeth",
+      "pincode": null
+    },
     "description": "Street lights on an entire stretch of Wardha Road are not working for a week. Very dark and unsafe area.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.78, "severity_confidence": 0.74, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-NAG-023", "reporter_name": "Vinay Meshram", "contact": "+91-98765-43226" },
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.78,
+      "severity_confidence": 0.74,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-NAG-023",
+      "reporter_name": "Vinay Meshram",
+      "contact": "+91-98765-43226"
+    },
     "images": [],
-    "assigned_to": { "worker_id": "WRK-NAG-011", "worker_name": "Amol Khandare", "team": [], "assigned_at": "2026-04-17T10:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Check main feeder circuit", "2. Inspect each pole connection", "3. Replace faulty components", "4. Test all lights"],
+    "assigned_to": {
+      "worker_id": "WRK-NAG-011",
+      "worker_name": "Amol Khandare",
+      "team": [],
+      "assigned_at": "2026-04-17T10:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Check main feeder circuit",
+      "2. Inspect each pole connection",
+      "3. Replace faulty components",
+      "4. Test all lights"
+    ],
     "deadline": "2026-04-19T10:00:00+05:30",
-    "materials_required": ["LED bulbs (8)", "Wiring kit", "Ladder", "Multimeter"],
+    "materials_required": [
+      "LED bulbs (8)",
+      "Wiring kit",
+      "Ladder",
+      "Multimeter"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
@@ -655,11 +1599,29 @@
     "severity": "LOW",
     "confidence": 0.72,
     "status": "reported",
-    "location": { "lat": 21.1540, "lng": 79.0757, "address": "Sadar Bazaar, Nagpur", "city": "Nagpur", "ward": "Sadar" },
+    "location": {
+      "lat": 21.154,
+      "lng": 79.0757,
+      "address": "Sadar Bazaar, Nagpur",
+      "city": "Nagpur",
+      "ward": "Sadar",
+      "pincode": null
+    },
     "description": "Garbage bins overflowing near Sadar market. Regular pickup seems delayed by 2 days.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.74, "severity_confidence": 0.70, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-NAG-056", "reporter_name": "Rekha Wankhede", "contact": "+91-98765-43227" },
-    "images": ["complaint_028_photo1.jpg"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.74,
+      "severity_confidence": 0.7,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-NAG-056",
+      "reporter_name": "Rekha Wankhede",
+      "contact": "+91-98765-43227"
+    },
+    "images": [
+      "complaint_028_photo1.jpg"
+    ],
     "assigned_to": null,
     "procedure": [],
     "deadline": null,
@@ -679,15 +1641,49 @@
     "severity": "HIGH",
     "confidence": 0.83,
     "status": "escalated",
-    "location": { "lat": 19.1895, "lng": 72.8412, "address": "Goregaon West, SV Road", "city": "Mumbai", "ward": "N" },
+    "location": {
+      "lat": 19.1895,
+      "lng": 72.8412,
+      "address": "Goregaon West, SV Road",
+      "city": "Mumbai",
+      "ward": "N",
+      "pincode": null
+    },
     "description": "Tap water is yellow/brown colored since yesterday. Multiple residents in the area are affected. Children have fallen sick.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.85, "severity_confidence": 0.81, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-189", "reporter_name": "Lakshmi Nambiar", "contact": "+91-98765-43228" },
-    "images": ["complaint_029_photo1.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-020", "worker_name": "Tushar Bhatt", "team": [], "assigned_at": "2026-04-16T16:00:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Collect water samples from multiple taps", "2. Test for contaminants", "3. Identify contamination source", "4. Flush main pipeline", "5. Coordinate with water treatment plant"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.85,
+      "severity_confidence": 0.81,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-189",
+      "reporter_name": "Lakshmi Nambiar",
+      "contact": "+91-98765-43228"
+    },
+    "images": [
+      "complaint_029_photo1.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-020",
+      "worker_name": "Tushar Bhatt",
+      "team": [],
+      "assigned_at": "2026-04-16T16:00:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Collect water samples from multiple taps",
+      "2. Test for contaminants",
+      "3. Identify contamination source",
+      "4. Flush main pipeline",
+      "5. Coordinate with water treatment plant"
+    ],
     "deadline": "2026-04-17T04:00:00+05:30",
-    "materials_required": ["Water testing kit", "Sample bottles", "Pipeline flushing equipment"],
+    "materials_required": [
+      "Water testing kit",
+      "Sample bottles",
+      "Pipeline flushing equipment"
+    ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": false,
@@ -703,16 +1699,59 @@
     "severity": "LOW",
     "confidence": 0.68,
     "status": "resolved",
-    "location": { "lat": 19.0954, "lng": 72.8547, "address": "Vile Parle Station Road", "city": "Mumbai", "ward": "K-West" },
+    "location": {
+      "lat": 19.0954,
+      "lng": 72.8547,
+      "address": "Vile Parle Station Road",
+      "city": "Mumbai",
+      "ward": "K-West",
+      "pincode": null
+    },
     "description": "Road markings and zebra crossing completely faded near Vile Parle station. Confusing for drivers and dangerous for pedestrians.",
-    "ai_classification": { "agent": "COGNOS", "category_confidence": 0.70, "severity_confidence": 0.65, "cross_validation_count": 0 },
-    "reporter": { "reporter_id": "CIT-MUM-210", "reporter_name": "Prakash Joshi", "contact": "+91-98765-43229" },
-    "images": ["complaint_030_before.jpg", "complaint_030_after.jpg"],
-    "assigned_to": { "worker_id": "WRK-MUM-017", "worker_name": "Deepak Mane", "team": [], "assigned_at": "2026-04-13T22:30:00+05:30", "assigned_by": "COMMANDER" },
-    "procedure": ["1. Clean road surface", "2. Apply fresh markings with road paint", "3. Repaint zebra crossing", "4. Add reflective paint for night visibility"],
+    "ai_classification": {
+      "agent": "COGNOS",
+      "category_confidence": 0.7,
+      "severity_confidence": 0.65,
+      "cross_validation_count": 0
+    },
+    "reporter": {
+      "reporter_id": "CIT-MUM-210",
+      "reporter_name": "Prakash Joshi",
+      "contact": "+91-98765-43229"
+    },
+    "images": [
+      "complaint_030_before.jpg",
+      "complaint_030_after.jpg"
+    ],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-017",
+      "worker_name": "Deepak Mane",
+      "team": [],
+      "assigned_at": "2026-04-13T22:30:00+05:30",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Clean road surface",
+      "2. Apply fresh markings with road paint",
+      "3. Repaint zebra crossing",
+      "4. Add reflective paint for night visibility"
+    ],
     "deadline": "2026-04-20T22:30:00+05:30",
-    "materials_required": ["Road marking paint (white + yellow)", "Stencils", "Paint roller", "Reflective paint"],
-    "completion": { "completed_at": "2026-04-14T02:00:00+05:30", "proof_images": ["complaint_030_before.jpg", "complaint_030_after.jpg"], "verified_by": "WRK-MUM-004", "verified_at": "2026-04-14T08:00:00+05:30" },
+    "materials_required": [
+      "Road marking paint (white + yellow)",
+      "Stencils",
+      "Paint roller",
+      "Reflective paint"
+    ],
+    "completion": {
+      "completed_at": "2026-04-14T02:00:00+05:30",
+      "proof_images": [
+        "complaint_030_before.jpg",
+        "complaint_030_after.jpg"
+      ],
+      "verified_by": "WRK-MUM-004",
+      "verified_at": "2026-04-14T08:00:00+05:30"
+    },
     "resolution_time_hours": 3.5,
     "sla_met": true,
     "citizen_notified": true,

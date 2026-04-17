@@ -26,9 +26,9 @@ class AgentState(TypedDict):
     execution_steps: List[str]
     role: str
 
-async def broadcast_event(state: AgentState, action: str):
+async def broadcast_event(state: AgentState, action: str, agent_id: str = "NEXUS"):
     event = AgentEvent(
-        agent="NEXUS",
+        agent=agent_id,
         action=action,
         issue_id=state.get("issue_id"),
         data={"source": state.get("source"), "status": state.get("status")},
@@ -56,7 +56,7 @@ async def node_cognos(state: AgentState):
     state["classification"] = res
     state["severity"] = res["final_severity"]
     state["execution_steps"].append("COGNOS")
-    await broadcast_event(state, "cognos_classification_complete")
+    await broadcast_event(state, "cognos_classification_complete", "SYS-02")
     return state
 
 async def node_sentinel(state: AgentState):
@@ -65,7 +65,7 @@ async def node_sentinel(state: AgentState):
     if not res.get("sentinel_passed"):
         state["status"] = "cancelled"
     state["execution_steps"].append("SENTINEL")
-    await broadcast_event(state, "sentinel_verification")
+    await broadcast_event(state, "sentinel_verification", "SYS-06")
     return state
 
 async def node_commander(state: AgentState):
@@ -103,13 +103,13 @@ async def node_commander(state: AgentState):
         state["deadline"] = assigned_issue.deadline
         
     state["execution_steps"].append("COMMANDER")
-    await broadcast_event(state, "commander_assigned")
+    await broadcast_event(state, "commander_assigned", "SYS-04")
     return state
 
 async def node_guardian(state: AgentState):
     """Hooks GUARDIAN explicitly for CRITICAL monitoring."""
     state["execution_steps"].append("GUARDIAN_MONITOR")
-    await broadcast_event(state, "guardian_hooked")
+    await broadcast_event(state, "guardian_hooked", "SYS-08")
     return state
 
 def severity_router(state: AgentState) -> str:

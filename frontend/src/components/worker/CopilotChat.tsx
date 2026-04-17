@@ -59,15 +59,17 @@ export default function CopilotChat({ className }: { className?: string }) {
     
     setIsTyping(true)
     try {
-      const data = await fetchApi<{ response: string }>('/api/field-copilot/chat', {
+      const data = await fetchApi<{ reply: string; safety_warning: string }>('/api/field-copilot/chat', {
         method: 'POST',
         body: { worker_id: 'WRK-MUM-015', message: msg, issue_id: 'ISS-MUM-2026-04-17-0042' }
       })
       setIsTyping(false)
-      addMessage('assistant', data.response || "Task updated.")
+      const reply = data.reply || 'No guidance available for this query.'
+      const warning = data.safety_warning ? `\n\n⚠️ Safety: ${data.safety_warning}` : ''
+      addMessage('assistant', reply + warning)
     } catch (err) {
       setIsTyping(false)
-      addMessage('assistant', "Network Error. Unable to process.")
+      addMessage('assistant', "Network Error. Unable to reach FIELD_COPILOT.")
     }
   }
 
@@ -99,15 +101,17 @@ export default function CopilotChat({ className }: { className?: string }) {
       
       setIsTyping(true)
       try {
-        const data = await fetchApi<{ response: string }>('/api/field-copilot/chat', {
+        const data = await fetchApi<{ reply: string; safety_warning: string }>('/api/field-copilot/chat', {
           method: 'POST',
           body: { worker_id: 'WRK-MUM-015', message: voiceText, issue_id: 'ISS-MUM-2026-04-17-0042' }
         })
         setIsTyping(false)
-        addMessage('assistant', data.response || "Voice processed.")
+        const reply = data.reply || 'No guidance available for this query.'
+        const warning = data.safety_warning ? `\n\n⚠️ Safety: ${data.safety_warning}` : ''
+        addMessage('assistant', reply + warning)
       } catch (err) {
         setIsTyping(false)
-        addMessage('assistant', "Network Error. Unable to process.")
+        addMessage('assistant', "Network Error. Unable to reach FIELD_COPILOT.")
       }
     }
 

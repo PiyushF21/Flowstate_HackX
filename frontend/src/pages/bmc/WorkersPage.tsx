@@ -12,30 +12,37 @@ export default function WorkersPage() {
   useEffect(() => {
     const fetchWorkers = async () => {
       try {
-        const data = await fetchApi<any[]>('/api/commander/workers')
-        if (Array.isArray(data)) {
-          setWorkers(data.map(w => ({
-            id: w.worker_id,
-            name: w.name,
-            specialization: (w.specializations || []).join(', ') || 'General',
-            status: w.status as 'on_task' | 'available' | 'off_duty',
-            currentTask: w.current_task_id || '',
-            distance: '1.2 km',
-            performanceScore: w.performance?.rating ? Math.round(w.performance.rating * 20) : 85
-          })))
-        }
+        const data = await fetchApi<any>('/api/commander/workers')
+        const arr = Array.isArray(data) ? data : []
+        setWorkers(arr.map((w: any) => ({
+          id: w.worker_id,
+          name: w.name,
+          specialization: (w.specializations || []).join(', ') || 'General',
+          status: w.status as 'on_task' | 'available' | 'off_duty',
+          currentTask: w.current_task_id || '',
+          distance: '1.2 km',
+          performanceScore: w.performance?.rating ? Math.round(w.performance.rating * 20) : 85
+        })))
       } catch (err) {
         console.error("Failed to fetch workers", err)
       }
     }
     fetchWorkers()
+    const interval = setInterval(fetchWorkers, 5000)
+    return () => clearInterval(interval)
   }, [fetchApi])
+
+  // Compute stats from real data
+  const totalWorkers = workers.length
+  const onTask = workers.filter(w => w.status === 'on_task').length
+  const available = workers.filter(w => w.status === 'available').length
+  const utilisation = totalWorkers > 0 ? Math.round((onTask / totalWorkers) * 100) : 0
 
   const mapWorkers = workers.map(w => ({
     id: w.id,
     name: w.name,
-    lat: 19.076 + (Math.random() - 0.5) * 0.1, // mock spread
-    lng: 72.8777 + (Math.random() - 0.5) * 0.1, // mock spread
+    lat: 19.076 + (Math.random() - 0.5) * 0.1,
+    lng: 72.8777 + (Math.random() - 0.5) * 0.1,
     status: w.status,
     task: w.currentTask
   }))
@@ -53,13 +60,13 @@ export default function WorkersPage() {
           </div>
         </div>
 
-        {/* Summary Strip */}
+        {/* Summary Strip — computed from real data */}
         <div className="grid grid-cols-4 gap-4 mb-6">
           {[
-            { label: 'Total Workers', value: '142' },
-            { label: 'On Task', value: '86', color: 'text-blue-400' },
-            { label: 'Available', value: '34', color: 'text-green-400' },
-            { label: 'Utilisation', value: '72%' },
+            { label: 'Total Workers', value: String(totalWorkers) },
+            { label: 'On Task', value: String(onTask), color: 'text-blue-400' },
+            { label: 'Available', value: String(available), color: 'text-green-400' },
+            { label: 'Utilisation', value: `${utilisation}%` },
           ].map(stat => (
             <div key={stat.label} className="p-4 rounded-xl bg-surface-elevated border border-border">
               <p className="text-xs text-text-muted mb-1">{stat.label}</p>

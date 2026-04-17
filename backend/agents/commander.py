@@ -70,22 +70,34 @@ async def generate_action_plan(issue: Issue) -> ProcedureOutput:
             materials=["Safety gear", "Standard tools"]
         )
         
-    llm = ChatXAI(xai_api_key=settings.XAI_API_KEY, model="grok-4-1-fast-reasoning", temperature=0.1)
-    llm_with_struct = llm.with_structured_output(ProcedureOutput)
-    
-    prompt = PromptTemplate.from_template(
-        "You are an expert infrastructure engineer. Generate a repair procedure and materials list for:\n"
-        "Category: {category}, Subcategory: {subcategory}, Description: {desc}, Severity: {sev}"
-    )
-    
-    chain = prompt | llm_with_struct
-    res = await chain.ainvoke({
-        "category": issue.category,
-        "subcategory": issue.subcategory,
-        "desc": issue.description,
-        "sev": issue.severity
-    })
-    return res
+    try:
+        llm = ChatXAI(xai_api_key=settings.XAI_API_KEY, model="grok-4-1-fast-reasoning", temperature=0.1)
+        llm_with_struct = llm.with_structured_output(ProcedureOutput)
+        
+        prompt = PromptTemplate.from_template(
+            "You are an expert infrastructure engineer. Generate a repair procedure and materials list for:\n"
+            "Category: {category}, Subcategory: {subcategory}, Description: {desc}, Severity: {sev}"
+        )
+        
+        chain = prompt | llm_with_struct
+        res = await chain.ainvoke({
+            "category": issue.category,
+            "subcategory": issue.subcategory,
+            "desc": issue.description,
+            "sev": issue.severity
+        })
+        return res
+    except Exception as e:
+        print(f"[Commander] AI Error: {e}")
+        return ProcedureOutput(
+            steps=[
+                "1. Secure the site with safety cones", 
+                "2. Assess extent of the problem", 
+                "3. Perform standard repair (Mock Fallback)", 
+                "4. Upload before/after photos"
+            ],
+            materials=["Safety cones", "Standard repair kit", "Mobile device for upload"]
+        )
 
 async def assign_issue(issue: Issue) -> Issue:
     worker = await find_best_worker(issue)

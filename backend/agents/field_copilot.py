@@ -69,34 +69,56 @@ async def get_advice(worker_id: str, issue_id: str, user_message: str) -> Copilo
     worker = await data_store.get_worker(worker_id)
     issue = await data_store.get_issue(issue_id)
     
-    if not worker or not issue:
-        return CopilotResponse(reply="Entity not found context.", safety_warning="")
+    # Determine category from issue or infer from message
+    cat = "roads"
+    subcategory = "general"
+    status = "assigned"
+    procedure = "Follow standard repair protocol."
+    
+    if issue:
+        cat = issue.category or "roads"
+        subcategory = issue.subcategory or "general"
+        status = issue.status or "assigned"
+        procedure = " ".join(issue.procedure) if issue.procedure else "Follow standard repair protocol."
         
-    cat = issue.category or "general"
-    knowledge = REPAIR_KNOWLEDGE.get(cat, ["No specific knowledge loaded."])
+    knowledge = REPAIR_KNOWLEDGE.get(cat, ["Follow standard safety and repair procedures."])
     safety = SAFETY_PROTOCOLS.get(cat, "Standard safety protocols apply.")
-    procedure = " ".join(issue.procedure) if issue.procedure else "None"
     
     if not settings.has_xai_key:
-        return CopilotResponse(
-            reply=f"MOCK: To resolve {cat}, please follow standard protocol. {knowledge[0]}",
-            safety_warning=f"MOCK WARNING: {safety}"
-        )
+        # Smart rule-based response using the knowledge base
+        msg_lower = user_message.lower()
+        if "fix" in msg_lower or "repair" in msg_lower or "how" in msg_lower or "complete" in msg_lower:
+            reply = f"For this {cat.replace('_', ' ')} task: {knowledge[0]} Make sure to document before/after with photos."
+        elif "safety" in msg_lower or "precaution" in msg_lower or "danger" in msg_lower:
+            reply = f"Safety protocol for {cat.replace('_', ' ')}: {safety}"
+        elif "material" in msg_lower or "tool" in msg_lower or "equipment" in msg_lower or "need" in msg_lower:
+            reply = f"For {cat.replace('_', ' ')} repairs, ensure you have the standard toolkit. {knowledge[-1] if len(knowledge) > 1 else knowledge[0]}"
+        else:
+            reply = f"I can help with this {cat.replace('_', ' ')} task. {knowledge[0]} Ask me about repair steps, safety tips, or required materials."
         
-    llm = ChatXAI(xai_api_key=settings.XAI_API_KEY, model="grok-4-1-fast-reasoning", temperature=0.1)
-    llm_with_struct = llm.with_structured_output(CopilotResponse)
-    
-    prompt = PromptTemplate.from_template(COPILOT_PROMPT)
-    chain = prompt | llm_with_struct
-    
-    res = await chain.ainvoke({
-        "category": cat,
-        "subcategory": issue.subcategory,
-        "status": issue.status,
-        "procedure": procedure,
-        "knowledge": str(knowledge),
-        "safety": safety,
-        "user_message": user_message
-    })
-    
-    return res
+        return CopilotResponse(reply=reply, safety_warning=safety)
+        
+    try:
+        llm = ChatXAI(xai_api_key=settings.XAI_API_KEY, model="grok-3-fast", temperature=0.1)
+        llm_with_struct = llm.with_structured_output(CopilotResponse)
+        
+        prompt = PromptTemplate.from_template(COPILOT_PROMPT)
+        chain = prompt | llm_with_struct
+        
+        res = await chain.ainvoke({
+            "category": cat,
+            "subcategory": subcategory,
+            "status": status,
+            "procedure": procedure,
+            "knowledge": str(knowledge),
+            "safety": safety,
+            "user_message": user_message
+        })
+        
+        return res
+    except Exception as e:
+        print(f"[FIELD_COPILOT] LLM error: {e}")
+        return CopilotResponse(
+            reply=f"For this {cat.replace('_', ' ')} task: {knowledge[0]} Document your progress with photos.",
+            safety_warning=safety
+        )
