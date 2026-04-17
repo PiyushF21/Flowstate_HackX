@@ -132,13 +132,13 @@
 
 ## Phase 4: Merge PRs + Backend Testing (Day 2 — PARALLEL with Yash)
 
-- [ ] Pull Piyush's branch, merge VIRA/GUARDIAN/PRESCIENT/FLEET routers
-- [ ] Pull Amit's branch, merge LOOP/ORACLE/FIELD_COPILOT routers + seed data
-- [ ] Import all 11 agent routers into `main.py`
-- [ ] Resolve any model additions needed
-- [ ] Test full NEXUS pipeline end-to-end with seed data
-- [ ] Fix any integration bugs between agents
-- [ ] Commit: `feat(backend): all 11 agent routers wired, pipeline tested`
+- [x] Pull Piyush's branch, merge VIRA/GUARDIAN/PRESCIENT/FLEET routers
+- [x] Pull Amit's branch, merge LOOP/ORACLE/FIELD_COPILOT routers + seed data
+- [x] Import all 11 agent routers into `main.py`
+- [x] Resolve any model additions needed
+- [x] Test full NEXUS pipeline end-to-end with seed data
+- [x] Fix any integration bugs between agents
+- [x] Commit: `feat(backend): all 11 agent routers wired, pipeline tested`
 
 ---
 

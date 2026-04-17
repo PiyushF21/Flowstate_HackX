@@ -16,17 +16,17 @@ audit_logger.addHandler(handler)
 ROLES = {
     "citizen": {
         "scope": "own_complaints_only",
-        "can_access": ["/api/vira", "/api/issues", "/api/notifications"],
+        "can_access": ["/api/vira", "/api/issues", "/api/notifications", "/api/loop"],
         "cannot_access": ["/api/fleet", "/api/commander", "/api/oracle"]
     },
     "bmc_supervisor": {
         "scope": "own_mc_only",
-        "can_access": ["/api/issues", "/api/commander", "/api/workers"],
+        "can_access": ["/api/issues", "/api/commander", "/api/workers", "/api/loop"],
         "cannot_access": ["/api/oracle", "/api/fleet/compare"]
     },
     "field_worker": {
         "scope": "assigned_tasks_only",
-        "can_access": ["/api/tasks", "/api/field-copilot"],
+        "can_access": ["/api/tasks", "/api/field-copilot", "/api/loop"],
         "cannot_access": ["/api/commander", "/api/fleet", "/api/oracle"]
     },
     "state_official": {

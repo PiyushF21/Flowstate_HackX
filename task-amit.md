@@ -180,16 +180,16 @@
 
 ## Phase 4: Individual Agent Testing (Day 2 — PARALLEL with Yash's dashboards)
 
-- [ ] Test LOOP verify flow: approved → resolved + citizen notified
-- [ ] Test LOOP verify flow: rejected → back to in_progress
-- [ ] Test LOOP feedback → worker rating rolling average updated
-- [ ] Test LOOP re-report detection with close GPS coordinates
-- [ ] Test ORACLE fund allocation → sensible amounts per MC
-- [ ] Test ORACLE approval with modifications → validates total
-- [ ] Test FIELD_COPILOT chat → precise technical responses
-- [ ] Verify seed data consistency one final time
-- [ ] Fix any bugs found
-- [ ] Commit: `fix(backend): LOOP, ORACLE, FIELD_COPILOT tested + fixed`
+- [x] Test LOOP verify flow: approved → resolved + citizen notified
+- [x] Test LOOP verify flow: rejected → back to in_progress
+- [x] Test LOOP feedback → worker rating rolling average updated
+- [x] Test LOOP re-report detection with close GPS coordinates
+- [x] Test ORACLE fund allocation → sensible amounts per MC
+- [x] Test ORACLE approval with modifications → validates total
+- [x] Test FIELD_COPILOT chat → precise technical responses
+- [x] Verify seed data consistency one final time
+- [x] Fix any bugs found
+- [x] Commit: `fix(backend): LOOP, ORACLE, FIELD_COPILOT tested + fixed`
 
 ---
 

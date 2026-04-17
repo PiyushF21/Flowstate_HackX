@@ -37,3 +37,19 @@ async def generate_fund_allocations() -> list[FundAllocation]:
         allocations.append(alloc)
         
     return allocations
+
+async def approve_fund_allocation(allocation_id: str, approved_by: str, modifications: dict = {}) -> dict:
+    return {"status": "approved", "allocation_id": allocation_id, "approved_by": approved_by, "modifications": modifications}
+
+async def recommend_resource_allocation() -> list:
+    return [{"mc": "BMC Mumbai", "equipment_need": "Excavator", "priority": "High"}]
+
+async def approve_resource_allocation(recommendation_id: str, approved_by: str, action: str) -> dict:
+    return {"status": "actioned", "recommendation_id": recommendation_id, "action": action}
+
+async def get_budget_tracker() -> dict:
+    return {
+        "total_state_budget": 50000000.0,
+        "allocated": 12500000.0,
+        "remaining": 37500000.0
+    }
