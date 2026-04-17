@@ -1,58 +1,74 @@
 [
   {
     "issue_id": "ISS-MUM-2026-04-17-0001",
-    "source": "car_sensor",
+    "source": "manual_complaint",
     "category": "roads",
     "subcategory": "pothole",
-    "severity": "CRITICAL",
+    "severity": "HIGH",
     "confidence": 0.0,
-    "status": "assigned",
+    "status": "resolved",
     "location": {
       "lat": 19.1196,
       "lng": 72.8467,
-      "address": "Andheri West",
+      "address": "Powai Lake Gate 2",
       "city": "Mumbai",
-      "ward": "K-West",
+      "ward": "S-Ward",
       "pincode": null
     },
-    "description": "Pothole detected on road segment WEH-KM-14 in Andheri West, Mumbai (K-West ward). Indicated by suspension event trigger and high vertical acceleration (y: 4.8g) at 45.2 km/h speed.",
+    "description": "Pothole detected on road surface via AI Vision analysis fallback classification.",
     "ai_classification": null,
-    "reporter": null,
-    "images": [],
+    "reporter": {
+      "reporter_id": "citizen_aarav",
+      "reporter_name": "Aarav Mehta",
+      "contact": null
+    },
+    "images": [
+      "/uploads/79483d43d1814a5d8c26feda3cb42329.jpg"
+    ],
     "assigned_to": {
-      "worker_id": "WRK-MUM-003",
-      "worker_name": "Manoj Yadav",
+      "worker_id": "WRK-MUM-001",
+      "worker_name": "Ganesh Patil",
       "team": [],
-      "assigned_at": "2026-04-17T20:21:37.802764+00:00",
+      "assigned_at": "2026-04-17T22:11:09.207565+00:00",
       "assigned_by": "COMMANDER"
     },
     "procedure": [
-      "1. Secure the site: Deploy traffic cones, barriers, and warning signs around the pothole area on WEH-KM-14. Assign flagmen for traffic diversion if necessary, especially during peak hours in Andheri West. Ensure all workers wear high-visibility vests, helmets, and PPE.",
-      "2. Assess and prepare the pothole: Measure the pothole dimensions (depth, width, length). Use a pavement saw to cut clean, vertical edges forming a square or rectangular shape extending 15-20 cm beyond visible damage. Remove all loose debris, water, and deteriorated material using brooms, compressed air blowers, or vacuum equipment.",
-      "3. Clean and prime: Thoroughly clean the prepared cavity. Apply a tack coat of bituminous emulsion evenly to the sides and bottom to ensure bonding.",
-      "4. Fill the pothole: Heat and place hot mix asphalt (HMA) into the cavity, overfilling by about 10-15% to account for compaction. Use a paver or manually place the mix for even distribution.",
-      "5. Compact the fill: Initially compact with hand tampers or plate compactors, followed by multiple passes with a vibratory roller (minimum 8-10 tonne) until no further densification occurs and the surface is level with the surrounding road.",
-      "6. Surface check and seal: Verify the patch is flush with the road surface and free of defects. Apply a fog seal or surface dressing if required for weather protection in Mumbai's humid climate.",
-      "7. Cleanup and reopen: Remove all equipment, debris, and traffic controls. Sweep the area and reopen the lane to traffic. Document the repair with photos and report to K-West ward authorities."
+      "1. Establish traffic control: Set up cones, barricades, and warning signs to secure the work area and protect workers and motorists.",
+      "2. Assess and mark the pothole: Outline the pothole and extend cuts 6-12 inches beyond edges using a pavement saw to create square edges for better bonding.",
+      "3. Clean the pothole: Remove all water, debris, and loose material using brooms, shovels, and compressed air. Ensure the area is dry.",
+      "4. Apply tack coat: Spray or brush asphalt emulsion tack coat on the cleaned surface and edges to promote adhesion.",
+      "5. Prepare and place hot mix asphalt (HMA): Heat HMA to 300-350\u00b0F if using infrared method, or use fresh hot mix. Fill the pothole in 2-3 inch lifts, overfilling slightly.",
+      "6. Compact the fill: Use a vibratory plate compactor to achieve 95% density, compacting each lift thoroughly with multiple passes in different directions.",
+      "7. Apply surface seal (optional for high severity): Apply a thin layer of seal coat or slurry to protect the repair.",
+      "8. Clean up: Remove excess material, sweep the surface, and restore traffic control devices. Inspect for smoothness and safety."
     ],
-    "deadline": "2026-04-18T00:21:37.802764+00:00",
+    "deadline": "2026-04-18T10:11:09.207565+00:00",
     "materials_required": [
-      "Traffic cones (20+), barriers, reflective warning signs, high-visibility vests, helmets, gloves (PPE for 4-6 workers)",
+      "Traffic cones and barricades",
+      "Warning signs and reflective vests",
+      "PPE (gloves, safety glasses, hard hats)",
       "Pavement saw or concrete cutter",
-      "Brooms, compressed air blower or vacuum cleaner",
-      "Bituminous emulsion tack coat (20-50 liters, depending on pothole size)",
-      "Hot mix asphalt (HMA) - estimate 0.5-2 cubic meters based on pothole volume (e.g., for 1m x 1m x 0.3m deep)",
-      "Plate compactor, vibratory road roller (8-10 tonne)",
-      "Hand tampers",
-      "Fog seal or bitumen spray (optional, 10-20 liters)",
-      "Cleaning solvents, waste bags"
+      "Brooms, shovels, and compressed air blower",
+      "Asphalt emulsion tack coat",
+      "Hot mix asphalt (HMA), approximately 1.5 times the pothole volume",
+      "Vibratory plate compactor",
+      "Surface seal coat or slurry (optional)",
+      "Infrared heater (for permanent bond if ambient temp <50\u00b0F)"
     ],
-    "completion": null,
-    "resolution_time_hours": null,
-    "sla_met": null,
-    "citizen_notified": false,
-    "created_at": "2026-04-17T20:21:25.418705+00:00",
-    "updated_at": "2026-04-17T20:21:25.418705+00:00"
+    "completion": {
+      "completed_at": "",
+      "proof_images": [
+        "/uploads/647db63eb5724b8a9ba9e6d94a82c8fc.jpeg",
+        "/uploads/dcfcd735800a45e58c356f288278ece5.png"
+      ],
+      "verified_by": "SYSTEM_AUTOVERIFY",
+      "verified_at": "2026-04-17T22:13:43.369588+00:00"
+    },
+    "resolution_time_hours": 0.04665657333333333,
+    "sla_met": true,
+    "citizen_notified": true,
+    "created_at": "2026-04-17T22:10:55.405924+00:00",
+    "updated_at": "2026-04-17T22:13:43.385115+00:00"
   },
   {
     "issue_id": "ISS-MUM-2026-04-17-0002",
@@ -121,7 +137,7 @@
     "subcategory": "pothole",
     "severity": "CRITICAL",
     "confidence": 0.0,
-    "status": "in_progress",
+    "status": "resolved",
     "location": {
       "lat": 19.1196,
       "lng": 72.8467,
@@ -169,12 +185,20 @@
       "Broom for final cleanup",
       "Camera or smartphone for documentation"
     ],
-    "completion": null,
-    "resolution_time_hours": null,
-    "sla_met": null,
+    "completion": {
+      "completed_at": "",
+      "proof_images": [
+        "/uploads/2997e7affb504dacb971fbb39dc836b3.jpeg",
+        "/uploads/a7c20337b2d34d73946f5946ca939889.jpeg"
+      ],
+      "verified_by": "SYSTEM_AUTOVERIFY",
+      "verified_at": "2026-04-17T22:07:15.351762+00:00"
+    },
+    "resolution_time_hours": 1.5556727736111111,
+    "sla_met": true,
     "citizen_notified": false,
     "created_at": "2026-04-17T20:33:54.929777+00:00",
-    "updated_at": "2026-04-17T21:32:00.598346+00:00"
+    "updated_at": "2026-04-17T22:07:15.352764+00:00"
   },
   {
     "issue_id": "ISS-MUM-2026-04-17-0004",

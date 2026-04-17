@@ -16,7 +16,7 @@ audit_logger.addHandler(handler)
 ROLES = {
     "citizen": {
         "scope": "own_complaints_only",
-        "can_access": ["/api/vira", "/api/issues", "/api/notifications", "/api/loop", "/api/nexus/process", "/api/cognos"],
+        "can_access": ["/api/vira", "/api/issues", "/api/notifications", "/api/loop", "/api/nexus/process", "/api/cognos", "/api/upload"],
         "cannot_access": ["/api/fleet", "/api/commander", "/api/oracle", "/api/sentinel"]
     },
     "bmc_supervisor": {
@@ -26,7 +26,7 @@ ROLES = {
     },
     "field_worker": {
         "scope": "assigned_tasks_only",
-        "can_access": ["/api/issues", "/api/field-copilot", "/api/loop", "/api/nexus", "/api/notifications"],
+        "can_access": ["/api/issues", "/api/field-copilot", "/api/loop", "/api/nexus", "/api/notifications", "/api/upload"],
         "cannot_access": ["/api/commander/assign", "/api/fleet", "/api/oracle"]
     },
     "state_official": {
@@ -43,9 +43,9 @@ ROLES = {
 
 class SentinelMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
-        # We skip checking health/docs endpoints and CORS preflight
+        # We skip checking health/docs endpoints, CORS preflight, and static uploads
         path = request.url.path
-        if path.startswith("/docs") or path.startswith("/openapi.json") or path == "/api/health" or path.startswith("/ws/"):
+        if path.startswith("/docs") or path.startswith("/openapi.json") or path == "/api/health" or path.startswith("/ws/") or path.startswith("/uploads/"):
             return await call_next(request)
         
         # CORS preflight (OPTIONS) must always pass — browser sends no custom headers

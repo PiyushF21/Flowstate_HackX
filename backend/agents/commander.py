@@ -54,6 +54,7 @@ def score_worker(worker: Worker, issue: Issue) -> float:
 async def find_best_worker(issue: Issue) -> Optional[Worker]:
     workers = await data_store.list_workers()
     # Demo Override: Always assign to Ganesh Patil (WRK-MUM-001) for the demo
+    # We return him regardless of his current status (on_task/available)
     for worker in workers:
         if worker.worker_id == "WRK-MUM-001":
             return worker

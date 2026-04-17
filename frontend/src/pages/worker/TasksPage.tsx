@@ -10,6 +10,8 @@ import { useApi } from '../../hooks/useApi'
 import { useAuth } from '../../context/AuthContext'
 import { cn } from '../../lib/utils'
 
+const API_BASE = import.meta.env.VITE_API_URL || 'http://localhost:8000'
+
 // Fallback worker ID for demo — in production this would come from auth token
 const DEMO_WORKER_ID = 'WRK-MUM-001'
 
@@ -40,7 +42,9 @@ export default function TasksPage() {
             deadline: t.deadline,
             procedure: t.procedure || [],
             materials: t.materials_required || [],
-            team: t.assigned_to?.team || []
+            team: t.assigned_to?.team || [],
+            images: t.images || [],
+            completion: t.completion || null
           })))
         }
       } catch (error) {
@@ -170,6 +174,53 @@ export default function TasksPage() {
                 </div>
               </div>
             )}
+
+            {/* Before & After Photos */}
+            {(selectedTask.images && selectedTask.images.length > 0) || (selectedTask.completion?.proof_images && selectedTask.completion.proof_images.length > 0) ? (
+              <div className="rounded-xl border border-border bg-surface-elevated p-3">
+                <p className="text-sm font-medium text-text-primary mb-3">📷 Before & After</p>
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Before (citizen photos) */}
+                  <div>
+                    <p className="text-[10px] text-text-muted mb-1.5 font-semibold uppercase tracking-wider">Before</p>
+                    {selectedTask.images && selectedTask.images.length > 0 ? (
+                      <div className="space-y-2">
+                        {selectedTask.images.map((img, i) => (
+                          <img
+                            key={i}
+                            src={img.startsWith('http') ? img : `${API_BASE}${img}`}
+                            alt={`Before ${i + 1}`}
+                            className="w-full aspect-[4/3] object-cover rounded-lg border border-border"
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="w-full aspect-[4/3] rounded-lg bg-surface-hover flex items-center justify-center text-text-muted text-xs">No photo</div>
+                    )}
+                  </div>
+                  {/* After (worker proof) */}
+                  <div>
+                    <p className="text-[10px] text-text-muted mb-1.5 font-semibold uppercase tracking-wider">After</p>
+                    {selectedTask.completion?.proof_images && selectedTask.completion.proof_images.length > 0 ? (
+                      <div className="space-y-2">
+                        {selectedTask.completion.proof_images.map((img, i) => (
+                          <img
+                            key={i}
+                            src={img.startsWith('http') ? img : `${API_BASE}${img}`}
+                            alt={`After ${i + 1}`}
+                            className="w-full aspect-[4/3] object-cover rounded-lg border border-border"
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="w-full aspect-[4/3] rounded-lg bg-surface-hover flex items-center justify-center text-text-muted text-xs">
+                        {selectedTask.status === 'resolved' ? 'No proof' : 'Pending'}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ) : null}
 
             {/* Proof Upload */}
             {showProof && <ProofUpload onSubmit={handleProofSubmit} />}

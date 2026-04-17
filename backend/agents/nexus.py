@@ -88,6 +88,7 @@ async def node_commander(state: AgentState):
         description=state["classification"].get("description", ""),
         location=Location(**state["location"]),
         reporter=reporter,
+        images=state["raw_data"].get("images", []),
         created_at=datetime.now(timezone.utc).isoformat(),
         updated_at=datetime.now(timezone.utc).isoformat()
     )

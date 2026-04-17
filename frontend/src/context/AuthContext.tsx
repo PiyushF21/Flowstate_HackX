@@ -49,7 +49,7 @@ export const ROLE_META: Record<UserRole, { label: string; description: string; i
     description: 'View tasks, follow procedures, AI assistant',
     icon: '👷',
     demoUser: 'Ganesh Patil',
-    demoUserId: 'WRK-MUM-015',
+    demoUserId: 'WRK-MUM-001',
     color: '#10B981',
   },
   state_official: {

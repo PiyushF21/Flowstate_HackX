@@ -15,8 +15,10 @@ Phase 3 (Piyush):
 - VIRA, GUARDIAN, PRESCIENT, FLEET routers
 """
 
+import os
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
 
 from config import settings
@@ -25,7 +27,7 @@ from ws_manager import ws_manager
 from routers import (
     issues_router, nexus_router, cognos_router, 
     commander_router, sentinel_router, loop_router, 
-    oracle_router, field_copilot_router
+    oracle_router, field_copilot_router, upload_router
 )
 from routers.vira_router import router as vira_router
 from routers.guardian_router import router as guardian_router
@@ -42,6 +44,9 @@ async def lifespan(app: FastAPI):
     """Lifecycle hook for startup and shutdown events."""
     print("[NEXUS] Booting InfraLens data layer...")
     data_store.load_seed_data()
+    # Ensure uploads directory exists
+    uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
+    os.makedirs(uploads_dir, exist_ok=True)
     yield
     print("[NEXUS] Shutting down InfraLens...")
 
@@ -82,6 +87,14 @@ app.include_router(sentinel_router.router)
 app.include_router(loop_router.router)
 app.include_router(oracle_router.router)
 app.include_router(field_copilot_router.router)
+app.include_router(upload_router.router)
+
+# ---------------------------------------------------------------------------
+# Static file serving for uploaded images
+# ---------------------------------------------------------------------------
+uploads_path = os.path.join(os.path.dirname(__file__), "uploads")
+os.makedirs(uploads_path, exist_ok=True)
+app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
 # ---------------------------------------------------------------------------
 # Register routers — Piyush's agent routers
@@ -117,3 +130,4 @@ async def health_check():
         "agent": "InfraLens",
         "version": "0.2.0",
     }
+# trigger restart

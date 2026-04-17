@@ -128,6 +128,20 @@ export default function ReportPage() {
     if (!selectedCategory) return
     setIsSubmitting(true)
     try {
+      // Upload image first if one exists
+      let uploadedImages: string[] = []
+      if (imageBase64) {
+        try {
+          const uploadResp = await fetchApi<{ url: string }>('/api/upload/base64', {
+            method: 'POST',
+            body: { image_base64: imageBase64 }
+          })
+          uploadedImages = [uploadResp.url]
+        } catch (uploadErr) {
+          console.error("Image upload failed, continuing without image", uploadErr)
+        }
+      }
+
       const resp = await fetchApi<{ data: { issue_id: string } }>('/api/nexus/process', {
         method: 'POST',
         body: {
@@ -140,6 +154,7 @@ export default function ReportPage() {
             user_id: user?.id || 'citizen_anon',
             reporter_name: user?.userName || 'Anonymous',
             has_image: !!imageBase64,
+            images: uploadedImages,
           },
           location: { lat: 19.1196, lng: 72.8467, address: 'Powai Lake Gate 2', city: 'Mumbai', ward: 'S-Ward' }
         }

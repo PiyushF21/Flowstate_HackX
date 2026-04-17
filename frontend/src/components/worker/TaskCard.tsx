@@ -17,6 +17,8 @@ export interface TaskData {
   procedure?: string[]
   materials?: string[]
   team?: Array<{ name: string; role: string }>
+  images?: string[]
+  completion?: { proof_images?: string[]; verified_by?: string; verified_at?: string }
 }
 
 interface TaskCardProps {
