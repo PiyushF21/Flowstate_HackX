@@ -33,103 +33,104 @@
 
 ---
 
-## Phase 3: Complete All 4 Agents + Routers (Day 1–2 — PARALLEL with all)
+## Phase 3: Complete All 4 Agents + Routers (Day 1-2 -- PARALLEL with all)
 
-- [ ] Verify: `pip install -r requirements.txt` succeeds
-- [ ] Verify: `uvicorn main:app --reload` runs
+- [x] Verify: `pip install -r requirements.txt` succeeds
+- [x] Verify: `uvicorn main:app --reload` runs
 
 ### VIRA Agent (`agents/vira.py`)
-- [ ] Complete `agents/vira.py` file with all imports
-- [ ] Implement `detect_mode(message)` — classify as report/query/general
-- [ ] Implement report mode: `extract_complaint_data(message)` with LLM prompt template
-- [ ] Implement report mode: `create_issue_from_chat(extracted_data, user_id)`
-- [ ] Implement query mode: `handle_status_query(message, user_id)`
-- [ ] Implement general mode: `handle_general(message)`
-- [ ] Implement main `chat(user_id, message, session_history)` entry point
-- [ ] Implement chat session history management (in-memory dict)
-- [ ] Create LangChain prompt templates (REPORT_EXTRACTION, STATUS_RESPONSE)
-- [ ] Test: "There's a pothole near Andheri" → extracts category=roads, subcategory=pothole
-- [ ] Test: "What's the status of my complaint?" → returns issue status
-- [ ] Test: "What is InfraLens?" → general response
+- [x] Complete `agents/vira.py` file with all imports
+- [x] Implement `detect_mode(message)` -- classify as report/query/general
+- [x] Implement report mode: `extract_complaint_data(message)` with LLM prompt template
+- [x] Implement report mode: `create_issue_from_chat(extracted_data, user_id)`
+- [x] Implement query mode: `handle_status_query(message, user_id)`
+- [x] Implement general mode: `handle_general(message)`
+- [x] Implement main `chat(user_id, message, session_history)` entry point
+- [x] Implement chat session history management (in-memory dict)
+- [x] Create LangChain prompt templates (REPORT_EXTRACTION, STATUS_RESPONSE)
+- [x] Test: "There's a pothole near Andheri" -> extracts category=roads, subcategory=pothole
+- [x] Test: "What's the status of my complaint?" -> returns issue status
+- [x] Test: "What is InfraLens?" -> general response
 
 ### VIRA Router (`routers/vira_router.py`)
-- [ ] Create `routers/vira_router.py`
-- [ ] Implement `POST /api/vira/chat` — body: { user_id, message }
-- [ ] Implement `POST /api/vira/voice` — body: { user_id, transcribed_text }
-- [ ] Verify: both endpoints return correct responses
+- [x] Create `routers/vira_router.py`
+- [x] Implement `POST /api/vira/chat` -- body: { user_id, message }
+- [x] Implement `POST /api/vira/voice` -- body: { user_id, transcribed_text }
+- [x] Verify: both endpoints return correct responses
 
 ### GUARDIAN Agent (`agents/guardian.py`)
-- [ ] Complete `agents/guardian.py` file with all imports
-- [ ] Define OVERDUE_THRESHOLDS (CRITICAL: 30min, HIGH: 4h, MEDIUM: 8h, LOW: 24h)
-- [ ] Implement `check_overdue_tasks()` — scan active issues vs deadlines
-- [ ] Implement `check_mc_performance()` — calculate MC resolution rates
-- [ ] Implement `check_repeated_failures(gps, radius_m, days)` — find 3+ re-reports
-- [ ] Implement `check_worker_idle(worker_id)` — GPS movement check
-- [ ] Implement `auto_escalate_critical()` — auto-flag CRITICAL issues past SLA
-- [ ] Implement `escalate(issue_id, escalated_by)` — manual state escalation + WebSocket broadcast
-- [ ] Implement `generate_alert(issue, alert_type)` — structured alert object
-- [ ] Implement `run_monitoring_cycle()` — run all checks, broadcast alerts
-- [ ] Test: create overdue issue → check_overdue_tasks returns it
-- [ ] Test: escalate() updates issue + broadcasts
+- [x] Complete `agents/guardian.py` file with all imports
+- [x] Define OVERDUE_THRESHOLDS (CRITICAL: 30min, HIGH: 4h, MEDIUM: 8h, LOW: 24h)
+- [x] Implement `check_overdue_tasks()` -- scan active issues vs deadlines
+- [x] Implement `check_mc_performance()` -- calculate MC resolution rates
+- [x] Implement `check_repeated_failures(gps, radius_m, days)` -- find 3+ re-reports
+- [x] Implement `check_worker_idle(worker_id)` -- GPS movement check
+- [x] Implement `auto_escalate_critical()` -- auto-flag CRITICAL issues past SLA
+- [x] Implement `escalate(issue_id, escalated_by)` -- manual state escalation + WebSocket broadcast
+- [x] Implement `generate_alert(issue, alert_type)` -- structured alert object
+- [x] Implement `run_monitoring_cycle()` -- run all checks, broadcast alerts
+- [x] Test: create overdue issue -> check_overdue_tasks returns it
+- [x] Test: escalate() updates issue + broadcasts
 
 ### GUARDIAN Router (`routers/guardian_router.py`)
-- [ ] Create `routers/guardian_router.py`
-- [ ] Implement `GET /api/guardian/alerts` — returns active alerts
-- [ ] Implement `POST /api/guardian/escalate` — body: { issue_id, escalated_by }
-- [ ] Implement `GET /api/guardian/overdue` — returns overdue tasks
-- [ ] Verify: all endpoints return correct data
+- [x] Create `routers/guardian_router.py`
+- [x] Implement `GET /api/guardian/alerts` -- returns active alerts
+- [x] Implement `POST /api/guardian/escalate` -- body: { issue_id, escalated_by }
+- [x] Implement `GET /api/guardian/overdue` -- returns overdue tasks
+- [x] Verify: all endpoints return correct data
 
 ### PRESCIENT Agent (`agents/prescient.py`)
-- [ ] Create `agents/prescient.py` file
-- [ ] Implement `generate_daily_report(mc_id, date)`
-- [ ] — Aggregate issues_received, resolved, pending, overdue from data_store
-- [ ] — Calculate by_category breakdown
-- [ ] — Calculate by_severity breakdown
-- [ ] — Find worst_wards (top 3 by pending)
-- [ ] — Calculate worker_utilization_pct
-- [ ] — Calculate avg_resolution_time_hours
-- [ ] — Generate AI narrative via Grok (or mock)
-- [ ] — Return DailyReport model
-- [ ] Implement `generate_weekly_digest()` — state-level cross-MC summary
-- [ ] Implement `generate_forecast(mc_id)` — predictive warnings
-- [ ] Create DAILY_NARRATIVE_PROMPT template
-- [ ] Test: daily report for BMC Mumbai has correct metrics
-- [ ] Test: narrative is coherent
+- [x] Create `agents/prescient.py` file
+- [x] Implement `generate_daily_report(mc_id, date)`
+- [x] -- Aggregate issues_received, resolved, pending, overdue from data_store
+- [x] -- Calculate by_category breakdown
+- [x] -- Calculate by_severity breakdown
+- [x] -- Find worst_wards (top 3 by pending)
+- [x] -- Calculate worker_utilization_pct
+- [x] -- Calculate avg_resolution_time_hours
+- [x] -- Generate AI narrative via Grok (or mock)
+- [x] -- Return DailyReport model
+- [x] Implement `generate_weekly_digest()` -- state-level cross-MC summary
+- [x] Implement `generate_forecast(mc_id)` -- predictive warnings
+- [x] Create DAILY_NARRATIVE_PROMPT template
+- [x] Test: daily report for BMC Mumbai has correct metrics
+- [x] Test: narrative is coherent
 
 ### PRESCIENT Router (`routers/prescient_router.py`)
-- [ ] Create `routers/prescient_router.py`
-- [ ] Implement `GET /api/prescient/daily/{mc_id}`
-- [ ] Implement `GET /api/prescient/weekly`
-- [ ] Implement `GET /api/prescient/forecast/{mc_id}`
-- [ ] Implement `POST /api/prescient/generate` — manual trigger
-- [ ] Verify: daily report endpoint returns full report structure
+- [x] Create `routers/prescient_router.py`
+- [x] Implement `GET /api/prescient/daily/{mc_id}`
+- [x] Implement `GET /api/prescient/weekly`
+- [x] Implement `GET /api/prescient/forecast/{mc_id}`
+- [x] Implement `POST /api/prescient/generate` -- manual trigger
+- [x] Verify: daily report endpoint returns full report structure
 
 ### FLEET Agent (`agents/fleet.py`)
-- [ ] Create `agents/fleet.py` file
-- [ ] Implement `detect_geographic_clusters(radius_m, min_count, days)`
-- [ ] Implement `detect_seasonal_trends()`
-- [ ] Implement `detect_category_anomalies(threshold_pct)`
-- [ ] Implement `compare_mc_performance()` — rank MCs by metrics
-- [ ] Implement `detect_recurrence(days)` — find repeat GPS reports
-- [ ] Implement `generate_insights()` — aggregate all detections + Grok summary
-- [ ] Test: cluster detection finds dense areas in seed data
-- [ ] Test: MC comparison returns ranked list
+- [x] Create `agents/fleet.py` file
+- [x] Implement `detect_geographic_clusters(radius_m, min_count, days)`
+- [x] Implement `detect_seasonal_trends()`
+- [x] Implement `detect_category_anomalies(threshold_pct)`
+- [x] Implement `compare_mc_performance()` -- rank MCs by metrics
+- [x] Implement `detect_recurrence(days)` -- find repeat GPS reports
+- [x] Implement `generate_insights()` -- aggregate all detections + Grok summary
+- [x] Test: cluster detection finds dense areas in seed data
+- [x] Test: MC comparison returns ranked list
 
 ### FLEET Router (`routers/fleet_router.py`)
-- [ ] Create `routers/fleet_router.py`
-- [ ] Implement `GET /api/fleet/patterns`
-- [ ] Implement `GET /api/fleet/insights`
-- [ ] Implement `GET /api/fleet/compare`
-- [ ] Implement `GET /api/fleet/trends`
-- [ ] Verify: all endpoints return correct data
+- [x] Create `routers/fleet_router.py`
+- [x] Implement `GET /api/fleet/patterns`
+- [x] Implement `GET /api/fleet/insights`
+- [x] Implement `GET /api/fleet/compare`
+- [x] Implement `GET /api/fleet/trends`
+- [x] Verify: all endpoints return correct data
 
 ### Final Phase 3 Checks
-- [ ] All 4 agents import and initialize without errors
-- [ ] All 4 routers have correct endpoints
-- [ ] Each agent tested individually with mock/seed data
-- [ ] No imports from files you don't own (use data_store, models, config only)
+- [x] All 4 agents import and initialize without errors
+- [x] All 4 routers have correct endpoints
+- [x] Each agent tested individually with mock/seed data
+- [x] No imports from files you don't own (use data_store, models, config only)
 - [ ] Commit: `feat(backend): agents VIRA, GUARDIAN, PRESCIENT, FLEET with routers`
 - [ ] Push branch and create PR for Stavan to merge
+
 
 ---
 

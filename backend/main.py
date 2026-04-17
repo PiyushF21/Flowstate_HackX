@@ -20,50 +20,48 @@ from config import settings
 from data_store import data_store
 from ws_manager import ws_manager
 from routers import issues_router
-from middleware.sentinel_middleware import SentinelMiddleware
-
-# ---------------------------------------------------------------------------
-# App Lifespan (Startup / Shutdown)
-# ---------------------------------------------------------------------------
-@asynccontextmanager
-async def lifespan(app: FastAPI):
-    """Lifecycle hook for startup and shutdown events."""
-    print("[NEXUS] Booting InfraLens data layer...")
-    data_store.load_seed_data()
-    yield
-    print("[NEXUS] Shutting down InfraLens...")
+from routers.vira_router import router as vira_router
+from routers.guardian_router import router as guardian_router
+from routers.prescient_router import router as prescient_router
+from routers.fleet_router import router as fleet_router
 
 # ---------------------------------------------------------------------------
 # App initialization
 # ---------------------------------------------------------------------------
 app = FastAPI(
     title="InfraLens",
-    description="Engineered by Flowstate — Civic Intelligence Platform",
-    version="0.1.0",
-    lifespan=lifespan
+    description="AI-Powered Civic Infrastructure Intelligence Platform",
+    version="0.2.0",
 )
 
 # ---------------------------------------------------------------------------
-# Middlewares (Order matters: Execution is outer -> inner)
-# CORS acts first to allow preflights. Then Sentinel authenticates/audits.
+# CORS — allow frontend dev server
 # ---------------------------------------------------------------------------
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        settings.FRONTEND_ORIGIN,
-        "http://localhost:5173",
+        settings.FRONTEND_ORIGIN,  # http://localhost:5173
+        "http://localhost:5173",     # explicit fallback
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-app.add_middleware(SentinelMiddleware)
+# ---------------------------------------------------------------------------
+# Startup event — load seed data
+# ---------------------------------------------------------------------------
+@app.on_event("startup")
+async def startup():
+    data_store.load_seed_data()
 
 # ---------------------------------------------------------------------------
-# Routers
+# Register routers
 # ---------------------------------------------------------------------------
-app.include_router(issues_router.router)
+app.include_router(vira_router)
+app.include_router(guardian_router)
+app.include_router(prescient_router)
+app.include_router(fleet_router)
 
 # ---------------------------------------------------------------------------
 # WebSockets
