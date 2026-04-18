@@ -18,11 +18,19 @@ from collections import Counter, defaultdict
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from langchain_xai import ChatXAI
+from langchain_core.messages import SystemMessage, HumanMessage
 from models import DailyReport, AgentEvent
 from data_store import data_store
 from config import settings
 
 IST = timezone(timedelta(hours=5, minutes=30))
+
+llm = ChatXAI(
+    xai_api_key=settings.XAI_API_KEY,
+    model="grok-4-1-fast-reasoning",
+    temperature=0.4
+)
 
 # =============================================================================
 # PROMPT TEMPLATES
@@ -125,11 +133,30 @@ async def generate_daily_report(mc_name: str, date: str = None) -> dict:
     # Top category
     top_cat = max(by_category, key=lambda c: by_category[c]["total"]) if by_category else "N/A"
 
-    # Generate narrative (rule-based; will use Grok when API key available)
-    narrative = _generate_narrative_rule_based(
-        mc_name, date, total, len(resolved), len(pending), len(overdue),
-        resolution_rate, avg_res_hours, top_cat, worst_wards, sla_compliance
+    prompt_content = DAILY_NARRATIVE_PROMPT.format(
+        mc_name=mc_name,
+        date=date,
+        received=total,
+        resolved=len(resolved),
+        pending=len(pending),
+        overdue=len(overdue),
+        resolution_rate=resolution_rate,
+        avg_hours=avg_res_hours,
+        top_category=top_cat,
+        worst_wards=", ".join(worst_wards) if worst_wards else "None"
     )
+
+    try:
+        response = await llm.ainvoke([HumanMessage(content=prompt_content)])
+        narrative = str(response.content)
+        import re
+        narrative = re.sub(r'<think>.*?</think>', '', narrative, flags=re.DOTALL).strip()
+    except Exception as e:
+        print(f"[PRESCIENT] Grok LLM failed to generate report narrative: {e}")
+        narrative = _generate_narrative_rule_based(
+            mc_name, date, total, len(resolved), len(pending), len(overdue),
+            resolution_rate, avg_res_hours, top_cat, worst_wards, sla_compliance
+        )
 
     now = datetime.now(IST)
     report_id = f"RPT-{mc_name[:3].upper()}-{date}"

@@ -138,7 +138,7 @@ async def synthesize_speech(text: str, language: str = "en") -> TTSResponse:
         "inputs": [text],
         "target_language_code": sarvam_code,
         "speaker": "meera",
-        "model": "bulbul:v1",
+        "model": "bulbul:v2",
     }
     headers = {
         "api-subscription-key": settings.SARVAM_API_KEY,
@@ -178,8 +178,8 @@ async def translate_text(text: str, source_lang: str, target_lang: str) -> str:
         "input": text,
         "source_language_code": source_config["sarvam_code"],
         "target_language_code": target_config["sarvam_code"],
-        "model": "mayura:v1",
-        "mode": "classic-colloquial",
+        "model": "sarvam-translate",
+        "mode": "formal",
     }
     headers = {
         "api-subscription-key": settings.SARVAM_API_KEY,

@@ -15,6 +15,7 @@ class AnalyzeRequest(BaseModel):
 
 class ImageAnalyzeRequest(BaseModel):
     image_base64: str
+    filename: Optional[str] = None
     lat: Optional[float] = 19.076
     lng: Optional[float] = 72.8777
 
@@ -28,7 +29,7 @@ async def api_analyze_sensor(req: AnalyzeRequest):
 async def api_analyze_image(req: ImageAnalyzeRequest):
     """Analyze an uploaded image using COGNOS Vision (Grok Vision or fallback)."""
     try:
-        result = await llm_analyze_image(req.image_base64)
+        result = await llm_analyze_image(req.image_base64, req.filename)
         return {
             "status": "success",
             "agent": "COGNOS",

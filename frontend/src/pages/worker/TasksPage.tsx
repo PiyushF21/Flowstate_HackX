@@ -135,7 +135,10 @@ export default function TasksPage() {
             <div>
               <p className="text-sm font-medium text-text-primary mb-2">{selectedTask.location}</p>
               <MapView center={[19.076, 72.8777]} zoom={14} height="120px" markers={[{ id: '1', lat: 19.1196, lng: 72.8467, color: '#F97316' }]} />
-              <button className="mt-2 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-elevated border border-border text-xs text-text-primary hover:bg-surface-hover w-full justify-center">
+              <button 
+                onClick={() => window.open(`https://www.google.com/maps/search/?api=1&query=${19.1196},${72.8467}`, '_blank')}
+                className="mt-2 flex items-center gap-1.5 px-3 py-2 rounded-xl bg-surface-elevated border border-border text-xs text-text-primary hover:bg-surface-hover w-full justify-center"
+              >
                 <Navigation size={14} /> Open in Maps
               </button>
             </div>

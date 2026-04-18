@@ -1,4 +1,4 @@
-import { useState, useCallback, useRef } from 'react'
+import { useState, useCallback, useRef, useEffect } from 'react'
 import { Camera, Upload, Mic, CheckCircle2, Loader2, Image as ImageIcon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import CitizenLayout from '../../components/citizen/CitizenLayout'
@@ -41,6 +41,10 @@ export default function ReportPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [issueId, setIssueId] = useState<string | null>(null)
   const [isListening, setIsListening] = useState(false)
+  
+  const [location, setLocation] = useState<{lat: number, lng: number, address: string, city: string, ward: string}>({
+     lat: 19.2319, lng: 72.8485, address: 'Mount Poinsur, S.V.P. Road, Borivali West', city: 'Mumbai', ward: 'R-Central'
+  })
 
   const processImage = useCallback(async (file: File) => {
     // Show preview
@@ -58,7 +62,7 @@ export default function ReportPage() {
       try {
         const resp = await fetchApi<{ data: { category: string; subcategory: string; severity: string; description: string; confidence: number } }>('/api/cognos/analyze-image', {
           method: 'POST',
-          body: { image_base64: base64 }
+          body: { image_base64: base64, filename: file.name }
         })
         const aiData = resp.data
         setAiResult(aiData)
@@ -156,7 +160,7 @@ export default function ReportPage() {
             has_image: !!imageBase64,
             images: uploadedImages,
           },
-          location: { lat: 19.1196, lng: 72.8467, address: 'Powai Lake Gate 2', city: 'Mumbai', ward: 'S-Ward' }
+          location: location
         }
       })
       setIssueId(resp.data.issue_id)
@@ -301,9 +305,12 @@ export default function ReportPage() {
 
         {/* Location */}
         <div className="rounded-xl bg-surface-elevated border border-border p-3 mb-4">
-          <p className="text-sm font-medium text-text-primary mb-1">📍 Location</p>
-          <p className="text-xs text-text-secondary">Powai Lake Gate 2, Hiranandani Gardens</p>
-          <button className="text-[10px] text-primary mt-1 hover:underline">Edit location</button>
+          <p className="text-sm font-medium text-text-primary mb-1 flex items-center gap-2">
+            📍 Location
+          </p>
+          <p className="text-xs text-text-secondary">
+            {`${location.address}`}
+          </p>
         </div>
 
         {/* Description */}

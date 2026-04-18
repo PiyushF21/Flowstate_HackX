@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useApi } from '../../hooks/useApi'
 import { Search, Plus, Camera, PenSquare } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -21,6 +22,7 @@ const CATEGORIES = [
 ]
 
 export default function AreaMapPage() {
+  const navigate = useNavigate()
   const { fetchApi } = useApi()
   const [activeFilter, setActiveFilter] = useState('all')
   const [selectedIssue, setSelectedIssue] = useState<IssueData | null>(null)
@@ -167,10 +169,16 @@ export default function AreaMapPage() {
                   exit={{ opacity: 0, y: 10, scale: 0.9 }}
                   className="absolute bottom-14 right-0 flex flex-col gap-2 items-end"
                 >
-                  <button className="flex items-center gap-2 bg-surface-elevated border border-border rounded-xl px-3 py-2 text-sm text-text-primary shadow-lg hover:bg-surface-hover">
+                  <button 
+                    onClick={() => navigate('/citizen/report')}
+                    className="flex items-center gap-2 bg-surface-elevated border border-border rounded-xl px-3 py-2 text-sm text-text-primary shadow-lg hover:bg-surface-hover"
+                  >
                     <Camera size={16} /> Capture Hazard
                   </button>
-                  <button className="flex items-center gap-2 bg-surface-elevated border border-border rounded-xl px-3 py-2 text-sm text-text-primary shadow-lg hover:bg-surface-hover">
+                  <button 
+                    onClick={() => navigate('/citizen/report')}
+                    className="flex items-center gap-2 bg-surface-elevated border border-border rounded-xl px-3 py-2 text-sm text-text-primary shadow-lg hover:bg-surface-hover"
+                  >
                     <PenSquare size={16} /> File Complaint
                   </button>
                 </motion.div>

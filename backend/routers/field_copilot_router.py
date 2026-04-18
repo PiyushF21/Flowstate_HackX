@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from agents.field_copilot import (
     get_advice, CopilotResponse, CopilotChatRequest,
     TTSRequest, TTSResponse, synthesize_speech,
+    translate_text,
     SUPPORTED_LANGUAGES
 )
 
@@ -15,6 +16,23 @@ class LegacyCopilotRequest(BaseModel):
     worker_id: str
     issue_id: str
     message: str
+
+
+class TranslateRequest(BaseModel):
+    text: str
+    target_language: str
+    source_language: str = "en"
+
+
+@router.post("/translate")
+async def api_copilot_translate(req: TranslateRequest):
+    """Translate text using Sarvam AI."""
+    try:
+        translated = await translate_text(req.text, req.source_language, req.target_language)
+        return {"translated_text": translated}
+    except Exception as e:
+        print(f"[FIELD_COPILOT Translate] Error: {e}")
+        return JSONResponse(status_code=500, content={"error": f"Translation failed: {str(e)}"})
 
 
 @router.post("/chat", response_model=CopilotResponse)

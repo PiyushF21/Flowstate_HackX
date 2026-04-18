@@ -3,6 +3,7 @@ import BMCLayout from '../../components/bmc/BMCLayout'
 import ReportGenerator from '../../components/bmc/ReportGenerator'
 import { ChartBar, ChartLine, ChartDonut } from '../../components/shared/Chart'
 import { useApi } from '../../hooks/useApi'
+import { Bot, AlertTriangle, TrendingUp, ShieldAlert, CheckCircle } from 'lucide-react'
 
 const CATEGORY_COLORS: Record<string, string> = {
   roads: 'var(--primary)',
@@ -14,11 +15,18 @@ const CATEGORY_COLORS: Record<string, string> = {
   environment: '#6B7280',
 }
 
+interface ForecastWarning {
+  type: string
+  message: string
+  priority: 'HIGH' | 'MEDIUM' | 'LOW'
+}
+
 export default function ReportsPage() {
   const { fetchApi } = useApi()
   const [weeklyVol, setWeeklyVol] = useState<{ name: string, issues: number }[]>([])
   const [resolutionTime, setResolutionTime] = useState<{ name: string, hours: number }[]>([])
   const [categoryDist, setCategoryDist] = useState<{ name: string, value: number, color: string }[]>([])
+  const [forecastWarnings, setForecastWarnings] = useState<ForecastWarning[]>([])
 
   useEffect(() => {
     const computeCharts = async () => {
@@ -93,8 +101,30 @@ export default function ReportsPage() {
         ])
       }
     }
+    
+    const fetchForecasts = async () => {
+      try {
+        const data = await fetchApi<{ warnings: ForecastWarning[] }>('/api/prescient/forecast/Mumbai')
+        if (data && data.warnings) {
+          setForecastWarnings(data.warnings)
+        }
+      } catch (err) {
+        console.error("Failed to fetch PRESCIENT forecast", err)
+      }
+    }
+    
     computeCharts()
+    fetchForecasts()
   }, [fetchApi])
+
+  const renderWarningIcon = (priority: string) => {
+    switch(priority) {
+      case 'HIGH': return <ShieldAlert size={20} className="text-critical" />
+      case 'MEDIUM': return <AlertTriangle size={20} className="text-high" />
+      case 'LOW': return <CheckCircle size={20} className="text-green-500" />
+      default: return <TrendingUp size={20} className="text-agent-prescient" />
+    }
+  }
 
   return (
     <BMCLayout>
@@ -107,6 +137,35 @@ export default function ReportsPage() {
         <div className="mb-8">
           <ReportGenerator />
         </div>
+
+        {/* PRESCIENT Predictive Forecasting Panel */}
+        {forecastWarnings.length > 0 && (
+          <div className="mb-8 p-6 rounded-2xl border border-agent-prescient/30 bg-gradient-to-br from-surface to-agent-prescient/5 shadow-sm">
+            <div className="flex items-center gap-2 mb-4">
+              <Bot size={20} className="text-agent-prescient" />
+              <h2 className="text-lg font-semibold text-text-primary">PRESCIENT Forecasting Insights</h2>
+              <span className="ml-auto text-xs px-2 py-1 rounded bg-agent-prescient/10 text-agent-prescient font-medium">Live Processing</span>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {forecastWarnings.map((warning, idx) => (
+                <div key={idx} className="p-4 rounded-xl bg-surface border border-border flex flex-col gap-3">
+                  <div className="flex items-start justify-between">
+                    {renderWarningIcon(warning.priority)}
+                    <span className={`text-[10px] font-bold px-2 py-0.5 rounded uppercase tracking-wider 
+                      ${warning.priority === 'HIGH' ? 'bg-critical/10 text-critical' : 
+                        warning.priority === 'MEDIUM' ? 'bg-high/10 text-high' : 
+                        'bg-green-500/10 text-green-500'}`}>
+                      {warning.priority} PRIORITY
+                    </span>
+                  </div>
+                  <p className="text-sm font-medium text-text-secondary leading-relaxed">
+                    {warning.message}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
 
         <h2 className="text-lg font-semibold text-text-primary mb-4">Current Week Analytics</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
