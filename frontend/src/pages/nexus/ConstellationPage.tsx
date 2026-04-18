@@ -1,9 +1,10 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import NexusLayout from '../../components/nexus/NexusLayout'
 import NexusCentralNode from '../../components/nexus/NexusCentralNode'
 import AgentNode from '../../components/nexus/AgentNode'
 import ConnectionLine from '../../components/nexus/ConnectionLine'
 import AgentDetailPanel from '../../components/nexus/AgentDetailPanel'
+import CarSensorSimulation from '../../components/nexus/CarSensorSimulation'
 import { useWebSocket } from '../../hooks/useWebSocket'
 
 const AGENTS = [
@@ -39,33 +40,28 @@ export default function ConstellationPage() {
   const [processingNodes, setProcessingNodes] = useState<string[]>([])
   const { fetchApi } = useApi()
   const [isSimulating, setIsSimulating] = useState(false)
+  const [showSimulation, setShowSimulation] = useState(false)
   
-  const triggerCarSensorMock = async () => {
+  const triggerCarSensorMock = () => {
+    setShowSimulation(true)
     setIsSimulating(true)
+  }
+
+  const handleSimulationComplete = useCallback(async (payload: any) => {
     try {
       await fetchApi('/api/nexus/process', {
         method: 'POST',
-        body: {
-          source: 'car_sensor',
-          raw_data: {
-            vehicle_id: 'MH-01-AB-1234',
-            timestamp: new Date().toISOString(),
-            gps: { lat: 19.1196, lng: 72.8467, address: 'Andheri West', city: 'Mumbai', ward: 'K-West' },
-            speed_kmh: 45.2,
-            accelerometer: { x: 0.1, y: 4.8, z: 0.5 },
-            suspension_event: true,
-            road_segment: 'WEH-KM-14',
-            city: 'Mumbai',
-            ward: 'K-West'
-          },
-          location: { lat: 19.1196, lng: 72.8467, address: 'Andheri West', city: 'Mumbai', ward: 'K-West' }
-        }
+        body: payload
       })
     } catch(e) {
-      console.error(e)
+      console.error('NEXUS process error:', e)
     }
-    setTimeout(() => setIsSimulating(false), 2000)
-  }
+  }, [fetchApi])
+
+  const handleSimulationClose = useCallback(() => {
+    setShowSimulation(false)
+    setIsSimulating(false)
+  }, [])
 
   useWebSocket({
     channel: 'agent_events?role=nexus_admin',
@@ -90,6 +86,13 @@ export default function ConstellationPage() {
 
   return (
     <NexusLayout>
+      {/* Car Sensor Simulation Overlay */}
+      {showSimulation && (
+        <CarSensorSimulation
+          onComplete={handleSimulationComplete}
+          onClose={handleSimulationClose}
+        />
+      )}
       <div className="absolute inset-0 pb-16"> {/* push up to avoid ticker */}
         
         {/* Helper Action Buttons Overlay */}

@@ -1,77 +1,6 @@
 [
   {
     "issue_id": "ISS-MUM-2026-04-17-0001",
-    "source": "manual_complaint",
-    "category": "roads",
-    "subcategory": "pothole",
-    "severity": "HIGH",
-    "confidence": 0.0,
-    "status": "resolved",
-    "location": {
-      "lat": 19.1196,
-      "lng": 72.8467,
-      "address": "Powai Lake Gate 2",
-      "city": "Mumbai",
-      "ward": "S-Ward",
-      "pincode": null
-    },
-    "description": "Pothole detected on road surface via AI Vision analysis fallback classification.",
-    "ai_classification": null,
-    "reporter": {
-      "reporter_id": "citizen_aarav",
-      "reporter_name": "Aarav Mehta",
-      "contact": null
-    },
-    "images": [
-      "/uploads/79483d43d1814a5d8c26feda3cb42329.jpg"
-    ],
-    "assigned_to": {
-      "worker_id": "WRK-MUM-001",
-      "worker_name": "Ganesh Patil",
-      "team": [],
-      "assigned_at": "2026-04-17T22:11:09.207565+00:00",
-      "assigned_by": "COMMANDER"
-    },
-    "procedure": [
-      "1. Establish traffic control: Set up cones, barricades, and warning signs to secure the work area and protect workers and motorists.",
-      "2. Assess and mark the pothole: Outline the pothole and extend cuts 6-12 inches beyond edges using a pavement saw to create square edges for better bonding.",
-      "3. Clean the pothole: Remove all water, debris, and loose material using brooms, shovels, and compressed air. Ensure the area is dry.",
-      "4. Apply tack coat: Spray or brush asphalt emulsion tack coat on the cleaned surface and edges to promote adhesion.",
-      "5. Prepare and place hot mix asphalt (HMA): Heat HMA to 300-350\u00b0F if using infrared method, or use fresh hot mix. Fill the pothole in 2-3 inch lifts, overfilling slightly.",
-      "6. Compact the fill: Use a vibratory plate compactor to achieve 95% density, compacting each lift thoroughly with multiple passes in different directions.",
-      "7. Apply surface seal (optional for high severity): Apply a thin layer of seal coat or slurry to protect the repair.",
-      "8. Clean up: Remove excess material, sweep the surface, and restore traffic control devices. Inspect for smoothness and safety."
-    ],
-    "deadline": "2026-04-18T10:11:09.207565+00:00",
-    "materials_required": [
-      "Traffic cones and barricades",
-      "Warning signs and reflective vests",
-      "PPE (gloves, safety glasses, hard hats)",
-      "Pavement saw or concrete cutter",
-      "Brooms, shovels, and compressed air blower",
-      "Asphalt emulsion tack coat",
-      "Hot mix asphalt (HMA), approximately 1.5 times the pothole volume",
-      "Vibratory plate compactor",
-      "Surface seal coat or slurry (optional)",
-      "Infrared heater (for permanent bond if ambient temp <50\u00b0F)"
-    ],
-    "completion": {
-      "completed_at": "",
-      "proof_images": [
-        "/uploads/647db63eb5724b8a9ba9e6d94a82c8fc.jpeg",
-        "/uploads/dcfcd735800a45e58c356f288278ece5.png"
-      ],
-      "verified_by": "SYSTEM_AUTOVERIFY",
-      "verified_at": "2026-04-17T22:13:43.369588+00:00"
-    },
-    "resolution_time_hours": 0.04665657333333333,
-    "sla_met": true,
-    "citizen_notified": true,
-    "created_at": "2026-04-17T22:10:55.405924+00:00",
-    "updated_at": "2026-04-17T22:13:43.385115+00:00"
-  },
-  {
-    "issue_id": "ISS-MUM-2026-04-17-0002",
     "source": "car_sensor",
     "category": "roads",
     "subcategory": "pothole",
@@ -81,54 +10,92 @@
     "location": {
       "lat": 19.1196,
       "lng": 72.8467,
-      "address": "Andheri West",
+      "address": "Western Express Highway, Andheri",
       "city": "Mumbai",
       "ward": "K-West",
       "pincode": null
     },
-    "description": "Suspension event detected with high vertical acceleration (y: 4.8g) at 45.2 km/h on road segment WEH-KM-14 in Andheri West, Mumbai (K-West ward), indicative of a road surface cavity or pothole.",
+    "description": "Pothole detected on Western Express Highway (WEH-KM-14), Andheri, Mumbai (K-West ward). Triggered by suspension event and high vertical accelerometer reading (y: 4.8) at 45.2 km/h.",
     "ai_classification": null,
     "reporter": null,
     "images": [],
     "assigned_to": {
-      "worker_id": "WRK-MUM-005",
-      "worker_name": "Vikram Jadhav",
+      "worker_id": "WRK-MUM-001",
+      "worker_name": "Ganesh Patil",
       "team": [],
-      "assigned_at": "2026-04-17T20:27:17.206408+00:00",
+      "assigned_at": "2026-04-17T23:52:33.815718+00:00",
       "assigned_by": "COMMANDER"
     },
     "procedure": [
-      "1. Establish a safe work zone: Deploy traffic cones, barriers, and warning signs at least 50 meters in advance and behind the pothole on road segment WEH-KM-14. Ensure all personnel wear high-visibility vests, helmets, gloves, safety boots, and eye protection. Notify local traffic authorities if needed.",
-      "2. Assess and clean the pothole: Inspect the cavity for depth and size. Remove all water, loose debris, dirt, and vegetation using shovels, brooms, compressed air, or a high-pressure water jet. Allow to dry completely.",
-      "3. Square the edges: Use a pavement saw, chisel, or pneumatic tool to cut clean, vertical edges around the pothole, creating a rectangular or square shape at least 15-30 cm beyond the cavity edges to ensure a strong bond.",
-      "4. Apply tack coat: Spray or brush a thin layer of asphalt emulsion or tack coat on the vertical walls and bottom of the prepared cavity to promote adhesion.",
-      "5. Backfill if deep: If the pothole depth exceeds 10 cm, fill the lower portion with crushed gravel or aggregate base material in 5-7 cm lifts, compacting each layer to 95-100% density using a plate compactor or hand tamper.",
-      "6. Fill with asphalt: Add hot mix asphalt (preferred for critical severity and permanent repair) or cold patch asphalt, overfilling the cavity by 2-3 cm to account for compaction.",
-      "7. Compact the repair: Use a vibrating plate compactor or hand tamper to thoroughly compact the asphalt in lifts, achieving a smooth, level surface flush with the surrounding road. Make multiple passes.",
-      "8. Seal the surface: Apply a fog seal or chip seal coat over the repaired area and a 30-50 cm border to protect against water infiltration, especially critical in Mumbai's monsoon conditions.",
-      "9. Final inspection and cleanup: Verify the repair is level, stable, and free of defects. Sweep away excess material, remove debris, and dismantle traffic controls. Place a temporary warning sign if full cure time is needed (e.g., 24-48 hours for hot mix).",
-      "10. Documentation: Record repair details including location (WEH-KM-14, Andheri West, K-West ward), date, time, materials used, crew, and photos before/after. Schedule follow-up inspection in 7 days."
+      "1. Establish site safety: Deploy traffic cones, barriers, warning signs, and assign flagmen to control high-speed highway traffic (WEH-KM-14). Ensure all crew wear high-visibility PPE, helmets, and gloves. Notify local traffic police (K-West ward) for support.",
+      "2. Assess and mark pothole: Measure dimensions (assume typical critical pothole: >30cm diameter, >10cm deep based on accelerometer y:4.8g). Mark a rectangular area extending 15-20cm beyond edges for clean cut.",
+      "3. Cut clean edges: Use concrete saw or pavement cutter to square off ragged edges, creating a clean rectangular hole. Depth to stable base.",
+      "4. Clean the excavation: Remove all loose debris, water, and failed material using brooms, compressed air blower, or vacuum. Ensure dry, stable base.",
+      "5. Apply tack coat: Spray or brush bitumen emulsion tack coat on vertical edges and base to ensure bonding.",
+      "6. Prepare and place asphalt mix: Heat and deliver hot mix asphalt (HMA, suitable for Mumbai climate: PG 64-22 grade). Fill hole in 50-75mm lifts, overfilling by 20-25mm to account for compaction.",
+      "7. Compact the fill: Use plate compactor for initial passes, followed by vibratory roller (minimum 8-10 tonne) for final compaction. Achieve 95%+ density, matching surrounding pavement level. Check with straightedge for smoothness.",
+      "8. Seal edges if needed: Apply fog seal or crack sealant around perimeter for water resistance.",
+      "9. Clean site and restore traffic: Remove all equipment, debris, and temporary markings. Reopen lane with temporary signage if minor settlement expected. Schedule re-inspection in 24-48 hours.",
+      "10. Document and report: Record before/after photos, measurements, materials used. Report completion to municipal authorities (BMC K-West ward) and highway maintenance log."
     ],
-    "deadline": "2026-04-18T00:27:17.206408+00:00",
+    "deadline": "2026-04-18T03:52:33.815718+00:00",
     "materials_required": [
-      "Traffic cones (10+), barriers, reflective warning signs",
-      "Personal Protective Equipment (PPE): high-visibility vests, helmets, gloves, safety boots, eye protection",
-      "Shovels, brooms, buckets",
-      "Pavement saw or chisels/pneumatic breakers",
-      "Compressed air blower or high-pressure water jet",
-      "Asphalt tack coat/emulsion (5-10 liters)",
-      "Crushed gravel/aggregate base (0.5-1 cubic meter, if needed)",
-      "Hot mix asphalt (1-2 cubic meters, depending on pothole size) or cold patch asphalt",
-      "Vibrating plate compactor or heavy-duty tamper",
-      "Fog seal or chip seal material (5 liters)",
-      "Paint or chalk for marking"
+      "Traffic control: 20+ reflective cones, 5+ delineator posts/barriers, warning signs ('Road Work Ahead', 'Pothole Repair'), electronic message boards if available.",
+      "PPE: High-visibility vests/jackets (for 4-6 crew), safety helmets, gloves, steel-toe boots.",
+      "Tools: Concrete/pavement saw, brooms, compressed air blower/vacuum, straightedge/level, measuring tape.",
+      "Adhesives: 20L bitumen emulsion tack coat.",
+      "Asphalt: 0.5-1 tonne HMA (hot mix asphalt, PG 64-22 grade, depending on pothole size).",
+      "Compaction: Vibratory plate compactor, 8-10 tonne vibratory roller.",
+      "Sealant: 5L fog seal or asphalt emulsion (optional).",
+      "Misc: Generator for tools, water spray for dust control, first-aid kit."
     ],
     "completion": null,
     "resolution_time_hours": null,
     "sla_met": null,
     "citizen_notified": false,
-    "created_at": "2026-04-17T20:26:57.985795+00:00",
-    "updated_at": "2026-04-17T20:26:57.985795+00:00"
+    "created_at": "2026-04-17T23:52:20.569222+00:00",
+    "updated_at": "2026-04-17T23:52:20.569222+00:00"
+  },
+  {
+    "issue_id": "ISS-MUM-2026-04-17-0002",
+    "source": "car_sensor",
+    "category": "roads",
+    "subcategory": "surface damage",
+    "severity": "CRITICAL",
+    "confidence": 0.0,
+    "status": "assigned",
+    "location": {
+      "lat": 19.1196,
+      "lng": 72.8467,
+      "address": "Western Express Highway, Andheri",
+      "city": "Mumbai",
+      "ward": "K-West",
+      "pincode": null
+    },
+    "description": "Vehicle detected a significant vertical jolt (accelerometer y=4.8) with suspension event triggered on Western Express Highway, indicative of a pothole or road surface cavity.",
+    "ai_classification": null,
+    "reporter": null,
+    "images": [],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-001",
+      "worker_name": "Ganesh Patil",
+      "team": [],
+      "assigned_at": "2026-04-17T23:44:55.679445+00:00",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Secure the work zone: Deploy traffic cones, barricades, arrow boards, and warning signs at least 200 meters in advance on both directions to ensure worker and motorist safety on the high-speed Western Express Highway."
+    ],
+    "deadline": "2026-04-18T03:44:55.679445+00:00",
+    "materials_required": [
+      "Traffic cones (20+), barricades (10+), electronic arrow boards (2), reflective warning signs (10+), safety vests and PPE for crew"
+    ],
+    "completion": null,
+    "resolution_time_hours": null,
+    "sla_met": null,
+    "citizen_notified": false,
+    "created_at": "2026-04-17T23:44:43.969520+00:00",
+    "updated_at": "2026-04-17T23:44:43.969520+00:00"
   },
   {
     "issue_id": "ISS-MUM-2026-04-17-0003",
