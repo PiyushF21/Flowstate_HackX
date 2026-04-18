@@ -9,7 +9,12 @@ router = APIRouter(prefix="/api/guardian", tags=["GUARDIAN"])
 @router.get("/alerts")
 async def get_alerts():
     """Returns all active alerts."""
-    return {"agent": "GUARDIAN", "alerts": guardian.get_active_alerts()}
+    alerts = guardian.get_active_alerts()
+    if not alerts:
+        # Lazily populate alerts if the server just restarted
+        await guardian.run_monitoring_cycle()
+        alerts = guardian.get_active_alerts()
+    return {"agent": "GUARDIAN", "alerts": alerts}
 
 
 @router.post("/escalate")

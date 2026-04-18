@@ -1736,5 +1736,65 @@
     "citizen_notified": true,
     "created_at": "2026-04-13T22:00:00+05:30",
     "updated_at": "2026-04-14T08:00:00+05:30"
+  },
+  {
+    "issue_id": "ISS-MUM-2026-04-18-0001",
+    "source": "car_sensor",
+    "category": "roads",
+    "subcategory": "pothole",
+    "severity": "CRITICAL",
+    "confidence": 0.0,
+    "status": "assigned",
+    "location": {
+      "lat": 19.1196,
+      "lng": 72.8467,
+      "address": "Western Express Highway, Andheri",
+      "city": "Mumbai",
+      "ward": "K-West",
+      "pincode": null
+    },
+    "description": "Suspension event detected with high vertical acceleration (y: 4.8) at 45.2 km/h on Western Express Highway (WEH-KM-14), Andheri, Mumbai (K-West ward). Indicates pothole or road surface cavity.",
+    "ai_classification": null,
+    "reporter": null,
+    "images": [],
+    "assigned_to": {
+      "worker_id": "WRK-MUM-001",
+      "worker_name": "Ganesh Patil",
+      "team": [],
+      "assigned_at": "2026-04-18T00:46:59.472247+00:00",
+      "assigned_by": "COMMANDER"
+    },
+    "procedure": [
+      "1. Establish traffic control: Deploy cones, barriers, and signage around the pothole area on Western Express Highway (WEH-KM-14) to ensure worker safety and minimize traffic disruption. Assign flagmen if necessary during peak hours.",
+      "2. Assess and mark the pothole: Inspect the pothole for size (typically >30cm diameter for critical severity) and depth. Mark a rectangular area extending 15-20cm beyond the pothole edges using chalk or paint for clean cuts.",
+      "3. Cut and square the edges: Use a concrete saw or pavement cutter to cut vertical edges around the marked area, removing loose material to create a clean, square cavity. Depth should be at least 5-7cm or to stable base.",
+      "4. Clean the cavity: Remove all debris, water, dust, and loose particles using a wire brush, broom, compressed air blower, or high-pressure water jet. Ensure the surface is dry.",
+      "5. Apply tack coat: Spray or brush asphalt emulsion (tack coat) on the cavity walls and base to promote bonding with new material.",
+      "6. Prepare and apply asphalt mix: Use hot mix asphalt (HMA) if plant nearby, or cold patch for temporary fix. Fill the cavity in 5cm lifts, overfilling slightly to account for compaction.",
+      "7. Compact the fill: Use a plate compactor or tamper to compact each lift thoroughly (95% density). Add more material if settlement occurs, and compact the final surface flush with surrounding road.",
+      "8. Seal and texture: Apply a thin seal coat if required for waterproofing. Texture the surface with a broom for skid resistance matching the highway.",
+      "9. Clean up and verify: Remove excess material, clean the area, and test for stability. Restore traffic control devices and mark the repair for monitoring (e.g., paint dot).",
+      "10. Document and report: Log the repair details including location (WEH-KM-14, Andheri, K-West ward), severity (CRITICAL), materials used, and crew details for BMC records."
+    ],
+    "deadline": "2026-04-18T04:46:59.471246+00:00",
+    "materials_required": [
+      "Traffic control devices: cones (10+), barriers, reflective signs, flagman vests",
+      "PPE: safety helmets, high-visibility vests, gloves, safety boots",
+      "Pavement cutter/concrete saw with diamond blade",
+      "Wire brush, stiff broom, shovel, compressed air blower or high-pressure washer",
+      "Asphalt emulsion (tack coat) - 5L",
+      "Hot Mix Asphalt (HMA) or cold patch asphalt - 50-100kg (depending on pothole size)",
+      "Plate compactor or vibrating tamper",
+      "Chalk/paint for marking",
+      "Seal coat material (optional) - 2L",
+      "Broom for texturing",
+      "Cleaning supplies: water, rags"
+    ],
+    "completion": null,
+    "resolution_time_hours": null,
+    "sla_met": null,
+    "citizen_notified": false,
+    "created_at": "2026-04-18T00:46:43.883863+00:00",
+    "updated_at": "2026-04-18T00:46:43.883863+00:00"
   }
 ]

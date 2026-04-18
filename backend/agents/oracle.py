@@ -1,7 +1,17 @@
+import asyncio
 from models import FundAllocation, MC
 from data_store import data_store
+from langchain_xai import ChatXAI
+from langchain_core.messages import SystemMessage, HumanMessage
+from config import settings
 
-def calculate_allocation_score(mc: MC) -> FundAllocation:
+llm = ChatXAI(
+    xai_api_key=settings.XAI_API_KEY,
+    model="grok-4-1-fast-reasoning",
+    temperature=0.3
+)
+
+async def calculate_allocation_score(mc: MC) -> FundAllocation:
     # 1. Base Score (Max 50) based on resolution rate
     base_score = (mc.resolution_rate / 100.0) * 50
     
@@ -11,11 +21,30 @@ def calculate_allocation_score(mc: MC) -> FundAllocation:
     efficiency = 1.0
     score = (base_score + speed_bonus) * efficiency
     
+    amount = score * 100000.0
+    
+    # Generate Rationale via ORACLE AI Engine
+    sys_prompt = "You are ORACLE, the state fund allocation AI. Keep your answers brief (1-2 sentences)."
+    user_prompt = (
+        f"Generate a financial rationale justifying an infrastructure fund allocation of {amount:,.0f} Rupees "
+        f"for {mc.name}. Their resolution rate is {mc.resolution_rate}%, and their avg resolution time is "
+        f"{mc.avg_resolution_hours} hours over {mc.issues_this_week} total issues this week."
+    )
+    
+    try:
+        response = await llm.ainvoke([SystemMessage(content=sys_prompt), HumanMessage(content=user_prompt)])
+        # Strip chain-of-thought tags if using reasoning model
+        rationale = str(response.content)
+        import re
+        rationale = re.sub(r'<think>.*?</think>', '', rationale, flags=re.DOTALL).strip()
+    except Exception as e:
+        rationale = f"AI Generation Failed: Computed base allocation score is {score:.2f} due to {mc.resolution_rate}% resolution rate."
+
     return FundAllocation(
         mc_id=mc.mc_id,
         mc_name=mc.name,
-        recommended_amount=score * 100000.0,
-        rationale=f"Computed allocation score: {score:.2f}"
+        recommended_amount=amount,
+        rationale=rationale
     )
 
 async def generate_fund_allocations() -> list[FundAllocation]:
@@ -23,9 +52,11 @@ async def generate_fund_allocations() -> list[FundAllocation]:
     mcs = await data_store.list_mcs()
     allocations = []
     
-    for mc in mcs:
-        alloc = calculate_allocation_score(mc)
-        
+    # Await all the LLM calls concurrently
+    tasks = [calculate_allocation_score(mc) for mc in mcs]
+    allocs = await asyncio.gather(*tasks)
+    
+    for mc, alloc in zip(mcs, allocs):
         # Add basic performance flag
         if mc.avg_resolution_hours > 24:
             alloc.performance_flag = "warning"

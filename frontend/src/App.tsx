@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
+import { Toaster } from 'react-hot-toast'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/shared/ProtectedRoute'
 import LoginPage from './pages/LoginPage'
@@ -32,6 +33,7 @@ import PipelinePage from './pages/nexus/PipelinePage'
 function App() {
   return (
     <BrowserRouter>
+      <Toaster position="top-right" toastOptions={{ duration: 3000 }} />
       <AuthProvider>
         <Routes>
           {/* Public */}

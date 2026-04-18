@@ -339,11 +339,19 @@ def generate_alert(data: dict, alert_type: str) -> dict:
     """Generate alert from a plain dict (for MC performance, repeated failure, etc.)."""
     now = datetime.now(IST)
     config = ALERT_TYPES.get(alert_type, {"title": alert_type, "icon": "⚠️", "priority_boost": False})
+    
+    desc = data.get("recommendation", f"Alert: {alert_type}")
+    if alert_type == "task_deadline_breach":
+        hrs = data.get("overdue_hours", 0)
+        sev = data.get("severity", "MEDIUM")
+        issue = data.get("issue_id", "Unknown")
+        desc = f"Task {issue} ({sev}) is severely delayed by {hrs} hours past the SLA deadline. Requires immediate supervisor intervention."
+
     return {
         "agent": "GUARDIAN",
         "alert_id": f"ALR-{now.strftime('%Y%m%d%H%M%S')}-{str(hash(str(data)))[-4:]}",
         "alert_type": alert_type, "title": config["title"], "icon": config["icon"],
-        "description": data.get("recommendation", f"Alert: {alert_type}"),
+        "description": desc,
         "issue_id": data.get("issue_id", ""),
         "severity": data.get("severity", "MEDIUM"),
         "priority_boost": config["priority_boost"],
@@ -410,8 +418,38 @@ async def run_monitoring_cycle() -> dict:
 
 
 def get_active_alerts() -> list:
-    """Return all active alerts."""
-    return active_alerts
+    """Return all active alerts sorted by criticality and delay."""
+    def alert_sort_key(alert):
+        score = 0
+        
+        # 1. Base Severity 
+        sev = alert.get("severity", "LOW")
+        sev_scores = {"CRITICAL": 100000, "HIGH": 10000, "MEDIUM": 1000, "LOW": 100}
+        score += sev_scores.get(sev, 0)
+        
+        # 2. Priority Boost & Actions required
+        if alert.get("priority_boost"):
+            score += 50000
+        if alert.get("requires_action"):
+            score += 20000
+            
+        # 3. Delays / Overdue minutes
+        overdue_min = alert.get("overdue_minutes")
+        if overdue_min is None:
+            overdue_min = alert.get("data", {}).get("overdue_minutes", 0)
+        
+        if isinstance(overdue_min, (int, float)):
+            # Add up to ~9999 for delay so it acts as a tie-breaker within severity bands
+            score += min(overdue_min, 9999)
+            
+        # 4. Performance Drops
+        gap_pct = alert.get("data", {}).get("gap_pct", 0)
+        if isinstance(gap_pct, (int, float)):
+            score += (gap_pct * 10)
+            
+        return score
+        
+    return sorted(active_alerts, key=alert_sort_key, reverse=True)
 
 
 def clear_alert(alert_id: str) -> bool:

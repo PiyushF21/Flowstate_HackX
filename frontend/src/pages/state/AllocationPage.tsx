@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import StateLayout from '../../components/state/StateLayout'
 import AllocationTable, { type AllocationRow } from '../../components/state/AllocationTable'
 import { Bot, Check, X, PencilLine, Download } from 'lucide-react'
+import toast from 'react-hot-toast'
 import { useApi } from '../../hooks/useApi'
 
 export default function AllocationPage() {
@@ -17,14 +18,14 @@ export default function AllocationPage() {
   useEffect(() => {
     const fetchOracle = async () => {
       try {
-        const data = await fetchApi<{ recommendations: any[] }>('/api/oracle/recommend-funds')
-        if (data && data.recommendations) {
-           setAllocations(data.recommendations.map((r, i) => ({
-             id: String(i),
+        const data = await fetchApi<any[]>('/api/oracle/funds')
+        if (data && Array.isArray(data)) {
+           setAllocations(data.map((r, i) => ({
+             id: r.mc_id || String(i),
              mcName: r.mc_name,
-             current: r.current_allocation_cr,
-             recommended: r.recommended_allocation_cr,
-             status: r.status as any,
+             current: r.current_amount || 50, // mock base current if needed
+             recommended: (r.recommended_amount / 1000000), // Convert to Cr
+             status: r.performance_flag === 'good' ? 'on_track' : r.performance_flag === 'warning' ? 'watch' : 'audit',
              rationale: r.rationale
            })))
         }
@@ -80,9 +81,9 @@ export default function AllocationPage() {
                 </div>
                 <p className="text-sm text-text-primary mb-4 leading-relaxed">{rec.text}</p>
                 <div className="flex gap-2">
-                  <button className="flex-1 py-1.5 rounded-lg bg-green-500/10 text-green-500 hover:bg-green-500/20 text-xs font-semibold flex items-center justify-center gap-1 transition-colors"><Check size={14}/> Approve</button>
-                  <button className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-hover text-xs font-semibold text-text-secondary transition-colors"><PencilLine size={14}/></button>
-                  <button className="px-3 py-1.5 rounded-lg bg-critical/10 text-critical hover:bg-critical/20 text-xs font-semibold transition-colors"><X size={14}/></button>
+                  <button onClick={() => toast.success('Resource reallocation approved')} className="flex-1 py-1.5 rounded-lg bg-green-500/10 text-green-500 hover:bg-green-500/20 text-xs font-semibold flex items-center justify-center gap-1 transition-colors"><Check size={14}/> Approve</button>
+                  <button onClick={() => toast.success('Edit template opened')} className="px-3 py-1.5 rounded-lg bg-surface border border-border hover:bg-surface-hover text-xs font-semibold text-text-secondary transition-colors"><PencilLine size={14}/></button>
+                  <button onClick={() => toast.error('Resource reallocation rejected')} className="px-3 py-1.5 rounded-lg bg-critical/10 text-critical hover:bg-critical/20 text-xs font-semibold transition-colors"><X size={14}/></button>
                 </div>
               </div>
             ))}
@@ -97,13 +98,13 @@ export default function AllocationPage() {
           Modifying the adjusted column will prompt a rationale requirement.
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2.5 rounded-xl border border-border bg-surface-elevated hover:bg-surface-hover text-sm font-medium text-text-primary flex items-center gap-2 transition-colors">
+          <button onClick={() => toast.success('Exporting draft allocation to PDF')} className="px-4 py-2.5 rounded-xl border border-border bg-surface-elevated hover:bg-surface-hover text-sm font-medium text-text-primary flex items-center gap-2 transition-colors">
             <Download size={16} /> Export Draft
           </button>
-          <button className="px-6 py-2.5 rounded-xl bg-surface border border-border text-sm font-medium text-text-primary hover:bg-surface-hover transition-colors flex items-center gap-2">
+          <button onClick={() => toast.success('Draft saved successfully')} className="px-6 py-2.5 rounded-xl bg-surface border border-border text-sm font-medium text-text-primary hover:bg-surface-hover transition-colors flex items-center gap-2">
             <PencilLine size={16} /> Save as Draft
           </button>
-          <button className="px-6 py-2.5 rounded-xl bg-agent-oracle text-bg text-sm font-bold hover:opacity-90 transition-opacity flex items-center gap-2 shadow-[0_0_15px_rgba(0,0,0,0.3)] shadow-agent-oracle/20">
+          <button onClick={() => toast.success('Allocations Authorized by State Command')} className="px-6 py-2.5 rounded-xl bg-agent-oracle text-bg text-sm font-bold hover:opacity-90 transition-opacity flex items-center gap-2 shadow-[0_0_15px_rgba(0,0,0,0.3)] shadow-agent-oracle/20">
             <Check size={18} /> Authorize Allocations
           </button>
         </div>

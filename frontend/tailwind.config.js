@@ -7,16 +7,18 @@ export default {
   theme: {
     extend: {
       colors: {
-        primary: '#2563EB',
-        bg: '#0A0A0F',
-        surface: '#13131A',
-        'surface-elevated': '#1C1C27',
+        primary: '#3B82F6',
+        bg: '#0F1014',
+        surface: '#181920',
+        'surface-elevated': '#22232B',
+        'surface-hover': '#2A2C35',
         critical: '#EF4444',
         high: '#F97316',
         medium: '#EAB308',
         low: '#22C55E',
-        'text-primary': '#F1F5F9',
-        'text-secondary': '#94A3B8',
+        'text-primary': '#F8FAFC',
+        'text-secondary': '#828291',
+        'border': 'rgba(255, 255, 255, 0.05)',
         'nexus-glow': '#A855F7',
         // Agent theme colors
         'agent-cognos': '#06B6D4',

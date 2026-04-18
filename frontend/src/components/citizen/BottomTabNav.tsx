@@ -14,7 +14,7 @@ export default function BottomTabNav() {
   const navigate = useNavigate()
 
   return (
-    <nav className="flex items-center justify-around py-2 pb-3 border-t border-border bg-surface/95 backdrop-blur-lg">
+    <nav className="flex items-center justify-around py-3 pb-4 bg-bg border-t border-white/[0.04]">
       {tabs.map((tab) => {
         const isActive = location.pathname === tab.path
         return (
@@ -22,17 +22,14 @@ export default function BottomTabNav() {
             key={tab.path}
             onClick={() => navigate(tab.path)}
             className={cn(
-              'flex flex-col items-center gap-0.5 px-4 py-1 rounded-xl transition-all',
+              'flex flex-col items-center gap-1 w-20 py-1.5 rounded-2xl transition-all duration-300',
               isActive
-                ? 'text-primary'
-                : 'text-text-muted hover:text-text-secondary'
+                ? 'bg-[#1e293b]/60 text-primary'
+                : 'text-[#646473] hover:text-text-secondary hover:bg-white/[0.02]'
             )}
           >
-            <tab.icon size={22} strokeWidth={isActive ? 2.5 : 1.8} />
-            <span className="text-[10px] font-medium">{tab.label}</span>
-            {isActive && (
-              <div className="w-1 h-1 rounded-full bg-primary mt-0.5" />
-            )}
+            <tab.icon size={20} strokeWidth={isActive ? 2.5 : 2} className={cn(isActive && 'fill-primary/20')} />
+            <span className="text-[9px] font-bold tracking-wide uppercase mt-0.5">{tab.label}</span>
           </button>
         )
       })}

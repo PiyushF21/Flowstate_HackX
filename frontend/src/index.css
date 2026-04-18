@@ -9,15 +9,19 @@
 
 /* Design tokens as CSS variables */
 :root {
-  --primary: #2563EB;
-  --primary-light: #3B82F6;
-  --primary-dark: #1D4ED8;
-  --bg: #0A0A0F;
-  --surface: #13131A;
-  --surface-elevated: #1C1C27;
-  --surface-hover: #252533;
-  --border: #2A2A3C;
-  --border-light: #363649;
+  --primary: #3B82F6;
+  --primary-light: #60A5FA;
+  --primary-dark: #2563EB;
+  
+  /* Premium softer dark palette inspired by reference */
+  --bg: #0F1014;
+  --surface: #1C1D24;
+  --surface-elevated: #252630;
+  --surface-hover: #2D2F3A;
+  
+  /* Almost invisible borders for high-end feel */
+  --border: rgba(255, 255, 255, 0.04);
+  --border-light: rgba(255, 255, 255, 0.08);
 
   /* Severity colors */
   --critical: #EF4444;
@@ -60,6 +64,14 @@
   --transition-fast: 150ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-base: 250ms cubic-bezier(0.4, 0, 0.2, 1);
   --transition-slow: 400ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* === Utility Classes === */
+@layer utilities {
+  .mesh-bg {
+    background-image: radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 16px 16px;
+  }
 }
 
 /* === Glassmorphism Utilities === */
@@ -261,6 +273,13 @@
     );
     background-size: 200% 100%;
     animation: shimmer 2s linear infinite;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+  .scrollbar-none {
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
   }
 }
 

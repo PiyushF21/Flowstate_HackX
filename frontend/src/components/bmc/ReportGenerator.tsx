@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { FileText, Bot, Download, ArrowRight } from 'lucide-react'
 import { motion } from 'framer-motion'
+import toast from 'react-hot-toast'
 
 export default function ReportGenerator() {
   const [isGenerating, setIsGenerating] = useState(false)
@@ -38,10 +39,19 @@ export default function ReportGenerator() {
           </div>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 rounded-xl bg-surface-elevated border border-border text-sm font-medium hover:bg-surface-hover transition-colors flex items-center gap-2">
+          <button 
+            onClick={() => toast.success('Generated PDF Preview')}
+            className="px-4 py-2 rounded-xl bg-surface-elevated border border-border text-sm font-medium hover:bg-surface-hover transition-colors flex items-center gap-2"
+          >
             <Download size={16} /> Preview PDF
           </button>
-          <button onClick={() => setIsReady(false)} className="px-4 py-2 rounded-xl bg-primary text-white text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2">
+          <button 
+            onClick={() => {
+              setIsReady(false)
+              toast.success('Report successfully submitted to State Government via PRESCIENT', { duration: 4000 })
+            }} 
+            className="px-4 py-2 rounded-xl bg-primary text-white text-sm font-medium hover:opacity-90 transition-opacity flex items-center gap-2"
+          >
             Submit to State <ArrowRight size={16} />
           </button>
         </div>

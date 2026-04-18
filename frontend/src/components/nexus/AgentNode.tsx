@@ -27,7 +27,7 @@ export default function AgentNode({
       <div 
         onClick={onClick}
         className={cn(
-          "relative group cursor-pointer rounded-2xl border bg-black/60 backdrop-blur-xl p-3 w-36 transition-all duration-300",
+          "relative group cursor-pointer rounded-2xl border bg-black/60 backdrop-blur-xl p-3 w-max min-w-[140px] pr-5 transition-all duration-300",
           selected ? "border-white/80 shadow-[0_0_30px_rgba(255,255,255,0.2)] bg-black/80 scale-105 z-30" : "border-white/10 hover:border-white/40",
         )}
         style={{ 
@@ -48,7 +48,7 @@ export default function AgentNode({
         
         <div className="flex items-center gap-3">
           <div 
-            className="w-10 h-10 rounded-xl flex items-center justify-center text-lg relative"
+            className="w-10 h-10 min-w-[40px] rounded-xl flex items-center justify-center text-lg relative"
             style={{ backgroundColor: `${color}15`, border: `1px solid ${color}40` }}
           >
              {icon}
@@ -61,7 +61,7 @@ export default function AgentNode({
           </div>
           <div className="flex-1 min-w-0">
              <p className="text-[10px] text-white/50 font-mono tracking-wider uppercase mb-0.5" style={{ color }}>{id}</p>
-             <p className="text-xs font-bold text-white truncate">{name}</p>
+             <p className="text-xs font-bold text-white whitespace-nowrap">{name}</p>
           </div>
         </div>
       </div>
